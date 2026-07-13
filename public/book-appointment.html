@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Consultation - Priority Citizenship Limited</title>
+<meta name="description" content="Book a free consultation with Priority Citizenship Limited immigration experts.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  body { font-family: 'Inter', sans-serif; margin: 0; }
+  .site-link { position: fixed; top: 20px; left: 24px; z-index: 100; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+  .site-link:hover { color: var(--gold); }
+  .site-link svg { width: 18px; height: 18px; }
+  .date-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .date-btn { padding: 8px 16px; border: 1px solid var(--gray-100); border-radius: 8px; background: #fff; font-family: inherit; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+  .date-btn:hover { border-color: var(--gold); }
+  .date-btn.active { border-color: var(--gold); background: rgba(201,168,76,0.08); font-weight: 600; color: var(--navy); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<a href="/" class="site-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Back to Home
+</a>
+
+<div class="tools-page">
+  <div class="container">
+    <div class="tools-card" id="bookingCard">
+      <div class="tools-header">
+        <h1>Book a Free Consultation</h1>
+        <p>Schedule a 30-minute consultation with our immigration team. We'll get back to you within 24 hours.</p>
+      </div>
+
+      <div id="bookingForm">
+        <span class="question-label" style="margin-bottom:12px;">Select a date and time slot</span>
+        <div class="date-filter" id="dateFilter"></div>
+        <div class="slot-grid" id="slotGrid">
+          <p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">Loading available slots...</p>
+        </div>
+
+        <div id="bookingDetails" class="hidden" style="margin-top:24px;">
+          <div style="border-top:1px solid var(--gray-100);padding-top:24px;">
+            <span class="question-label" style="font-size:1rem;margin-bottom:16px;">Your Contact Information</span>
+            <div class="booking-form">
+              <div class="form-row">
+                <div class="form-group"><label>Full Name *</label><input type="text" id="bookName" placeholder="Your name" required></div>
+                <div class="form-group"><label>Email Address *</label><input type="email" id="bookEmail" placeholder="your@email.com" required></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="bookPhone" placeholder="+ country code"></div>
+                <div class="form-group"><label>Service Interested In</label>
+                  <select id="bookService">
+                    <option value="citizenship">Citizenship by Investment</option>
+                    <option value="residence">Residence Permit</option>
+                    <option value="family">Family Sponsorship</option>
+                    <option value="business">Business Immigration</option>
+                    <option value="visitor">Visitor Visa</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group"><label>Message (optional)</label><textarea id="bookMessage" rows="3" placeholder="Any specific questions?"></textarea></div>
+              <button class="btn btn-primary form-submit" onclick="bookAppointment()">Confirm Booking</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="bookingSuccess" class="hidden" style="text-align:center;padding:40px 0;">
+        <div class="form-success-icon" style="margin:0 auto 20px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <h2 style="color:var(--navy);margin-bottom:8px;">Consultation Booked!</h2>
+        <p style="color:var(--gray-500);max-width:400px;margin:0 auto 24px;">Your consultation has been confirmed. You will receive a confirmation email shortly with the meeting details.</p>
+        <a href="/" class="btn btn-primary">Return to Home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let availableSlots = [];
+let selectedSlotId = null;
+
+async function loadSlots() {
+  try {
+    const res = await fetch('/api/appointments/slots');
+    availableSlots = await res.json();
+    renderDateFilter();
+  } catch (err) {
+    document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;">Unable to load slots. Please try again.</p>';
+  }
+}
+
+function renderDateFilter() {
+  const dates = [...new Set(availableSlots.map(s => s.displayDate))];
+  const filter = document.getElementById('dateFilter');
+  filter.innerHTML = '';
+  
+  dates.slice(0, 7).forEach((date, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'date-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = date;
+    btn.onclick = () => {
+      filter.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSlots(date);
+    };
+    filter.appendChild(btn);
+  });
+
+  if (dates.length > 0) renderSlots(dates[0]);
+}
+
+function renderSlots(selectedDate) {
+  const grid = document.getElementById('slotGrid');
+  const slots = availableSlots.filter(s => s.displayDate === selectedDate);
+  
+  if (slots.length === 0) {
+    grid.innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;">No available slots for this date.</p>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  slots.forEach(slot => {
+    const btn = document.createElement('button');
+    btn.className = 'slot-btn';
+    btn.textContent = slot.label.split(' at ')[1] || slot.time;
+    btn.dataset.slotId = slot.id;
+    btn.dataset.label = slot.label;
+    btn.onclick = () => {
+      grid.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedSlotId = slot.id;
+      document.getElementById('bookingDetails').classList.remove('hidden');
+      document.getElementById('bookingDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    grid.appendChild(btn);
+  });
+}
+
+async function bookAppointment() {
+  const name = document.getElementById('bookName').value.trim();
+  const email = document.getElementById('bookEmail').value.trim();
+  
+  if (!name || !email || !selectedSlotId) {
+    alert('Please fill in your name, email, and select a time slot.');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/appointments/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        slotId: selectedSlotId,
+        name, email,
+        phone: document.getElementById('bookPhone').value,
+        service: document.getElementById('bookService').value,
+        message: document.getElementById('bookMessage').value
+      })
+    });
+    
+    const data = await res.json();
+    if (data.success) {
+      document.getElementById('bookingForm').classList.add('hidden');
+      document.getElementById('bookingSuccess').classList.remove('hidden');
+    } else {
+      alert(data.error || 'Booking failed. Please try again.');
+    }
+  } catch (err) {
+    alert('Booking failed. Please try again.');
+  }
+}
+
+loadSlots();
+</script>
+</body>
+</html>

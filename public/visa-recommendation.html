@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Visa Recommendation - Priority Citizenship Limited</title>
+<meta name="description" content="Find the best Vanuatu visa program for your profile. AI-powered visa recommendation tool.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<style>
+  body { font-family: 'Inter', sans-serif; margin: 0; }
+  .step-counter { font-size: 0.85rem; color: var(--gray-500); margin-bottom: 8px; }
+  .range-input { width: 100%; padding: 10px 14px; border: 1px solid var(--input-border); border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
+  .site-link { position: fixed; top: 20px; left: 24px; z-index: 100; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
+  .site-link:hover { color: var(--gold); }
+  .site-link svg { width: 18px; height: 18px; }
+</style>
+</head>
+<body>
+<a href="/" class="site-link">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+  Back to Home
+</a>
+
+<div class="tools-page">
+  <div class="container">
+    <div class="tools-card">
+      <div class="tools-header">
+        <h1>AI Visa Recommendation</h1>
+        <p>Answer a few questions and our AI will recommend the best Vanuatu immigration program for you.</p>
+      </div>
+
+      <div id="wizardContainer">
+        <!-- Step 1 -->
+        <div class="wizard-step" id="step0">
+          <div class="wizard-progress"><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
+          <div class="step-counter">Step 1 of 6</div>
+          <span class="question-label">What is your age?</span>
+          <input type="number" class="range-input" id="visaAge" placeholder="Enter your age" min="18" max="120" value="35">
+          <div class="wizard-nav">
+            <div></div>
+            <button class="btn btn-primary" onclick="nextStep(0)">Next Step</button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="wizard-step hidden" id="step1">
+          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
+          <div class="step-counter">Step 2 of 6</div>
+          <span class="question-label">What is your highest education level?</span>
+          <div class="option-grid">
+            <button class="option-btn" onclick="selectOption('visaEdu', 'phd', this)">PhD / Doctorate</button>
+            <button class="option-btn selected" onclick="selectOption('visaEdu', 'master', this)">Master's Degree</button>
+            <button class="option-btn" onclick="selectOption('visaEdu', 'bachelor', this)">Bachelor's Degree</button>
+            <button class="option-btn" onclick="selectOption('visaEdu', 'diploma', this)">Diploma / Associate</button>
+            <button class="option-btn" onclick="selectOption('visaEdu', 'highschool', this)">High School</button>
+            <button class="option-btn" onclick="selectOption('visaEdu', 'other', this)">Other</button>
+          </div>
+          <div class="wizard-nav">
+            <button class="btn btn-gold-outline" onclick="prevStep(1)">Back</button>
+            <button class="btn btn-primary" onclick="nextStep(1)">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="wizard-step hidden" id="step2">
+          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
+          <div class="step-counter">Step 3 of 6</div>
+          <span class="question-label">How many years of professional work experience do you have?</span>
+          <input type="number" class="range-input" id="visaExp" placeholder="Enter years of experience" min="0" max="50" value="5">
+          <div class="wizard-nav">
+            <button class="btn btn-gold-outline" onclick="prevStep(2)">Back</button>
+            <button class="btn btn-primary" onclick="nextStep(2)">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="wizard-step hidden" id="step3">
+          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
+          <div class="step-counter">Step 4 of 6</div>
+          <span class="question-label">What is your English proficiency level?</span>
+          <div class="option-grid">
+            <button class="option-btn" onclick="selectOption('visaEng', '5', this)">Native / Fluent</button>
+            <button class="option-btn selected" onclick="selectOption('visaEng', '4', this)">Very Good (IELTS 7+)</button>
+            <button class="option-btn" onclick="selectOption('visaEng', '3', this)">Good (IELTS 5-6)</button>
+            <button class="option-btn" onclick="selectOption('visaEng', '2', this)">Basic</button>
+            <button class="option-btn" onclick="selectOption('visaEng', '1', this)">Limited / None</button>
+          </div>
+          <div class="wizard-nav">
+            <button class="btn btn-gold-outline" onclick="prevStep(3)">Back</button>
+            <button class="btn btn-primary" onclick="nextStep(3)">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="wizard-step hidden" id="step4">
+          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div></div>
+          <div class="step-counter">Step 5 of 6</div>
+          <span class="question-label">What is your estimated budget (USD)?</span>
+          <div class="option-grid">
+            <button class="option-btn" onclick="selectOption('visaBudget', '150000', this)">Over $150,000</button>
+            <button class="option-btn selected" onclick="selectOption('visaBudget', '130000', this)">$100,000 - $150,000</button>
+            <button class="option-btn" onclick="selectOption('visaBudget', '50000', this)">$50,000 - $100,000</button>
+            <button class="option-btn" onclick="selectOption('visaBudget', '10000', this)">$10,000 - $50,000</button>
+            <button class="option-btn" onclick="selectOption('visaBudget', '5000', this)">Under $10,000</button>
+          </div>
+          <div class="wizard-nav">
+            <button class="btn btn-gold-outline" onclick="prevStep(4)">Back</button>
+            <button class="btn btn-primary" onclick="nextStep(4)">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="wizard-step hidden" id="step5">
+          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div></div>
+          <div class="step-counter">Step 6 of 6</div>
+          <span class="question-label">Are you applying with family members?</span>
+          <div class="option-grid">
+            <button class="option-btn" onclick="selectOption('visaFamily', 'true', this)">Yes - with spouse/dependents</button>
+            <button class="option-btn selected" onclick="selectOption('visaFamily', 'false', this)">No - just myself</button>
+          </div>
+          <div class="wizard-nav">
+            <button class="btn btn-gold-outline" onclick="prevStep(5)">Back</button>
+            <button class="btn btn-primary" onclick="getRecommendation()">Get My Recommendation</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="visaResults" style="display:none;">
+        <div class="result-card">
+          <div class="result-label">Match Score</div>
+          <div class="result-score gold" id="topScore">0%</div>
+          <div class="result-label" id="topName">Citizenship by Investment</div>
+          <div class="result-summary" id="topSummary">Recommended program based on your profile.</div>
+        </div>
+
+        <div class="result-recommendations">
+          <h4>All Program Scores</h4>
+          <div class="result-details" id="allScores"></div>
+        </div>
+
+        <div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <a href="/tools/book-appointment" class="btn btn-primary">Book Free Consultation</a>
+          <button class="btn btn-gold-outline" onclick="resetWizard()">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Wizard state
+const wizardData = {
+  age: 35,
+  education: 'master',
+  workExperience: 5,
+  englishProficiency: '4',
+  budget: '130000',
+  hasFamily: 'false'
+};
+
+let currentStep = 0;
+
+function showStep(idx) {
+  document.querySelectorAll('.wizard-step').forEach((el, i) => {
+    el.classList.toggle('hidden', i !== idx);
+  });
+}
+
+function nextStep(idx) {
+  // Collect data
+  const inputs = ['visaAge', 'visaExp'];
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      const key = id.replace('visa', '').toLowerCase();
+      if (key === 'age') wizardData.age = el.value;
+      if (key === 'exp') wizardData.workExperience = el.value;
+    }
+  });
+
+  currentStep = idx + 1;
+  if (currentStep < 6) showStep(currentStep);
+}
+
+function prevStep(idx) {
+  currentStep = idx - 1;
+  showStep(currentStep);
+}
+
+function selectOption(field, value, btn) {
+  wizardData[field.replace('visa', '').toLowerCase()] = value;
+  const parent = btn.parentElement;
+  parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+async function getRecommendation() {
+  // Collect final data
+  wizardData.age = document.getElementById('visaAge').value;
+  wizardData.workExperience = document.getElementById('visaExp').value;
+
+  try {
+    const res = await fetch('/api/recommend/visa', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(wizardData)
+    });
+    const data = await res.json();
+
+    // Show results
+    document.getElementById('wizardContainer').style.display = 'none';
+    document.getElementById('visaResults').style.display = 'block';
+
+    const top = data.recommendations[0];
+    document.getElementById('topScore').textContent = top.score + '%';
+    document.getElementById('topName').textContent = top.name;
+    const summaries = {
+      'citizenship': 'This is Vanuatu\'s fastest program - a second passport in 1-2 months with no residency requirement.',
+      'residence': 'Perfect for those looking to live, work, or retire in Vanuatu with family inclusion.',
+      'business': 'Ideal for entrepreneurs and investors looking to establish operations in a tax-efficient jurisdiction.',
+      'family': 'Reunite with your family in Vanuatu with straightforward sponsorship options.',
+      'visitor': 'A short-stay option for tourism, business visits, or family visits to Vanuatu.'
+    };
+    document.getElementById('topSummary').textContent = summaries[top.id] || 'Recommended based on your profile.';
+
+    const scoresDiv = document.getElementById('allScores');
+    scoresDiv.innerHTML = '';
+    data.recommendations.forEach(r => {
+      const div = document.createElement('div');
+      div.className = 'result-detail-item';
+      div.innerHTML = `<span class="result-detail-label">${r.name}</span><span class="result-detail-score">${r.score}%</span>`;
+      scoresDiv.appendChild(div);
+    });
+  } catch (err) {
+    alert('Failed to get recommendation. Please try again.');
+  }
+}
+
+function resetWizard() {
+  document.getElementById('wizardContainer').style.display = 'block';
+  document.getElementById('visaResults').style.display = 'none';
+  currentStep = 0;
+  showStep(0);
+}
+</script>
+</body>
+</html>

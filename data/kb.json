@@ -1,0 +1,127 @@
+{
+  "company": {
+    "name": "Priority Citizenship Limited",
+    "shortName": "Priority Citizenship",
+    "founded": "2013",
+    "location": "Port Vila, Vanuatu",
+    "address": "Rue de la République, PO Box 1234, Port Vila, Vanuatu",
+    "phone": "+678 12345",
+    "email": "info@prioritycitizenship.vu",
+    "consultEmail": "consult@prioritycitizenship.vu",
+    "hours": "Monday–Friday 9AM–6PM VUT, Saturday 10AM–2PM",
+    "teamSize": "15+ team members",
+    "successRate": "100% application approval rate to date",
+    "experience": "12+ years in immigration services",
+    "applicationsCompleted": "500+ successful applications"
+  },
+  "services": [
+    {
+      "id": "citizenship",
+      "name": "Citizenship by Investment",
+      "summary": "Vanuatu's flagship citizenship program offers a second passport in as fast as 1–2 months through a government-contributed investment.",
+      "processingTime": "1–2 months",
+      "requirements": [
+        "Clean criminal record",
+        "Proof of sufficient funds for investment",
+        "Completed application forms",
+        "Passport copy and birth certificate",
+        "Medical certificate",
+        "Professional references"
+      ],
+      "features": [
+        "No physical residency required",
+        "Visa-free travel to 100+ countries",
+        "No language test required",
+        "No interview required",
+        "Tax-neutral jurisdiction",
+        "Fastest citizenship program globally"
+      ],
+      "familyIncluded": "Spouse and dependent children under 18",
+      "faqs": {
+        "How fast can I get a passport?": "The Vanuatu Citizenship by Investment program typically takes 1–2 months from application submission to passport issuance.",
+        "Do I need to live in Vanuatu?": "No, there is no physical residency requirement. You can obtain full citizenship and passport without ever living in the country.",
+        "Can my family also apply?": "Yes, you can include your spouse and dependent children under 18 in your application."
+      }
+    },
+    {
+      "id": "residence",
+      "name": "Residence Permits",
+      "summary": "Long-term and permanent residence options for individuals looking to live, work, or retire in Vanuatu.",
+      "processingTime": "2–3 months",
+      "features": [
+        "Work and retire visas available",
+        "Family members included",
+        "Pathway to permanent residence",
+        "No minimum income requirement for retirees"
+      ],
+      "faqs": {
+        "What types of residence permits are available?": "We offer work visas, retiree visas, and long-term residence permits.",
+        "Can I work on a residence permit?": "Yes, certain residence permits allow you to work in Vanuatu."
+      }
+    },
+    {
+      "id": "family",
+      "name": "Family Sponsorship",
+      "summary": "Reunite with your family in Vanuatu. We assist with dependent visas, spouse sponsorship, and parent immigration.",
+      "processingTime": "1–3 months",
+      "features": [
+        "Spouse and dependent visas",
+        "Parent sponsorship",
+        "Simple documentation process"
+      ]
+    },
+    {
+      "id": "business",
+      "name": "Business Immigration",
+      "summary": "Investor visas and business residence programs for entrepreneurs and investors.",
+      "processingTime": "2–4 months",
+      "features": [
+        "Investor visa pathways",
+        "Business registration support",
+        "Tax-efficient structures"
+      ]
+    },
+    {
+      "id": "visitor",
+      "name": "Visitor & Tourist Visas",
+      "summary": "Short-stay visitor visas for tourism, business visits, and family visits.",
+      "processingTime": "5–10 business days",
+      "features": [
+        "30–90 day stay options",
+        "Easy online application",
+        "Fast processing"
+      ]
+    },
+    {
+      "id": "consulting",
+      "name": "Visa Consulting & Support",
+      "summary": "Comprehensive advisory services including document preparation, application lodgement, and ongoing status tracking.",
+      "features": [
+        "Document verification",
+        "Application management",
+        "Ongoing status updates"
+      ]
+    }
+  ],
+  "faq": [
+    { "q": "How long does it take to get Vanuatu citizenship?", "a": "The Vanuatu Citizenship by Investment program typically takes 1–2 months from application submission to passport issuance, making it one of the fastest citizenship programs in the world." },
+    { "q": "Do I need to live in Vanuatu to get citizenship?", "a": "No, Vanuatu's citizenship program has no physical residency requirement. You can obtain full citizenship and a passport without ever living in the country. There are also no language tests or interview requirements." },
+    { "q": "Can I include my family in the application?", "a": "Yes, you can include your spouse and dependent children under the age of 18 in your citizenship application. Additional fees apply for each dependent." },
+    { "q": "What are the fees and costs involved?", "a": "Costs vary by program. The citizenship by investment program includes a government contribution fee, application processing fees, due diligence fees, and professional service fees. Contact us for a detailed fee schedule tailored to your situation." },
+    { "q": "What if my application is refused?", "a": "Vanuatu has a straightforward due diligence process, and with proper documentation, the approval rate is very high. All applications we have submitted to date have been successful." },
+    { "q": "Do I need to take a language test?", "a": "No. Vanuatu has no language requirements, no education requirements, no age limits, and no interview process." },
+    { "q": "Can I apply for citizenship remotely?", "a": "Yes. The entire process can be completed remotely. You do not need to travel to Vanuatu at any point." },
+    { "q": "What documents do I need?", "a": "You typically need: a valid passport, birth certificate, police clearance certificate, medical certificate, passport photos, and proof of funds. Our team will guide you through the full list." },
+    { "q": "How long is the Vanuatu passport valid?", "a": "The Vanuatu passport is valid for 10 years for adults and can be renewed." },
+    { "q": "Is dual citizenship allowed?", "a": "Vanuatu does not require you to renounce your existing citizenship. Dual citizenship is permitted." },
+    { "q": "What countries can I visit visa-free with a Vanuatu passport?", "a": "Vanuatu passport holders enjoy visa-free or visa-on-arrival access to 100+ countries including the UK, Hong Kong, Singapore, Russia, and Schengen Area countries." },
+    { "q": "Can I work in Vanuatu after getting citizenship?", "a": "Yes, citizens have full rights to live, work, and do business in Vanuatu without any restrictions." },
+    { "q": "What is the minimum investment amount?", "a": "The minimum government contribution for the Vanuatu Citizenship by Investment program starts at USD 130,000 for a single applicant. Contact us for current pricing." },
+    { "q": "Can I pay in installments?", "a": "Payment terms are structured around the application process. Contact our team for flexible payment options." },
+    { "q": "How do I book a consultation?", "a": "You can use the contact form on our website, email us at info@prioritycitizenship.vu, or call us at +678 12345. We typically respond within 24 hours." },
+    { "q": "What is your office address?", "a": "Our office is located in Port Vila, Vanuatu at Rue de la République, PO Box 1234." },
+    { "q": "What are your office hours?", "a": "We are open Monday to Friday from 9:00 AM to 6:00 PM (Vanuatu Time), and Saturday from 10:00 AM to 2:00 PM." },
+    { "q": "Do you offer services in Chinese?", "a": "Yes, our team includes Mandarin-speaking consultants to assist Chinese clients throughout the application process." },
+    { "q": "Is there an age limit for citizenship?", "a": "There is no maximum age limit. Minors can be included in their parents' application." }
+  ]
+}
