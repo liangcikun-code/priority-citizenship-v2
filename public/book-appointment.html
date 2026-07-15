@@ -3,25 +3,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Book a Consultation - Priority Citizenship Limited</title>
-<meta name="description" content="Book a free consultation with Priority Citizenship Limited immigration experts.">
+<title>Book a Consultation — Priority Citizenship Limited</title>
+<meta name="description" content="Book a free 30-minute consultation with our licensed Vanuatu immigration advisors.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
 <style>
-  body { font-family: 'Inter', sans-serif; margin: 0; }
-  .site-link { position: fixed; top: 20px; left: 24px; z-index: 100; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
-  .site-link:hover { color: var(--gold); }
-  .site-link svg { width: 18px; height: 18px; }
-  .date-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-  .date-btn { padding: 8px 16px; border: 1px solid var(--gray-100); border-radius: 8px; background: #fff; font-family: inherit; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
-  .date-btn:hover { border-color: var(--gold); }
-  .date-btn.active { border-color: var(--gold); background: rgba(201,168,76,0.08); font-weight: 600; color: var(--navy); }
-  .hidden { display: none; }
+  :root {
+    --navy: #0a1628; --gold: #c9a84c; --gold-light: #e4c86a; --gold-dark: #a8892e;
+    --success: #059669; --success-light: #d1fae5;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db;
+    --gray-400: #9ca3af; --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .site-link {
+    position: fixed; top: 24px; left: 24px; z-index: 100;
+    display: inline-flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.65); font-size: 0.875rem; font-weight: 500;
+    text-decoration: none; transition: color 0.2s;
+    background: rgba(255,255,255,0.06); padding: 8px 16px; border-radius: 100px;
+    backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .site-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .site-link svg { width: 16px; height: 16px; }
+
+  .tools-page {
+    background: linear-gradient(135deg, var(--navy) 0%, #0d1f3c 50%, #13213e 100%);
+    min-height: 100vh; padding: 100px 24px 80px;
+    position: relative; overflow: hidden;
+  }
+  .tools-page::before {
+    content: ''; position: absolute; top: -30%; right: -15%;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tools-page .container { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .tools-card {
+    background: #fff; border-radius: 20px; padding: 48px 44px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .tools-header { text-align: center; margin-bottom: 40px; }
+  .tools-header .icon-circle {
+    width: 56px; height: 56px; margin: 0 auto 20px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .tools-header .icon-circle svg { color: var(--gold-dark); }
+  .tools-header h1 { font-size: 1.85rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; letter-spacing: -0.02em; }
+  .tools-header p { color: var(--gray-500); font-size: 0.95rem; line-height: 1.6; max-width: 480px; margin: 0 auto; }
+
+  /* Date filter */
+  .section-label-text {
+    font-size: 0.85rem; font-weight: 700; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; display: block;
+  }
+  .date-filter { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .date-btn {
+    padding: 10px 18px; border: 2px solid var(--gray-200); border-radius: 10px;
+    background: #fff; font-family: inherit; font-size: 0.85rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s; color: var(--gray-700);
+  }
+  .date-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.03); }
+  .date-btn.active {
+    border-color: var(--gold); background: rgba(201,168,76,0.08);
+    font-weight: 700; color: var(--navy); box-shadow: 0 0 0 4px rgba(201,168,76,0.06);
+  }
+
+  /* Time slots */
+  .slot-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+  .slot-btn {
+    padding: 12px 14px; border: 2px solid var(--gray-200); border-radius: 10px;
+    background: #fff; font-family: inherit; font-size: 0.88rem; color: var(--gray-700);
+    cursor: pointer; transition: all 0.2s; text-align: center; font-weight: 500;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .slot-btn::before { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--gray-300); flex-shrink: 0; }
+  .slot-btn:hover { border-color: var(--gold); }
+  .slot-btn.selected {
+    border-color: var(--gold); background: rgba(201,168,76,0.08);
+    color: var(--navy); font-weight: 600; box-shadow: 0 0 0 4px rgba(201,168,76,0.06);
+  }
+  .slot-btn.selected::before { background: var(--gold); }
+
+  .selected-slot-display {
+    display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+    background: rgba(201,168,76,0.06); border: 1px solid rgba(201,168,76,0.15);
+    border-radius: 10px; font-weight: 600; color: var(--navy); font-size: 0.95rem;
+  }
+  .selected-slot-display svg { color: var(--gold-dark); flex-shrink: 0; }
+
+  /* Form */
+  .form-section { border-top: 2px solid var(--gray-100); padding-top: 28px; margin-top: 8px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block; font-size: 0.83rem; font-weight: 600; color: var(--gray-700);
+    margin-bottom: 6px;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 12px 16px; border: 2px solid var(--gray-200); border-radius: 10px;
+    font-family: inherit; font-size: 0.95rem; color: var(--gray-900);
+    transition: all 0.25s; background: var(--gray-50);
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201,168,76,0.08); background: #fff;
+  }
+  .form-group input::placeholder { color: var(--gray-400); }
+  .form-group select { cursor: pointer; }
+  .form-group textarea { resize: vertical; min-height: 80px; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
+    font-family: inherit; font-size: 0.95rem; font-weight: 600; border: none;
+    border-radius: 10px; cursor: pointer; transition: all 0.25s; letter-spacing: 0.01em;
+  }
+  .btn-primary { background: var(--gold); color: var(--navy); width: 100%; justify-content: center; padding: 16px; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-outline { background: transparent; color: var(--gray-700); border: 2px solid var(--gray-200); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+  /* Success state */
+  .success-state { text-align: center; padding: 40px 20px; animation: fadeSlideIn 0.5s ease; }
+  .success-icon-circle {
+    width: 80px; height: 80px; margin: 0 auto 24px;
+    background: var(--success-light); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .success-icon-circle svg { color: var(--success); width: 36px; height: 36px; }
+  .success-state h2 { color: var(--navy); font-size: 1.5rem; margin-bottom: 8px; }
+  .success-state p { color: var(--gray-500); max-width: 420px; margin: 0 auto 28px; line-height: 1.7; }
+  .success-detail {
+    display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
+    background: var(--gray-50); border-radius: 10px; font-size: 0.9rem; color: var(--gray-700);
+    margin-bottom: 28px;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hidden { display: none !important; }
+
+  .loading-state { text-align: center; padding: 20px; color: var(--gray-400); }
+  .loading-spinner {
+    width: 28px; height: 28px; margin: 0 auto 12px;
+    border: 3px solid var(--gray-200); border-top-color: var(--gold); border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 640px) {
+    .tools-card { padding: 28px 20px; border-radius: 16px; }
+    .tools-header h1 { font-size: 1.5rem; }
+    .tools-page { padding: 80px 16px 60px; }
+    .form-row { grid-template-columns: 1fr; }
+    .slot-grid { grid-template-columns: 1fr 1fr; }
+    .date-btn { padding: 8px 14px; font-size: 0.8rem; }
+  }
 </style>
 </head>
 <body>
+
 <a href="/" class="site-link">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
   Back to Home
@@ -31,50 +182,69 @@
   <div class="container">
     <div class="tools-card" id="bookingCard">
       <div class="tools-header">
+        <div class="icon-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
         <h1>Book a Free Consultation</h1>
-        <p>Schedule a 30-minute consultation with our immigration team. We'll get back to you within 24 hours.</p>
+        <p>Schedule a 30-minute call with our licensed immigration advisor. We respond within 24 hours.</p>
       </div>
 
       <div id="bookingForm">
-        <span class="question-label" style="margin-bottom:12px;">Select a date and time slot</span>
+        <span class="section-label-text">1. Choose a Date</span>
         <div class="date-filter" id="dateFilter"></div>
+
+        <span class="section-label-text">2. Select a Time</span>
         <div class="slot-grid" id="slotGrid">
-          <p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">Loading available slots...</p>
+          <div class="loading-state" style="grid-column:1/-1;">
+            <div class="loading-spinner"></div>
+            Loading available time slots...
+          </div>
         </div>
 
-        <div id="bookingDetails" class="hidden" style="margin-top:24px;">
-          <div style="border-top:1px solid var(--gray-100);padding-top:24px;">
-            <span class="question-label" style="font-size:1rem;margin-bottom:16px;">Your Contact Information</span>
-            <div class="booking-form">
-              <div class="form-row">
-                <div class="form-group"><label>Full Name *</label><input type="text" id="bookName" placeholder="Your name" required></div>
-                <div class="form-group"><label>Email Address *</label><input type="email" id="bookEmail" placeholder="your@email.com" required></div>
-              </div>
-              <div class="form-row">
-                <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="bookPhone" placeholder="+ country code"></div>
-                <div class="form-group"><label>Service Interested In</label>
-                  <select id="bookService">
-                    <option value="citizenship">Citizenship by Investment</option>
-                    <option value="residence">Residence Permit</option>
-                    <option value="family">Family Sponsorship</option>
-                    <option value="business">Business Immigration</option>
-                    <option value="visitor">Visitor Visa</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-              <div class="form-group"><label>Message (optional)</label><textarea id="bookMessage" rows="3" placeholder="Any specific questions?"></textarea></div>
-              <button class="btn btn-primary form-submit" onclick="bookAppointment()">Confirm Booking</button>
+        <div id="selectedSlotDisplay" style="margin-bottom:20px;"></div>
+
+        <div id="bookingDetails" class="hidden">
+          <div class="form-section">
+            <span class="section-label-text">3. Your Details</span>
+            <div class="form-row">
+              <div class="form-group"><label>Full Name *</label><input type="text" id="bookName" placeholder="Your full name" required></div>
+              <div class="form-group"><label>Email Address *</label><input type="email" id="bookEmail" placeholder="your@email.com" required></div>
             </div>
+            <div class="form-row">
+              <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="bookPhone" placeholder="+ country code"></div>
+              <div class="form-group"><label>Service Interested In</label>
+                <select id="bookService">
+                  <option value="citizenship">Citizenship by Investment</option>
+                  <option value="residence">Residence Permit</option>
+                  <option value="family">Family Sponsorship</option>
+                  <option value="business">Business Immigration</option>
+                  <option value="visitor">Visitor Visa</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group"><label>Message <span style="font-weight:400;color:var(--gray-400);">(optional)</span></label><textarea id="bookMessage" rows="3" placeholder="Any specific questions or context you'd like us to know..."></textarea></div>
+            <button class="btn btn-primary" onclick="bookAppointment()">
+              Confirm Booking
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
           </div>
         </div>
       </div>
 
-      <div id="bookingSuccess" class="hidden" style="text-align:center;padding:40px 0;">
-        <div class="form-success-icon" style="margin:0 auto 20px;"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <h2 style="color:var(--navy);margin-bottom:8px;">Consultation Booked!</h2>
-        <p style="color:var(--gray-500);max-width:400px;margin:0 auto 24px;">Your consultation has been confirmed. You will receive a confirmation email shortly with the meeting details.</p>
-        <a href="/" class="btn btn-primary">Return to Home</a>
+      <div id="bookingSuccess" class="hidden">
+        <div class="success-state">
+          <div class="success-icon-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2>Consultation Confirmed!</h2>
+          <p>We've received your booking request. You'll receive a confirmation email shortly with the meeting details and a calendar invite.</p>
+          <div class="success-detail" id="successDetail"></div>
+          <div>
+            <a href="/" class="btn btn-outline" style="margin-right:8px;">Return to Home</a>
+            <a href="/tools/visa-recommendation" class="btn btn-outline">Try AI Visa Tool</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -83,14 +253,20 @@
 <script>
 let availableSlots = [];
 let selectedSlotId = null;
+let selectedSlotLabel = '';
 
 async function loadSlots() {
   try {
     const res = await fetch('/api/appointments/slots');
-    availableSlots = await res.json();
+    const data = await res.json();
+    availableSlots = Array.isArray(data) ? data : (data.slots || []);
+    if (availableSlots.length === 0) {
+      document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">No available slots right now. Please check back later or email us at info@prioritycitizenship.vu.</p>';
+      return;
+    }
     renderDateFilter();
   } catch (err) {
-    document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;">Unable to load slots. Please try again.</p>';
+    document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">Unable to load time slots. Please refresh the page or email info@prioritycitizenship.vu.</p>';
   }
 }
 
@@ -98,7 +274,7 @@ function renderDateFilter() {
   const dates = [...new Set(availableSlots.map(s => s.displayDate))];
   const filter = document.getElementById('dateFilter');
   filter.innerHTML = '';
-  
+
   dates.slice(0, 7).forEach((date, i) => {
     const btn = document.createElement('button');
     btn.className = 'date-btn' + (i === 0 ? ' active' : '');
@@ -117,38 +293,50 @@ function renderDateFilter() {
 function renderSlots(selectedDate) {
   const grid = document.getElementById('slotGrid');
   const slots = availableSlots.filter(s => s.displayDate === selectedDate);
-  
+
   if (slots.length === 0) {
-    grid.innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;">No available slots for this date.</p>';
+    grid.innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">No available slots for this date. Try another date.</p>';
     return;
   }
 
   grid.innerHTML = '';
   slots.forEach(slot => {
     const btn = document.createElement('button');
-    btn.className = 'slot-btn';
-    btn.textContent = slot.label.split(' at ')[1] || slot.time;
-    btn.dataset.slotId = slot.id;
-    btn.dataset.label = slot.label;
+    btn.className = 'slot-btn' + (slot.id === selectedSlotId ? ' selected' : '');
+    const timeOnly = (slot.label || slot.time || '').split(' at ').pop() || slot.time;
+    btn.textContent = timeOnly;
     btn.onclick = () => {
       grid.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       selectedSlotId = slot.id;
+      selectedSlotLabel = slot.label || `${selectedDate} at ${timeOnly}`;
       document.getElementById('bookingDetails').classList.remove('hidden');
-      document.getElementById('bookingDetails').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('bookingDetails').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      updateSelectedDisplay();
     };
     grid.appendChild(btn);
   });
 }
 
+function updateSelectedDisplay() {
+  const display = document.getElementById('selectedSlotDisplay');
+  if (selectedSlotId) {
+    display.innerHTML = `<div class="selected-slot-display"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Selected: ${selectedSlotLabel}</div>`;
+  }
+}
+
 async function bookAppointment() {
   const name = document.getElementById('bookName').value.trim();
   const email = document.getElementById('bookEmail').value.trim();
-  
+
   if (!name || !email || !selectedSlotId) {
     alert('Please fill in your name, email, and select a time slot.');
     return;
   }
+
+  const btn = document.querySelector('#bookingDetails .btn-primary');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"><animate attributeName="stroke-dashoffset" values="32;0" dur="0.8s" repeatCount="indefinite"/></circle></svg> Booking...';
 
   try {
     const res = await fetch('/api/appointments/book', {
@@ -162,16 +350,21 @@ async function bookAppointment() {
         message: document.getElementById('bookMessage').value
       })
     });
-    
+
     const data = await res.json();
     if (data.success) {
       document.getElementById('bookingForm').classList.add('hidden');
       document.getElementById('bookingSuccess').classList.remove('hidden');
+      document.getElementById('successDetail').textContent = `${selectedSlotLabel} — ${email}`;
     } else {
       alert(data.error || 'Booking failed. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = 'Confirm Booking <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
     }
   } catch (err) {
     alert('Booking failed. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = 'Confirm Booking <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   }
 }
 

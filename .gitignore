@@ -1,5 +1,14 @@
 node_modules/
 .env
 .env.local
+.env*
 .DS_Store
 *.log
+.vercel
+
+# Admin data (contains user data and credentials)
+data/admin.json
+data/leads.json
+data/appointments.json
+data/blog.json
+data/analytics.json

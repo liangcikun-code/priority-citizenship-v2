@@ -15,6 +15,12 @@ function reload() {
   return load();
 }
 
+function save(data) {
+  const filePath = path.join(__dirname, '..', 'data', 'kb.json');
+  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  kbData = data;
+}
+
 function getCompanyInfo() {
   return load().company;
 }
@@ -92,7 +98,7 @@ function getContextForQuery(query) {
 }
 
 module.exports = {
-  load, reload, getCompanyInfo, getServices,
+  load, reload, save, getCompanyInfo, getServices,
   getServiceById, getFAQ, searchFAQ, findBestAnswer,
   getContextForQuery
 };

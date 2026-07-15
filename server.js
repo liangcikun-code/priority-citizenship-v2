@@ -10,6 +10,8 @@ const chatRoutes = require("./routes/chat");
 const knowledgeRoutes = require("./routes/knowledge");
 const recommendationRoutes = require("./routes/recommendation");
 const appointmentRoutes = require("./routes/appointments");
+const adminRoutes = require("./routes/admin");
+const contactRoutes = require("./routes/contact");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,12 +27,14 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/knowledge", knowledgeRoutes);
 app.use("/api/recommend", recommendationRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/contact", contactRoutes);
 
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
-    version: "2.0.0",
-    phase: "Phase 2 - AI Integration",
+    version: "2.1.0",
+    phase: "Phase 3 - Admin System",
     geminiConfigured: !!process.env.GEMINI_API_KEY,
     timestamp: new Date().toISOString()
   });
@@ -44,6 +48,11 @@ app.get("/tools/:page", (req, res) => {
   } else {
     res.status(404).json({ error: "Page not found" });
   }
+});
+
+// Admin panel route
+app.get("/admin", (req, res) => {
+  res.sendFile(path.join(publicDir, "admin.html"));
 });
 
 app.get("*", (req, res) => {
@@ -60,12 +69,13 @@ app.use((err, req, res, next) => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log("\n  Priority Citizenship Limited - Phase 2");
+    console.log("\n  Priority Citizenship Limited - Phase 3");
     console.log("  Server running at http://localhost:" + PORT);
     console.log("  AI Chatbot: http://localhost:" + PORT);
     console.log("  Visa Recommendation: http://localhost:" + PORT + "/tools/visa-recommendation");
     console.log("  Eligibility Assessment: http://localhost:" + PORT + "/tools/eligibility-assessment");
     console.log("  Book Appointment: http://localhost:" + PORT + "/tools/book-appointment");
+    console.log("  Admin Panel: http://localhost:" + PORT + "/admin");
     console.log("  API Health: http://localhost:" + PORT + "/api/health");
     if (process.env.GEMINI_API_KEY) {
       console.log("  AI Mode: Google Gemini AI connected");

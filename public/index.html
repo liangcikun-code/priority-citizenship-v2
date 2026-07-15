@@ -1795,29 +1795,40 @@ function toggleFaq(btn) {
 }
 
 // Form submission
-function handleSubmit(e) {
+async function handleSubmit(e) {
   e.preventDefault();
 
   const form = e.target;
   const formContainer = document.getElementById('consultForm');
   const successMsg = document.getElementById('formSuccess');
 
-  // Simple form validation
   const name = document.getElementById('fullName').value.trim();
   const email = document.getElementById('email').value.trim();
   const service = document.getElementById('service').value;
+  const phone = document.getElementById('phone').value.trim();
+  const country = document.getElementById('country').value.trim();
+  const budget = document.getElementById('budget').value;
+  const message = document.getElementById('message').value.trim();
 
   if (!name || !email || !service) {
+    alert('Please fill in your name, email, and select a service.');
     return;
+  }
+
+  try {
+    await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, country, service, budget, message })
+    });
+  } catch (err) {
+    console.error('Form submit error:', err);
   }
 
   // Hide form, show success
   form.style.display = 'none';
   formContainer.querySelector('.contact-form-title').style.display = 'none';
   successMsg.classList.add('show');
-
-  // In production, send data to your CRM/backend here
-  console.log('Form submitted:', { name, email, service });
 }
 
 // Navbar background on scroll

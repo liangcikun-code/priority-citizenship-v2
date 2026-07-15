@@ -1,10 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const { v4: uuidv4 } = require('uuid');
+const store = require('../services/data-store');
 
-// In-memory appointment store (replace with DB in Phase 3)
-const appointments = [];
-const timeSlots = [];
+// Track used slot IDs to prevent double-booking
+const bookedSlots = new Set();
+
+// Initialize booked slots from persisted appointments
+(function init() {
+  const appts = store.getAppointments();
+  appts.forEach(a => { if (a.slotId) bookedSlots.add(a.slotId); });
+})();
 
 // Generate available time slots for next 14 days
 function generateTimeSlots() {
@@ -16,8 +22,7 @@ function generateTimeSlots() {
     const date = new Date(now);
     date.setDate(date.getDate() + d);
     const day = date.getDay();
-    // Skip Sunday
-    if (day === 0) continue;
+    if (day === 0) continue; // Skip Sunday
 
     const isSaturday = day === 6;
     const startHour = isSaturday ? 10 : 9;
@@ -28,12 +33,13 @@ function generateTimeSlots() {
         const slotDate = new Date(date);
         slotDate.setHours(h, m, 0, 0);
         if (slotDate > now) {
+          const sid = uuidv4();
           slots.push({
-            id: uuidv4(),
+            id: sid,
             date: slotDate.toISOString().split('T')[0],
             time: `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`,
             label: `${dayNames[day]}, ${slotDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} at ${h > 12 ? h - 12 : h}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'} (VUT)`,
-            available: true,
+            available: !bookedSlots.has(sid),
             displayDate: slotDate.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
           });
         }
@@ -45,8 +51,7 @@ function generateTimeSlots() {
 
 // GET /api/appointments/slots - Get available time slots
 router.get('/slots', (req, res) => {
-  const slots = timeSlots.length > 0 ? timeSlots : generateTimeSlots();
-  // Return next 7 days by default
+  const slots = generateTimeSlots();
   const available = slots.filter(s => s.available).slice(0, 40);
   res.json(available);
 });
@@ -60,28 +65,24 @@ router.post('/book', (req, res) => {
       return res.status(400).json({ error: 'Slot ID, name, and email are required' });
     }
 
-    // Find and mark slot as unavailable
-    const slot = timeSlots.find(s => s.id === slotId);
-    if (slot && !slot.available) {
+    // Check for double-booking
+    if (bookedSlots.has(slotId)) {
       return res.status(409).json({ error: 'This time slot is no longer available' });
     }
 
-    const appointment = {
-      id: uuidv4(),
+    bookedSlots.add(slotId);
+
+    // Persist to data store
+    const appointment = store.addAppointment({
       slotId,
-      date: slot?.date || '',
-      time: slot?.time || '',
       name,
       email,
       phone: phone || '',
       service: service || 'general',
       message: message || '',
-      status: 'confirmed',
-      createdAt: new Date().toISOString()
-    };
-
-    appointments.push(appointment);
-    if (slot) slot.available = false;
+      slotLabel: '', // Will be resolved by admin panel
+      status: 'confirmed'
+    });
 
     // In production: send confirmation email, create Google Calendar event, notify sales team
 
@@ -89,8 +90,6 @@ router.post('/book', (req, res) => {
       success: true,
       appointment: {
         id: appointment.id,
-        date: appointment.date,
-        time: appointment.time,
         status: appointment.status
       },
       message: 'Your consultation has been booked. You will receive a confirmation email shortly.'
@@ -103,9 +102,10 @@ router.post('/book', (req, res) => {
 
 // GET /api/appointments/check/:id - Check appointment status
 router.get('/check/:id', (req, res) => {
-  const appt = appointments.find(a => a.id === req.params.id);
+  const appts = store.getAppointments();
+  const appt = appts.find(a => a.id === req.params.id);
   if (!appt) return res.status(404).json({ error: 'Appointment not found' });
-  res.json({ status: appt.status, date: appt.date, time: appt.time });
+  res.json({ status: appt.status, date: appt.createdAt });
 });
 
 module.exports = router;

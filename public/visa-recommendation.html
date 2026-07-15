@@ -3,22 +3,231 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Visa Recommendation - Priority Citizenship Limited</title>
+<title>AI Visa Recommendation — Priority Citizenship Limited</title>
 <meta name="description" content="Find the best Vanuatu visa program for your profile. AI-powered visa recommendation tool.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
 <style>
-  body { font-family: 'Inter', sans-serif; margin: 0; }
-  .step-counter { font-size: 0.85rem; color: var(--gray-500); margin-bottom: 8px; }
-  .range-input { width: 100%; padding: 10px 14px; border: 1px solid var(--input-border); border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
-  .site-link { position: fixed; top: 20px; left: 24px; z-index: 100; display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.6); font-size: 0.85rem; text-decoration: none; transition: color 0.2s; }
-  .site-link:hover { color: var(--gold); }
-  .site-link svg { width: 18px; height: 18px; }
+  :root {
+    --navy: #0a1628;
+    --gold: #c9a84c;
+    --gold-light: #e4c86a;
+    --gold-dark: #a8892e;
+    --success: #059669;
+    --success-light: #d1fae5;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+
+  .site-link {
+    position: fixed; top: 24px; left: 24px; z-index: 100;
+    display: inline-flex; align-items: center; gap: 8px;
+    color: rgba(255,255,255,0.65); font-size: 0.875rem; font-weight: 500;
+    text-decoration: none; transition: color 0.2s;
+    background: rgba(255,255,255,0.06); padding: 8px 16px; border-radius: 100px;
+    backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08);
+  }
+  .site-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
+  .site-link svg { width: 16px; height: 16px; }
+
+  /* Page background */
+  .tools-page {
+    background: linear-gradient(135deg, var(--navy) 0%, #0d1f3c 50%, #13213e 100%);
+    min-height: 100vh;
+    padding: 100px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tools-page::before {
+    content: ''; position: absolute; top: -30%; right: -15%;
+    width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .tools-page .container { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* Card */
+  .tools-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 48px 44px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+
+  .tools-header { text-align: center; margin-bottom: 40px; }
+  .tools-header .icon-circle {
+    width: 56px; height: 56px; margin: 0 auto 20px;
+    background: linear-gradient(135deg, rgba(201,168,76,0.12), rgba(201,168,76,0.06));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .tools-header .icon-circle svg { color: var(--gold-dark); }
+  .tools-header h1 { font-size: 1.85rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; letter-spacing: -0.02em; }
+  .tools-header p { color: var(--gray-500); font-size: 0.95rem; line-height: 1.6; max-width: 480px; margin: 0 auto; }
+
+  /* Progress bar with labels */
+  .progress-wrapper { margin-bottom: 36px; }
+  .progress-steps { display: flex; justify-content: space-between; margin-bottom: 10px; }
+  .progress-step-label {
+    font-size: 0.7rem; font-weight: 600; color: var(--gray-300);
+    text-transform: uppercase; letter-spacing: 0.04em; transition: color 0.3s;
+    text-align: center; flex: 1;
+  }
+  .progress-step-label.active { color: var(--gold-dark); }
+  .progress-step-label.done { color: var(--success); }
+  .progress-bar-track {
+    display: flex; gap: 4px; height: 6px; border-radius: 3px; overflow: hidden;
+    background: var(--gray-100);
+  }
+  .progress-bar-segment { flex: 1; background: var(--gray-200); transition: background 0.4s ease; border-radius: 3px; }
+  .progress-bar-segment.done { background: var(--success); }
+  .progress-bar-segment.active { background: var(--gold); }
+
+  /* Step counter */
+  .step-counter { font-size: 0.8rem; font-weight: 500; color: var(--gray-400); margin-bottom: 12px; letter-spacing: 0.02em; }
+
+  /* Question */
+  .question-label {
+    font-size: 1.2rem; font-weight: 700; color: var(--navy);
+    margin-bottom: 20px; display: block; line-height: 1.3;
+  }
+  .question-hint { font-size: 0.85rem; color: var(--gray-400); font-weight: 400; margin-top: 4px; display: block; }
+
+  /* Input */
+  .range-input {
+    width: 100%; padding: 14px 18px; border: 2px solid var(--gray-200);
+    border-radius: var(--radius); font-family: inherit; font-size: 1.05rem;
+    color: var(--gray-900); transition: all 0.25s;
+    background: var(--gray-50);
+  }
+  .range-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(201,168,76,0.08); background: #fff; }
+
+  /* Option grid */
+  .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
+  .option-btn {
+    padding: 15px 18px; border: 2px solid var(--gray-200); border-radius: var(--radius);
+    background: #fff; font-family: inherit; font-size: 0.93rem; color: var(--gray-700);
+    cursor: pointer; transition: all 0.2s ease; text-align: left;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .option-btn::before {
+    content: ''; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-300);
+    flex-shrink: 0; transition: all 0.2s;
+  }
+  .option-btn:hover { border-color: var(--gold); background: rgba(201,168,76,0.03); }
+  .option-btn.selected {
+    border-color: var(--gold); background: rgba(201,168,76,0.06);
+    color: var(--navy); font-weight: 600; box-shadow: 0 0 0 4px rgba(201,168,76,0.06);
+  }
+  .option-btn.selected::before {
+    border-color: var(--gold); background: var(--gold);
+    box-shadow: inset 0 0 0 3px #fff;
+  }
+
+  /* Navigation */
+  .wizard-nav { display: flex; justify-content: space-between; margin-top: 28px; gap: 12px; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
+    font-family: inherit; font-size: 0.95rem; font-weight: 600; border: none;
+    border-radius: 10px; cursor: pointer; transition: all 0.25s; letter-spacing: 0.01em;
+  }
+  .btn-primary { background: var(--gold); color: var(--navy); }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-outline {
+    background: transparent; color: var(--gray-700); border: 2px solid var(--gray-200);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+
+  /* Fade transition */
+  .wizard-step {
+    animation: fadeSlideIn 0.35s ease;
+  }
+  .wizard-step.hidden { display: none; }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Results */
+  .result-hero {
+    text-align: center; padding: 40px 0;
+    animation: fadeSlideIn 0.5s ease;
+  }
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 16px; border-radius: 100px; font-size: 0.8rem; font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .result-badge.top { background: rgba(201,168,76,0.1); color: var(--gold-dark); }
+  .result-score-ring {
+    width: 140px; height: 140px; margin: 0 auto 16px; position: relative;
+  }
+  .result-score-ring svg { transform: rotate(-90deg); }
+  .result-score-ring .bg { fill: none; stroke: var(--gray-100); stroke-width: 8; }
+  .result-score-ring .fill { fill: none; stroke: var(--gold); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .result-score-ring .score-text {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .result-score-ring .score-value { font-size: 2.5rem; font-weight: 800; color: var(--navy); line-height: 1; }
+  .result-score-ring .score-unit { font-size: 0.8rem; color: var(--gray-400); }
+
+  .result-program-name { font-size: 1.3rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .result-subtitle { font-size: 0.9rem; color: var(--gray-400); }
+
+  .result-summary-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.06), rgba(201,168,76,0.02));
+    border: 1px solid rgba(201,168,76,0.12); border-radius: var(--radius);
+    padding: 20px 24px; margin: 24px 0; text-align: left;
+  }
+  .result-summary-box p { color: var(--gray-700); font-size: 0.95rem; line-height: 1.7; }
+
+  .score-bars { margin: 24px 0; }
+  .score-bars h4 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+  .score-bar-item { margin-bottom: 14px; }
+  .score-bar-header { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 0.88rem; }
+  .score-bar-header .name { color: var(--gray-700); font-weight: 500; }
+  .score-bar-header .pct { color: var(--gray-900); font-weight: 700; }
+  .score-bar-track { height: 8px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+  .score-bar-fill {
+    height: 100%; border-radius: 4px; transition: width 1s ease;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  }
+  .score-bar-fill.top { background: linear-gradient(90deg, var(--gold-dark), var(--gold)); }
+  .score-bar-fill.second { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+
+  .result-actions {
+    display: flex; gap: 12px; justify-content: center; margin-top: 28px; flex-wrap: wrap;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .tools-card { padding: 28px 20px; border-radius: 16px; }
+    .tools-header h1 { font-size: 1.5rem; }
+    .option-grid { grid-template-columns: 1fr; }
+    .tools-page { padding: 80px 16px 60px; }
+    .progress-step-label { font-size: 0.62rem; }
+    .result-score-ring { width: 110px; height: 110px; }
+    .result-score-ring .score-value { font-size: 2rem; }
+  }
 </style>
 </head>
 <body>
+
 <a href="/" class="site-link">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
   Back to Home
@@ -28,28 +237,41 @@
   <div class="container">
     <div class="tools-card">
       <div class="tools-header">
+        <div class="icon-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
         <h1>AI Visa Recommendation</h1>
-        <p>Answer a few questions and our AI will recommend the best Vanuatu immigration program for you.</p>
+        <p>Answer 6 quick questions and our AI will match you with the ideal Vanuatu immigration program.</p>
       </div>
 
+      <!-- Wizard -->
       <div id="wizardContainer">
-        <!-- Step 1 -->
+        <div class="progress-wrapper">
+          <div class="progress-steps" id="progressLabels"></div>
+          <div class="progress-bar-track" id="progressBar"></div>
+        </div>
+
+        <!-- Step 1: Age -->
         <div class="wizard-step" id="step0">
-          <div class="wizard-progress"><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
-          <div class="step-counter">Step 1 of 6</div>
-          <span class="question-label">What is your age?</span>
+          <div class="step-counter">Step 1 of 6 &middot; Personal</div>
+          <span class="question-label">
+            How old are you?
+            <span class="question-hint">This helps us determine eligible program tiers.</span>
+          </span>
           <input type="number" class="range-input" id="visaAge" placeholder="Enter your age" min="18" max="120" value="35">
           <div class="wizard-nav">
             <div></div>
-            <button class="btn btn-primary" onclick="nextStep(0)">Next Step</button>
+            <button class="btn btn-primary" onclick="nextStep(0)">Next Step <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
           </div>
         </div>
 
-        <!-- Step 2 -->
+        <!-- Step 2: Education -->
         <div class="wizard-step hidden" id="step1">
-          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
-          <div class="step-counter">Step 2 of 6</div>
-          <span class="question-label">What is your highest education level?</span>
+          <div class="step-counter">Step 2 of 6 &middot; Background</div>
+          <span class="question-label">
+            What's your highest education level?
+            <span class="question-hint">Higher education unlocks more program options.</span>
+          </span>
           <div class="option-grid">
             <button class="option-btn" onclick="selectOption('visaEdu', 'phd', this)">PhD / Doctorate</button>
             <button class="option-btn selected" onclick="selectOption('visaEdu', 'master', this)">Master's Degree</button>
@@ -59,193 +281,319 @@
             <button class="option-btn" onclick="selectOption('visaEdu', 'other', this)">Other</button>
           </div>
           <div class="wizard-nav">
-            <button class="btn btn-gold-outline" onclick="prevStep(1)">Back</button>
-            <button class="btn btn-primary" onclick="nextStep(1)">Next</button>
+            <button class="btn btn-outline" onclick="prevStep(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+            <button class="btn btn-primary" onclick="nextStep(1)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
           </div>
         </div>
 
-        <!-- Step 3 -->
+        <!-- Step 3: Work Experience -->
         <div class="wizard-step hidden" id="step2">
-          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
-          <div class="step-counter">Step 3 of 6</div>
-          <span class="question-label">How many years of professional work experience do you have?</span>
+          <div class="step-counter">Step 3 of 6 &middot; Experience</div>
+          <span class="question-label">
+            Years of professional work experience?
+            <span class="question-hint">More experience strengthens your application profile.</span>
+          </span>
           <input type="number" class="range-input" id="visaExp" placeholder="Enter years of experience" min="0" max="50" value="5">
           <div class="wizard-nav">
-            <button class="btn btn-gold-outline" onclick="prevStep(2)">Back</button>
-            <button class="btn btn-primary" onclick="nextStep(2)">Next</button>
+            <button class="btn btn-outline" onclick="prevStep(2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+            <button class="btn btn-primary" onclick="nextStep(2)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
           </div>
         </div>
 
-        <!-- Step 4 -->
+        <!-- Step 4: English -->
         <div class="wizard-step hidden" id="step3">
-          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div><div class="wizard-dot"></div></div>
-          <div class="step-counter">Step 4 of 6</div>
-          <span class="question-label">What is your English proficiency level?</span>
+          <div class="step-counter">Step 4 of 6 &middot; Language</div>
+          <span class="question-label">
+            How would you rate your English?
+            <span class="question-hint">English proficiency isn't required but helps with business programs.</span>
+          </span>
           <div class="option-grid">
             <button class="option-btn" onclick="selectOption('visaEng', '5', this)">Native / Fluent</button>
             <button class="option-btn selected" onclick="selectOption('visaEng', '4', this)">Very Good (IELTS 7+)</button>
-            <button class="option-btn" onclick="selectOption('visaEng', '3', this)">Good (IELTS 5-6)</button>
+            <button class="option-btn" onclick="selectOption('visaEng', '3', this)">Good (IELTS 5–6)</button>
             <button class="option-btn" onclick="selectOption('visaEng', '2', this)">Basic</button>
             <button class="option-btn" onclick="selectOption('visaEng', '1', this)">Limited / None</button>
           </div>
           <div class="wizard-nav">
-            <button class="btn btn-gold-outline" onclick="prevStep(3)">Back</button>
-            <button class="btn btn-primary" onclick="nextStep(3)">Next</button>
+            <button class="btn btn-outline" onclick="prevStep(3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+            <button class="btn btn-primary" onclick="nextStep(3)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
           </div>
         </div>
 
-        <!-- Step 5 -->
+        <!-- Step 5: Budget -->
         <div class="wizard-step hidden" id="step4">
-          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div><div class="wizard-dot"></div></div>
-          <div class="step-counter">Step 5 of 6</div>
-          <span class="question-label">What is your estimated budget (USD)?</span>
+          <div class="step-counter">Step 5 of 6 &middot; Budget</div>
+          <span class="question-label">
+            What's your estimated budget (USD)?
+            <span class="question-hint">Different programs have different investment requirements.</span>
+          </span>
           <div class="option-grid">
             <button class="option-btn" onclick="selectOption('visaBudget', '150000', this)">Over $150,000</button>
-            <button class="option-btn selected" onclick="selectOption('visaBudget', '130000', this)">$100,000 - $150,000</button>
-            <button class="option-btn" onclick="selectOption('visaBudget', '50000', this)">$50,000 - $100,000</button>
-            <button class="option-btn" onclick="selectOption('visaBudget', '10000', this)">$10,000 - $50,000</button>
+            <button class="option-btn selected" onclick="selectOption('visaBudget', '130000', this)">$100,000 – $150,000</button>
+            <button class="option-btn" onclick="selectOption('visaBudget', '50000', this)">$50,000 – $100,000</button>
+            <button class="option-btn" onclick="selectOption('visaBudget', '10000', this)">$10,000 – $50,000</button>
             <button class="option-btn" onclick="selectOption('visaBudget', '5000', this)">Under $10,000</button>
           </div>
           <div class="wizard-nav">
-            <button class="btn btn-gold-outline" onclick="prevStep(4)">Back</button>
-            <button class="btn btn-primary" onclick="nextStep(4)">Next</button>
+            <button class="btn btn-outline" onclick="prevStep(4)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+            <button class="btn btn-primary" onclick="nextStep(4)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
           </div>
         </div>
 
-        <!-- Step 6 -->
+        <!-- Step 6: Family -->
         <div class="wizard-step hidden" id="step5">
-          <div class="wizard-progress"><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot completed"></div><div class="wizard-dot active"></div></div>
-          <div class="step-counter">Step 6 of 6</div>
-          <span class="question-label">Are you applying with family members?</span>
+          <div class="step-counter">Step 6 of 6 &middot; Family</div>
+          <span class="question-label">
+            Are you applying with family?
+            <span class="question-hint">Family inclusion affects which programs are best for you.</span>
+          </span>
           <div class="option-grid">
-            <button class="option-btn" onclick="selectOption('visaFamily', 'true', this)">Yes - with spouse/dependents</button>
-            <button class="option-btn selected" onclick="selectOption('visaFamily', 'false', this)">No - just myself</button>
+            <button class="option-btn" onclick="selectOption('visaFamily', 'true', this)">Yes — with spouse / dependents</button>
+            <button class="option-btn selected" onclick="selectOption('visaFamily', 'false', this)">No — just myself</button>
           </div>
           <div class="wizard-nav">
-            <button class="btn btn-gold-outline" onclick="prevStep(5)">Back</button>
-            <button class="btn btn-primary" onclick="getRecommendation()">Get My Recommendation</button>
+            <button class="btn btn-outline" onclick="prevStep(5)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
+            <button class="btn btn-primary" onclick="getRecommendation()">
+              Get My Recommendation
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Results -->
-      <div id="visaResults" style="display:none;">
-        <div class="result-card">
-          <div class="result-label">Match Score</div>
-          <div class="result-score gold" id="topScore">0%</div>
-          <div class="result-label" id="topName">Citizenship by Investment</div>
-          <div class="result-summary" id="topSummary">Recommended program based on your profile.</div>
-        </div>
-
-        <div class="result-recommendations">
-          <h4>All Program Scores</h4>
-          <div class="result-details" id="allScores"></div>
-        </div>
-
-        <div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
-          <a href="/tools/book-appointment" class="btn btn-primary">Book Free Consultation</a>
-          <button class="btn btn-gold-outline" onclick="resetWizard()">Start Over</button>
-        </div>
-      </div>
+      <div id="visaResults" style="display:none;"></div>
     </div>
   </div>
 </div>
 
 <script>
-// Wizard state
+// ─── Wizard State ───────────────────────────────────
+const STEPS = ['Profile', 'Education', 'Experience', 'Language', 'Budget', 'Family'];
 const wizardData = {
-  age: 35,
-  education: 'master',
-  workExperience: 5,
-  englishProficiency: '4',
-  budget: '130000',
-  hasFamily: 'false'
+  age: 35, education: 'master', workExperience: 5,
+  englishProficiency: '4', budget: '130000', hasFamily: 'false'
 };
-
 let currentStep = 0;
 
+// ─── Build Progress UI ──────────────────────────────
+function buildProgress() {
+  const labels = document.getElementById('progressLabels');
+  const bar = document.getElementById('progressBar');
+  labels.innerHTML = STEPS.map((s, i) =>
+    `<span class="progress-step-label" id="label${i}">${s}</span>`
+  ).join('');
+  bar.innerHTML = STEPS.map((_, i) =>
+    `<div class="progress-bar-segment" id="seg${i}"></div>`
+  ).join('');
+}
+
+function updateProgress(step) {
+  for (let i = 0; i < STEPS.length; i++) {
+    const label = document.getElementById('label' + i);
+    const seg = document.getElementById('seg' + i);
+    label.className = 'progress-step-label';
+    seg.className = 'progress-bar-segment';
+    if (i < step) { label.classList.add('done'); seg.classList.add('done'); }
+    if (i === step) { label.classList.add('active'); seg.classList.add('active'); }
+  }
+}
+
+// ─── Navigation ─────────────────────────────────────
 function showStep(idx) {
-  document.querySelectorAll('.wizard-step').forEach((el, i) => {
-    el.classList.toggle('hidden', i !== idx);
-  });
+  currentStep = idx;
+  document.querySelectorAll('.wizard-step').forEach((el, i) => el.classList.toggle('hidden', i !== idx));
+  updateProgress(idx);
 }
 
 function nextStep(idx) {
-  // Collect data
   const inputs = ['visaAge', 'visaExp'];
   inputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      const key = id.replace('visa', '').toLowerCase();
-      if (key === 'age') wizardData.age = el.value;
-      if (key === 'exp') wizardData.workExperience = el.value;
+      const key = id.replace('visa', '');
+      if (key === 'Age') wizardData.age = parseInt(el.value) || 35;
+      if (key === 'Exp') wizardData.workExperience = parseInt(el.value) || 5;
     }
   });
-
-  currentStep = idx + 1;
-  if (currentStep < 6) showStep(currentStep);
+  if (idx < 5) showStep(idx + 1);
 }
 
 function prevStep(idx) {
-  currentStep = idx - 1;
-  showStep(currentStep);
+  if (idx > 0) showStep(idx - 1);
 }
 
 function selectOption(field, value, btn) {
-  wizardData[field.replace('visa', '').toLowerCase()] = value;
+  const keyMap = { visaEdu: 'education', visaEng: 'englishProficiency', visaBudget: 'budget', visaFamily: 'hasFamily' };
+  if (keyMap[field]) wizardData[keyMap[field]] = value;
   const parent = btn.parentElement;
   parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
 }
 
+// ─── API Call ───────────────────────────────────────
 async function getRecommendation() {
-  // Collect final data
-  wizardData.age = document.getElementById('visaAge').value;
-  wizardData.workExperience = document.getElementById('visaExp').value;
+  wizardData.age = parseInt(document.getElementById('visaAge').value) || 35;
+  wizardData.workExperience = parseInt(document.getElementById('visaExp').value) || 5;
+
+  // Show loading state
+  const btn = document.querySelector('#step5 .btn-primary');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spinner"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"><animate attributeName="stroke-dashoffset" values="32;0" dur="0.8s" repeatCount="indefinite"/></circle></svg> Analyzing...';
 
   try {
+    const payload = {
+      age: wizardData.age,
+      education: wizardData.education,
+      workExperience: wizardData.workExperience,
+      englishProficiency: parseInt(wizardData.englishProficiency) || 4,
+      budget: parseInt(wizardData.budget) || 130000,
+      hasFamily: wizardData.hasFamily === 'true'
+    };
+
     const res = await fetch('/api/recommend/visa', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(wizardData)
+      body: JSON.stringify(payload)
     });
     const data = await res.json();
 
-    // Show results
     document.getElementById('wizardContainer').style.display = 'none';
-    document.getElementById('visaResults').style.display = 'block';
-
-    const top = data.recommendations[0];
-    document.getElementById('topScore').textContent = top.score + '%';
-    document.getElementById('topName').textContent = top.name;
-    const summaries = {
-      'citizenship': 'This is Vanuatu\'s fastest program - a second passport in 1-2 months with no residency requirement.',
-      'residence': 'Perfect for those looking to live, work, or retire in Vanuatu with family inclusion.',
-      'business': 'Ideal for entrepreneurs and investors looking to establish operations in a tax-efficient jurisdiction.',
-      'family': 'Reunite with your family in Vanuatu with straightforward sponsorship options.',
-      'visitor': 'A short-stay option for tourism, business visits, or family visits to Vanuatu.'
-    };
-    document.getElementById('topSummary').textContent = summaries[top.id] || 'Recommended based on your profile.';
-
-    const scoresDiv = document.getElementById('allScores');
-    scoresDiv.innerHTML = '';
-    data.recommendations.forEach(r => {
-      const div = document.createElement('div');
-      div.className = 'result-detail-item';
-      div.innerHTML = `<span class="result-detail-label">${r.name}</span><span class="result-detail-score">${r.score}%</span>`;
-      scoresDiv.appendChild(div);
-    });
+    renderResults(data);
   } catch (err) {
-    alert('Failed to get recommendation. Please try again.');
+    alert('Unable to reach the recommendation engine. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = 'Get My Recommendation <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   }
+}
+
+// ─── Render Results ─────────────────────────────────
+function renderResults(data) {
+  const top = data.recommendations[0];
+  const summaries = {
+    citizenship: "Vanuatu's fastest program — a second passport in 1–2 months with no residency requirement and visa-free travel to 100+ countries.",
+    residence: "Perfect for those looking to live, work, or retire in Vanuatu. Includes family members and offers a pathway to permanent residence.",
+    business: "Ideal for entrepreneurs and investors seeking to establish operations in a tax-efficient jurisdiction with full business support.",
+    family: "Reunite with your family in Vanuatu through straightforward sponsorship options with simple documentation requirements.",
+    visitor: "A flexible short-stay option for tourism, business visits, or family visits to Vanuatu with fast 5–10 day processing."
+  };
+  const descriptions = {
+    citizenship: 'Citizenship by Investment',
+    residence: 'Residence Permit',
+    business: 'Business Immigration',
+    family: 'Family Sponsorship',
+    visitor: 'Visitor & Tourist Visa'
+  };
+
+  const circumference = 2 * Math.PI * 54;
+  const offset = circumference - (top.score / 100) * circumference;
+
+  const container = document.getElementById('visaResults');
+  container.innerHTML = `
+    <div class="result-hero">
+      <div class="result-badge top">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Top Recommendation
+      </div>
+      <div class="result-score-ring">
+        <svg width="140" height="140" viewBox="0 0 140 140">
+          <circle class="bg" cx="70" cy="70" r="54"/>
+          <circle class="fill" cx="70" cy="70" r="54"
+            stroke-dasharray="${circumference}"
+            stroke-dashoffset="${circumference}"
+            id="scoreRing"
+          />
+        </svg>
+        <div class="score-text">
+          <span class="score-value" id="scoreVal">0</span>
+          <span class="score-unit">% Match</span>
+        </div>
+      </div>
+      <div class="result-program-name">${top.name}</div>
+      <div class="result-subtitle">Best match for your profile</div>
+    </div>
+
+    <div class="result-summary-box">
+      <p>${summaries[top.id] || 'This program is recommended based on your unique profile and goals.'}</p>
+    </div>
+
+    <div class="score-bars">
+      <h4>All Program Match Scores</h4>
+      ${data.recommendations.map((r, i) => `
+        <div class="score-bar-item">
+          <div class="score-bar-header">
+            <span class="name">${r.name}</span>
+            <span class="pct">${r.score}%</span>
+          </div>
+          <div class="score-bar-track">
+            <div class="score-bar-fill ${i === 0 ? 'top' : 'second'}"
+              style="width: 0" data-width="${r.score}%"
+            ></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="result-actions">
+      <a href="/tools/book-appointment" class="btn btn-primary">
+        Book Free Consultation
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </a>
+      <button class="btn btn-outline" onclick="resetWizard()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+        Start Over
+      </button>
+    </div>
+  `;
+
+  document.getElementById('visaResults').style.display = 'block';
+
+  // Animate score
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById('scoreRing').style.strokeDashoffset = offset;
+      animateNumber('scoreVal', 0, top.score, 1200);
+    }, 200);
+
+    // Animate bars
+    setTimeout(() => {
+      document.querySelectorAll('.score-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width;
+      });
+    }, 400);
+  });
+}
+
+function animateNumber(id, start, end, duration) {
+  const el = document.getElementById(id);
+  const startTime = performance.now();
+  function step(ts) {
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    el.textContent = Math.round(start + (end - start) * eased);
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 function resetWizard() {
   document.getElementById('wizardContainer').style.display = 'block';
   document.getElementById('visaResults').style.display = 'none';
+  document.getElementById('visaResults').innerHTML = '';
   currentStep = 0;
   showStep(0);
+  document.querySelectorAll('.option-btn').forEach((b, i) => {
+    b.classList.toggle('selected',
+      (i === 1 && b.onclick.toString().includes('visaEdu')) ||
+      (i === 1 && b.onclick.toString().includes('visaEng')) ||
+      (i === 1 && b.onclick.toString().includes('visaBudget'))
+    );
+  });
 }
+
+// ─── Init ───────────────────────────────────────────
+buildProgress();
+showStep(0);
 </script>
 </body>
 </html>
