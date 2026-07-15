@@ -11,13 +11,18 @@ const path = require('path');
 const ADMIN_CONFIG_PATH = path.join(__dirname, '..', 'data', 'admin.json');
 const TOKEN_EXPIRY_MS = 8 * 60 * 60 * 1000; // 8 hours
 
-// Default admin credentials (change in production!)
-const DEFAULT_ADMIN = {
-  username: 'admin',
-  // password: 'priority2026admin'
-  passwordHash: crypto.createHash('sha256').update('priority2026admin').digest('hex'),
-  createdAt: new Date().toISOString()
-};
+function getDefaultAdmin() {
+  const password = process.env.ADMIN_PASSWORD || crypto.randomUUID();
+  if (!process.env.ADMIN_PASSWORD) {
+    console.warn('[admin-auth] No ADMIN_PASSWORD env var set — using a one-time random password.');
+    console.warn('[admin-auth] Set ADMIN_PASSWORD in .env to persist your admin credentials.');
+  }
+  return {
+    username: process.env.ADMIN_USERNAME || 'admin',
+    passwordHash: crypto.createHash('sha256').update(password).digest('hex'),
+    createdAt: new Date().toISOString()
+  };
+}
 
 function loadConfig() {
   try {
@@ -41,10 +46,19 @@ function initAdmin() {
   let config = loadConfig();
   if (!config) {
     config = {
-      admin: DEFAULT_ADMIN,
+      admin: getDefaultAdmin(),
       tokens: {}
     };
     saveConfig(config);
+  }
+  // If ADMIN_PASSWORD env var is set, update the stored password hash
+  if (process.env.ADMIN_PASSWORD) {
+    const envHash = crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD).digest('hex');
+    if (config.admin.passwordHash !== envHash) {
+      config.admin.passwordHash = envHash;
+      if (process.env.ADMIN_USERNAME) config.admin.username = process.env.ADMIN_USERNAME;
+      saveConfig(config);
+    }
   }
   return config;
 }
