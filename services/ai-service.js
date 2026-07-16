@@ -65,17 +65,17 @@ function keywordFallback(query) {
 
   // Check for contact / consultation booking
   if (/\b(contact|consult|book|appointment|meet|call)\b/.test(q)) {
-    return "You can book a free consultation by filling out the contact form on our website, emailing us at info@prioritycitizenship.vu, or calling +678 12345. Our team typically responds within 24 hours. Our office hours are Monday to Friday 9AM–6PM (Vanuatu Time).";
+    return "You can book a free consultation by filling out the contact form on our website, emailing us at prioritycitizenship@gmail.com, or calling +678 7773595. Our team typically responds within 24 hours. Our office hours are Monday to Friday 9AM–6PM (Vanuatu Time).";
   }
 
   // Check for pricing
   if (/\b(price|cost|fee|pricing|how much|budget|payment)\b/.test(q)) {
-    return "Our pricing varies by program. The Vanuatu Citizenship by Investment program starts at USD 130,000 for a single applicant (government contribution). Other services have different fee structures. For a detailed breakdown tailored to your situation, please book a free consultation. Contact us at info@prioritycitizenship.vu for more information.";
+    return "Our pricing varies by program. The Vanuatu Citizenship by Investment program starts at USD 130,000 for a single applicant (government contribution). Other services have different fee structures. For a detailed breakdown tailored to your situation, please book a free consultation. Contact us at prioritycitizenship@gmail.com for more information.";
   }
 
   // Check for office hours / location
   if (/\b(office|address|location|where|hours|open|visit)\b/.test(q)) {
-    return "Our office is located in Port Vila, Vanuatu at Rue de la République, PO Box 1234. We are open Monday to Friday from 9:00 AM to 6:00 PM (Vanuatu Time), and Saturday from 10:00 AM to 2:00 PM. You can also reach us by phone at +678 12345 or email at info@prioritycitizenship.vu.";
+    return "Our office is located in Port Vila, Vanuatu, Pango Area. We are open Monday to Friday from 9:00 AM to 6:00 PM (Vanuatu Time), and Saturday from 10:00 AM to 2:00 PM. You can also reach us by phone or WhatsApp at +678 7773595 or email at prioritycitizenship@gmail.com.";
   }
 
   // Check for processing time
@@ -90,7 +90,7 @@ function keywordFallback(query) {
   }
 
   // Default
-  return "Thank you for your question. I'm not sure I have enough information to answer that specific query. For accurate and personalized assistance, please contact our team at info@prioritycitizenship.vu or call +678 12345. You can also fill out the consultation form on our website and we'll get back to you within 24 hours.";
+  return "Thank you for your question. I'm not sure I have enough information to answer that specific query. For accurate and personalized assistance, please contact our team at prioritycitizenship@gmail.com or call +678 7773595. You can also fill out the consultation form on our website and we'll get back to you within 24 hours.";
 }
 
 /**
@@ -144,7 +144,7 @@ async function generateResponse(messages) {
       }
 
       if (response.promptFeedback && response.promptFeedback.blockReason) {
-        return "I'm sorry, I couldn't process that request due to content safety guidelines. Please rephrase or contact our team at info@prioritycitizenship.vu.";
+        return "I'm sorry, I couldn't process that request due to content safety guidelines. Please rephrase or contact our team at prioritycitizenship@gmail.com.";
       }
 
       throw new Error('Unexpected Gemini response format');

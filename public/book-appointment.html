@@ -261,12 +261,12 @@ async function loadSlots() {
     const data = await res.json();
     availableSlots = Array.isArray(data) ? data : (data.slots || []);
     if (availableSlots.length === 0) {
-      document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">No available slots right now. Please check back later or email us at info@prioritycitizenship.vu.</p>';
+      document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">No available slots right now. Please check back later or email us at prioritycitizenship@gmail.com.</p>';
       return;
     }
     renderDateFilter();
   } catch (err) {
-    document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">Unable to load time slots. Please refresh the page or email info@prioritycitizenship.vu.</p>';
+    document.getElementById('slotGrid').innerHTML = '<p style="color:var(--gray-500);grid-column:1/-1;text-align:center;padding:20px;">Unable to load time slots. Please refresh the page or email prioritycitizenship@gmail.com.</p>';
   }
 }
 

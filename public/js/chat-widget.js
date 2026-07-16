@@ -147,11 +147,11 @@
         addMessage(data.reply, 'bot');
         messageHistory.push({ role: 'assistant', content: data.reply });
       } else {
-        addMessage('I apologize, but I encountered an issue. Please try again or contact our team at info@prioritycitizenship.vu.', 'bot');
+        addMessage('I apologize, but I encountered an issue. Please try again or contact our team at prioritycitizenship@gmail.com.', 'bot');
       }
     } catch (err) {
       hideTyping();
-      addMessage('I apologize, but I encountered a connection issue. Please try again or contact our team at info@prioritycitizenship.vu.', 'bot');
+      addMessage('I apologize, but I encountered a connection issue. Please try again or contact our team at prioritycitizenship@gmail.com.', 'bot');
     }
 
     isProcessing = false;
