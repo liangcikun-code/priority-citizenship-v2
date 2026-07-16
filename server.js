@@ -31,22 +31,19 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
 
 // Public Blog API (published posts only)
-app.get("/api/blog", (req, res) => {
-  const store = require("./services/data-store");
-  const posts = store.getPosts().filter(p => p.published);
-  res.json(posts.map(p => ({
-    id: p.id, title: p.title, slug: p.slug,
-    excerpt: p.excerpt, content: p.content,
-    category: p.category, author: p.author,
-    createdAt: p.createdAt, updatedAt: p.updatedAt
-  })));
-});
-
-app.get("/api/blog/:slug", (req, res) => {
-  const store = require("./services/data-store");
-  const post = store.getPosts().find(p => p.published && (p.slug === req.params.slug || p.id === req.params.slug));
-  if (!post) return res.status(404).json({ error: "Post not found" });
-  res.json(post);
+app.get("/api/blog", async (req, res) => {
+  try {
+    const store = require("./services/data-store");
+    const posts = await store.getPosts();
+    const published = posts.filter(p => p.published);
+    res.json(published.map(p => ({
+      id: p.id, title: p.title, slug: p.slug,
+      excerpt: p.excerpt, content: p.content,
+      category: p.category, author: p.author,
+      createdAt: p.created_at || p.createdAt,
+      updatedAt: p.updated_at || p.updatedAt
+    })));
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
 app.get("/api/health", (req, res) => {

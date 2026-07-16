@@ -1,7 +1,5 @@
 /**
- * Admin API Routes — Phase 3 Complete
- * Auth | Dashboard | CRM | Blog | Appointments | FAQ | Services | Company
- * Analytics | Export | Activity Log | Settings | Email
+ * Admin API Routes — Async Supabase edition
  */
 
 const express = require('express');
@@ -11,7 +9,7 @@ const store = require('../services/data-store');
 const kb = require('../services/knowledge-base');
 const email = require('../services/email-service');
 
-// ═══════════ Auth ════════════════════════════════════
+// ═══════ Auth ════════════════════════════════════
 
 router.post('/login', (req, res) => {
   const { username, password } = req.body;
@@ -30,67 +28,85 @@ router.get('/verify', requireAdmin, (req, res) => {
   res.json({ authenticated: true, user: req.adminUser });
 });
 
-// ═══════════ Dashboard & Analytics ═══════════════════
+// ═══════ Dashboard ═══════════════════════════════
 
-router.get('/stats', requireAdmin, (req, res) => {
-  res.json(store.getAnalyticsSummary());
+router.get('/stats', requireAdmin, async (req, res) => {
+  try { res.json(await store.getAnalyticsSummary()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ═══════════ CRM / Leads ═════════════════════════════
+// ═══════ CRM / Leads ═════════════════════════════
 
-router.get('/leads', requireAdmin, (req, res) => {
-  const { status, search, service, from } = req.query;
-  res.json(store.getLeads({ status, search, service, from }));
+router.get('/leads', requireAdmin, async (req, res) => {
+  try {
+    const { status, search, service, from } = req.query;
+    res.json(await store.getLeads({ status, search, service, from }));
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.post('/leads', requireAdmin, (req, res) => {
-  const lead = store.addLead(req.body);
-  email.notifyNewLead(lead).catch(() => {});
-  res.status(201).json(lead);
+router.post('/leads', requireAdmin, async (req, res) => {
+  try {
+    const lead = await store.addLead(req.body);
+    email.notifyNewLead(lead).catch(() => {});
+    res.status(201).json(lead);
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.put('/leads/:id', requireAdmin, (req, res) => {
-  const lead = store.updateLead(req.params.id, req.body);
-  lead ? res.json(lead) : res.status(404).json({ error: 'Lead not found' });
+router.put('/leads/:id', requireAdmin, async (req, res) => {
+  try {
+    const lead = await store.updateLead(req.params.id, req.body);
+    lead ? res.json(lead) : res.status(404).json({ error: 'Lead not found' });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.delete('/leads/:id', requireAdmin, (req, res) => {
-  store.deleteLead(req.params.id) ? res.json({ success: true })
-                                   : res.status(404).json({ error: 'Lead not found' });
+router.delete('/leads/:id', requireAdmin, async (req, res) => {
+  try {
+    await store.deleteLead(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(404).json({ error: e.message }); }
 });
 
-// ═══════════ Blog ════════════════════════════════════
+// ═══════ Blog ════════════════════════════════════
 
-router.get('/blog', requireAdmin, (req, res) => {
-  res.json(store.getPosts());
+router.get('/blog', requireAdmin, async (req, res) => {
+  try { res.json(await store.getPosts()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.post('/blog', requireAdmin, (req, res) => {
-  res.status(201).json(store.addPost(req.body));
+router.post('/blog', requireAdmin, async (req, res) => {
+  try { res.status(201).json(await store.addPost(req.body)); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.put('/blog/:id', requireAdmin, (req, res) => {
-  const p = store.updatePost(req.params.id, req.body);
-  p ? res.json(p) : res.status(404).json({ error: 'Post not found' });
+router.put('/blog/:id', requireAdmin, async (req, res) => {
+  try {
+    const p = await store.updatePost(req.params.id, req.body);
+    p ? res.json(p) : res.status(404).json({ error: 'Post not found' });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.delete('/blog/:id', requireAdmin, (req, res) => {
-  store.deletePost(req.params.id) ? res.json({ success: true })
-                                   : res.status(404).json({ error: 'Post not found' });
+router.delete('/blog/:id', requireAdmin, async (req, res) => {
+  try {
+    await store.deletePost(req.params.id);
+    res.json({ success: true });
+  } catch (e) { res.status(404).json({ error: e.message }); }
 });
 
-// ═══════════ Appointments ════════════════════════════
+// ═══════ Appointments ════════════════════════════
 
-router.get('/appointments', requireAdmin, (req, res) => {
-  res.json(store.getAppointments());
+router.get('/appointments', requireAdmin, async (req, res) => {
+  try { res.json(await store.getAppointments()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.put('/appointments/:id', requireAdmin, (req, res) => {
-  const a = store.updateAppointment(req.params.id, req.body);
-  a ? res.json(a) : res.status(404).json({ error: 'Not found' });
+router.put('/appointments/:id', requireAdmin, async (req, res) => {
+  try {
+    const a = await store.updateAppointment(req.params.id, req.body);
+    a ? res.json(a) : res.status(404).json({ error: 'Not found' });
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ═══════════ FAQ ═════════════════════════════════════
+// ═══════ FAQ ═════════════════════════════════════
 
 router.get('/faq', requireAdmin, (req, res) => {
   res.json((kb.load()).faq || []);
@@ -98,10 +114,11 @@ router.get('/faq', requireAdmin, (req, res) => {
 
 router.post('/faq', requireAdmin, (req, res) => {
   const data = kb.load();
-  const f = { q: req.body.q, a: req.body.a };
-  data.faq.push(f); kb.save(data);
-  store.logActivity('faq_added', `FAQ: ${f.q}`, f.q);
-  res.status(201).json(f);
+  data.faq.push({ q: req.body.q, a: req.body.a });
+  kb.save(data);
+  const faq = data.faq[data.faq.length - 1];
+  store.logActivity('faq_added', `FAQ: ${faq.q}`, faq.q);
+  res.status(201).json(faq);
 });
 
 router.put('/faq/:index', requireAdmin, (req, res) => {
@@ -119,11 +136,12 @@ router.delete('/faq/:index', requireAdmin, (req, res) => {
   const idx = parseInt(req.params.index);
   if (isNaN(idx) || idx < 0 || idx >= data.faq.length)
     return res.status(404).json({ error: 'FAQ not found' });
-  data.faq.splice(idx, 1); kb.save(data);
+  data.faq.splice(idx, 1);
+  kb.save(data);
   res.json({ success: true });
 });
 
-// ═══════════ Services ════════════════════════════════
+// ═══════ Services ════════════════════════════════
 
 router.get('/services', requireAdmin, (req, res) => {
   res.json((kb.load()).services || []);
@@ -137,7 +155,7 @@ router.put('/services/:id', requireAdmin, (req, res) => {
   res.json(svc);
 });
 
-// ═══════════ Company Info ════════════════════════════
+// ═══════ Company ═════════════════════════════════
 
 router.get('/company', requireAdmin, (req, res) => {
   res.json((kb.load()).company || {});
@@ -150,40 +168,43 @@ router.put('/company', requireAdmin, (req, res) => {
   res.json(data.company);
 });
 
-// ═══════════ Activity Log ════════════════════════════
+// ═══════ Activity ════════════════════════════════
 
-router.get('/activity', requireAdmin, (req, res) => {
-  const limit = parseInt(req.query.limit) || 50;
-  res.json(store.getActivity(limit));
+router.get('/activity', requireAdmin, async (req, res) => {
+  try { res.json(await store.getActivity(parseInt(req.query.limit) || 50)); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ═══════════ Export ══════════════════════════════════
+// ═══════ Export ══════════════════════════════════
 
-router.get('/export/:type', requireAdmin, (req, res) => {
-  const csv = store.exportCSV(req.params.type);
-  if (!csv) return res.status(400).json({ error: `Unknown export type: ${req.params.type}` });
-  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
-  res.setHeader('Content-Disposition', `attachment; filename="${req.params.type}-${new Date().toISOString().slice(0,10)}.csv"`);
-  res.send(csv);
+router.get('/export/:type', requireAdmin, async (req, res) => {
+  try {
+    const csv = await store.exportCSV(req.params.type);
+    if (!csv) return res.status(400).json({ error: `Unknown type: ${req.params.type}` });
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${req.params.type}-${new Date().toISOString().slice(0,10)}.csv"`);
+    res.send(csv);
+  } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ═══════════ Settings ════════════════════════════════
+// ═══════ Settings ════════════════════════════════
 
-router.get('/settings', requireAdmin, (req, res) => {
-  res.json(store.getSettings());
+router.get('/settings', requireAdmin, async (req, res) => {
+  try { res.json(await store.getSettings()); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-router.put('/settings', requireAdmin, (req, res) => {
-  res.json(store.updateSettings(req.body));
+router.put('/settings', requireAdmin, async (req, res) => {
+  try { res.json(await store.updateSettings(req.body)); }
+  catch (e) { res.status(500).json({ error: e.message }); }
 });
 
-// ═══════════ Email ═══════════════════════════════════
+// ═══════ Email ═══════════════════════════════════
 
 router.post('/send-email', requireAdmin, async (req, res) => {
   const { to, subject, html } = req.body;
   if (!to || !subject) return res.status(400).json({ error: 'to and subject required' });
-  const result = await email.sendEmail({ to, subject, html: html || '<p>Test email</p>' });
-  res.json(result);
+  res.json(await email.sendEmail({ to, subject, html: html || '<p>Test</p>' }));
 });
 
 module.exports = router;

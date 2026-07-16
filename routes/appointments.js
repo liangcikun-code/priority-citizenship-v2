@@ -57,7 +57,7 @@ router.get('/slots', (req, res) => {
 });
 
 // POST /api/appointments/book - Book an appointment
-router.post('/book', (req, res) => {
+router.post('/book', async (req, res) => {
   try {
     const { slotId, name, email, phone, service, message } = req.body;
 
@@ -73,18 +73,16 @@ router.post('/book', (req, res) => {
     bookedSlots.add(slotId);
 
     // Persist to data store
-    const appointment = store.addAppointment({
+      const appointment = await store.addAppointment({
       slotId,
       name,
       email,
       phone: phone || '',
       service: service || 'general',
       message: message || '',
-      slotLabel: '', // Will be resolved by admin panel
+      slotLabel: '',
       status: 'confirmed'
     });
-
-    // In production: send confirmation email, create Google Calendar event, notify sales team
 
     res.json({
       success: true,
@@ -101,8 +99,8 @@ router.post('/book', (req, res) => {
 });
 
 // GET /api/appointments/check/:id - Check appointment status
-router.get('/check/:id', (req, res) => {
-  const appts = store.getAppointments();
+router.get('/check/:id', async (req, res) => {
+  const appts = await store.getAppointments();
   const appt = appts.find(a => a.id === req.params.id);
   if (!appt) return res.status(404).json({ error: 'Appointment not found' });
   res.json({ status: appt.status, date: appt.createdAt });
