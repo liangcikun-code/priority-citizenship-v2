@@ -3,454 +3,253 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Eligibility Assessment — Priority Citizenship Limited</title>
-<meta name="description" content="Check your eligibility for Vanuatu immigration programs. AI-powered pre-assessment in 5 steps.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<title>Eligibility Assessment — Priority Citizenship</title>
+<meta name="description" content="Check your eligibility for Vanuatu immigration. Personalized score, breakdown, and recommendations.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/app.css">
 <style>
-  :root {
-    --navy: #0a1628; --gold: #c9a84c; --gold-light: #e4c86a; --gold-dark: #a8892e;
-    --success: #059669; --success-light: #d1fae5; --warning: #d97706; --warning-light: #fef3c7;
-    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db;
-    --gray-400: #9ca3af; --gray-500: #6b7280; --gray-700: #374151; --gray-900: #111827;
-    --radius: 12px;
-  }
+:root {
+  --navy:#0a1628; --gold:#c9a84c; --gold-light:#e4c86a; --gold-dark:#a8892e;
+  --success:#059669; --success-light:#d1fae5; --warning:#d97706; --warning-light:#fef3c7;
+  --danger:#dc2626; --danger-light:#fee2e2;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db;
+  --gray-500:#6b7280; --gray-700:#374151;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy)0%,#0d1f3c100%);color:var(--gray-700);min-height:100vh;-webkit-font-smoothing:antialiased}
+.back-link{position:fixed;top:24px;left:24px;z-index:10;display:flex;align-items:center;gap:6px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.85rem;transition:color 0.2s}
+.back-link:hover{color:var(--gold)}.back-link svg{width:16px;height:16px}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+.hero{padding:80px 0 40px;text-align:center;color:#fff}
+.hero .badge{display:inline-block;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--gold-light);margin-bottom:16px}
+.hero h1{font-size:2.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
+.hero h1 span{color:var(--gold)}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:520px;margin:0 auto}
 
-  .site-link {
-    position: fixed; top: 24px; left: 24px; z-index: 100;
-    display: inline-flex; align-items: center; gap: 8px;
-    color: rgba(255,255,255,0.65); font-size: 0.875rem; font-weight: 500;
-    text-decoration: none; transition: color 0.2s;
-    background: rgba(255,255,255,0.06); padding: 8px 16px; border-radius: 100px;
-    backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08);
-  }
-  .site-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
-  .site-link svg { width: 16px; height: 16px; }
+.wizard-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
+.wizard-progress{display:flex;gap:8px;align-items:center;margin-bottom:24px}
+.wizard-dot{width:12px;height:12px;border-radius:50%;background:var(--gray-200);transition:all 0.3s}
+.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:14px;height:14px}
+.wizard-dot.done{background:var(--success)}
+.step-label{font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.question-label{display:block;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:24px}
+.question-hint{font-size:0.85rem;color:var(--gray-500);margin-top:-16px;margin-bottom:20px;font-weight:400}
 
-  .tools-page {
-    background: linear-gradient(135deg, var(--navy) 0%, #0d1f3c 50%, #13213e 100%);
-    min-height: 100vh; padding: 100px 24px 80px;
-    position: relative; overflow: hidden;
-  }
-  .tools-page::before {
-    content: ''; position: absolute; top: -30%; right: -15%;
-    width: 600px; height: 600px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .tools-page .container { max-width: 780px; margin: 0 auto; position: relative; z-index: 1; }
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.option-btn{display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;background:#fff;font-family:inherit;font-size:0.95rem;color:var(--gray-700);cursor:pointer;transition:all 0.2s;text-align:left}
+.option-btn:hover{border-color:var(--gold);background:rgba(201,168,76,0.03)}
+.option-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
+.option-btn .icon{width:20px;height:20px;border-radius:50%;border:2px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent}
+.option-btn.selected .icon{border-color:var(--gold);background:var(--gold);color:#fff}
 
-  .tools-card {
-    background: #fff; border-radius: 20px; padding: 48px 44px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.08);
-  }
+.range-input{width:100%;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;font-family:inherit;font-size:1rem;transition:border-color 0.2s;margin-bottom:24px}
+.range-input:focus{outline:none;border-color:var(--gold)}
 
-  .tools-header { text-align: center; margin-bottom: 40px; }
-  .tools-header .icon-circle {
-    width: 56px; height: 56px; margin: 0 auto 20px;
-    background: linear-gradient(135deg, rgba(5,150,105,0.12), rgba(5,150,105,0.06));
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  }
-  .tools-header .icon-circle svg { color: var(--success); }
-  .tools-header h1 { font-size: 1.85rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; letter-spacing: -0.02em; }
-  .tools-header p { color: var(--gray-500); font-size: 0.95rem; line-height: 1.6; max-width: 480px; margin: 0 auto; }
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px}
+.btn{padding:12px 28px;border-radius:10px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--gold);color:var(--navy)}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;color:var(--gray-500);border:2px solid var(--gray-200)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-dark)}
 
-  /* Progress bar */
-  .progress-wrapper { margin-bottom: 36px; }
-  .progress-steps { display: flex; justify-content: space-between; margin-bottom: 10px; }
-  .progress-step-label {
-    font-size: 0.7rem; font-weight: 600; color: var(--gray-300);
-    text-transform: uppercase; letter-spacing: 0.04em; transition: color 0.3s; text-align: center; flex: 1;
-  }
-  .progress-step-label.active { color: var(--success); }
-  .progress-step-label.done { color: var(--success); }
-  .progress-bar-track { display: flex; gap: 4px; height: 6px; border-radius: 3px; overflow: hidden; background: var(--gray-100); }
-  .progress-bar-segment { flex: 1; background: var(--gray-200); transition: background 0.4s ease; border-radius: 3px; }
-  .progress-bar-segment.done { background: var(--success); }
-  .progress-bar-segment.active { background: var(--success); opacity: 0.6; }
+/* Results */
+.results{padding:60px 0 80px}
+.results .container{max-width:700px;margin:0 auto;padding:0 20px}
+.results-header{text-align:center;margin-bottom:40px}
+.results-header h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px}
+.results-header p{color:rgba(255,255,255,0.6);font-size:1rem}
 
-  .step-counter { font-size: 0.8rem; font-weight: 500; color: var(--gray-400); margin-bottom: 12px; letter-spacing: 0.02em; }
+.score-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);text-align:center;margin-bottom:24px}
+.score-ring{width:160px;height:160px;margin:0 auto 20px;position:relative}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring .value-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-ring .value-num .num{font-size:2.8rem;font-weight:800;color:var(--navy);line-height:1}
+.score-ring .value-num .txt{font-size:0.85rem;color:var(--gray-500);font-weight:500}
+.score-tier{display:inline-block;padding:6px 20px;border-radius:100px;font-size:0.9rem;font-weight:700;margin-top:8px}
+.score-summary{font-size:1rem;color:var(--gray-700);max-width:480px;margin:12px auto 0;line-height:1.6}
 
-  .question-label { font-size: 1.2rem; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: block; line-height: 1.3; }
-  .question-hint { font-size: 0.85rem; color: var(--gray-400); font-weight: 400; margin-top: 4px; display: block; }
+.breakdown{background:#fff;border-radius:20px;padding:32px 40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
+.breakdown h3{font-size:1.1rem;color:var(--navy);margin-bottom:20px}
+.b-item{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+.b-item:last-child{margin-bottom:0}
+.b-label{width:130px;font-size:0.85rem;font-weight:600;color:var(--gray-700);flex-shrink:0}
+.b-bar{flex:1;height:10px;background:var(--gray-100);border-radius:5px;overflow:hidden}
+.b-fill{height:100%;border-radius:5px;transition:width 1s ease}
+.b-val{width:44px;text-align:right;font-size:0.85rem;font-weight:700;color:var(--navy);flex-shrink:0}
 
-  .range-input {
-    width: 100%; padding: 14px 18px; border: 2px solid var(--gray-200);
-    border-radius: var(--radius); font-family: inherit; font-size: 1.05rem;
-    color: var(--gray-900); transition: all 0.25s; background: var(--gray-50);
-  }
-  .range-input:focus { outline: none; border-color: var(--success); box-shadow: 0 0 0 4px rgba(5,150,105,0.08); background: #fff; }
+.rec-cards{display:grid;gap:16px;margin-bottom:20px}
+.rec-card{background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 16px rgba(0,0,0,0.06);border-left:4px solid var(--gold);transition:all 0.2s}
+.rec-card:hover{box-shadow:0 4px 24px rgba(0,0,0,0.1)}
+.rec-card h4{font-size:1.05rem;color:var(--navy);margin-bottom:8px}
+.rec-card p{color:var(--gray-500);font-size:0.9rem;line-height:1.6;margin-bottom:16px}
+.rec-card .tag{display:inline-block;padding:3px 10px;border-radius:100px;font-size:0.73rem;font-weight:600;background:rgba(201,168,76,0.1);color:var(--gold-dark);margin-bottom:10px}
+.rec-actions{display:flex;gap:10px;flex-wrap:wrap}
 
-  .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 28px; }
-  .option-btn {
-    padding: 15px 18px; border: 2px solid var(--gray-200); border-radius: var(--radius);
-    background: #fff; font-family: inherit; font-size: 0.93rem; color: var(--gray-700);
-    cursor: pointer; transition: all 0.2s ease; text-align: left;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .option-btn::before {
-    content: ''; width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--gray-300);
-    flex-shrink: 0; transition: all 0.2s;
-  }
-  .option-btn:hover { border-color: var(--success); background: rgba(5,150,105,0.02); }
-  .option-btn.selected {
-    border-color: var(--success); background: rgba(5,150,105,0.05);
-    color: var(--navy); font-weight: 600; box-shadow: 0 0 0 4px rgba(5,150,105,0.06);
-  }
-  .option-btn.selected::before { border-color: var(--success); background: var(--success); box-shadow: inset 0 0 0 3px #fff; }
+.legend{text-align:center;padding:24px;color:rgba(255,255,255,0.4);font-size:0.8rem}
+.hidden{display:none !important}
+.container{padding:0 20px}
 
-  .wizard-nav { display: flex; justify-content: space-between; margin-top: 28px; gap: 12px; align-items: center; }
-
-  .btn {
-    display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px;
-    font-family: inherit; font-size: 0.95rem; font-weight: 600; border: none;
-    border-radius: 10px; cursor: pointer; transition: all 0.25s; letter-spacing: 0.01em;
-  }
-  .btn-primary { background: var(--gold); color: var(--navy); }
-  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(201,168,76,0.3); }
-  .btn-outline { background: transparent; color: var(--gray-700); border: 2px solid var(--gray-200); }
-  .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
-  .btn-success { background: var(--success); color: #fff; }
-  .btn-success:hover { background: #047857; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(5,150,105,0.3); }
-
-  .wizard-step { animation: fadeSlideIn 0.35s ease; }
-  .wizard-step.hidden { display: none; }
-  @keyframes fadeSlideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Results */
-  .result-hero { text-align: center; padding: 30px 0; animation: fadeSlideIn 0.5s ease; }
-
-  .score-gauge {
-    width: 180px; height: 180px; margin: 0 auto 16px; position: relative;
-  }
-  .score-gauge svg { transform: rotate(-90deg); }
-  .score-gauge .bg { fill: none; stroke: var(--gray-100); stroke-width: 10; }
-  .score-gauge .fill { fill: none; stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 1.2s ease; }
-  .score-gauge .fill.high { stroke: var(--success); }
-  .score-gauge .fill.moderate { stroke: var(--gold); }
-  .score-gauge .fill.fair { stroke: var(--warning); }
-  .score-gauge .fill.exploratory { stroke: var(--gray-400); }
-  .score-gauge .gauge-text {
-    position: absolute; inset: 0; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-  }
-  .score-gauge .gauge-value { font-size: 3rem; font-weight: 800; color: var(--navy); line-height: 1; }
-  .score-gauge .gauge-label { font-size: 0.8rem; color: var(--gray-400); margin-top: 2px; }
-
-  .result-level-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 20px; border-radius: 100px; font-size: 0.9rem; font-weight: 700; margin-bottom: 16px;
-  }
-  .result-level-badge.high { background: var(--success-light); color: var(--success); }
-  .result-level-badge.moderate { background: rgba(201,168,76,0.12); color: var(--gold-dark); }
-  .result-level-badge.fair { background: var(--warning-light); color: var(--warning); }
-  .result-level-badge.exploratory { background: var(--gray-100); color: var(--gray-500); }
-
-  .result-summary-text { color: var(--gray-700); font-size: 1rem; line-height: 1.7; margin-bottom: 24px; }
-
-  .breakdown-card {
-    background: var(--gray-50); border-radius: var(--radius); padding: 24px;
-    margin-bottom: 24px;
-  }
-  .breakdown-card h4 { font-size: 0.9rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .breakdown-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--gray-200); }
-  .breakdown-item:last-child { border-bottom: none; }
-  .breakdown-item .label { font-size: 0.9rem; color: var(--gray-700); }
-  .breakdown-item .pts { font-weight: 700; font-size: 0.9rem; color: var(--success); }
-
-  .rec-card {
-    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
-    background: rgba(5,150,105,0.04); border: 1px solid rgba(5,150,105,0.1);
-    border-radius: 10px; margin-bottom: 8px; font-weight: 600; color: var(--navy);
-  }
-  .rec-card svg { color: var(--success); flex-shrink: 0; }
-
-  .result-actions { display: flex; gap: 12px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
-
-  @media (max-width: 640px) {
-    .tools-card { padding: 28px 20px; border-radius: 16px; }
-    .tools-header h1 { font-size: 1.5rem; }
-    .option-grid { grid-template-columns: 1fr; }
-    .tools-page { padding: 80px 16px 60px; }
-    .progress-step-label { font-size: 0.62rem; }
-    .score-gauge { width: 140px; height: 140px; }
-    .score-gauge .gauge-value { font-size: 2.4rem; }
-  }
+@media(max-width:600px){
+  .hero h1{font-size:1.6rem}.wizard-card{padding:24px;margin:0 10px 40px}.option-grid{grid-template-columns:1fr}
+  .score-card,.breakdown{padding:24px}.b-label{width:90px;font-size:0.75rem}
+}
 </style>
 </head>
 <body>
 
-<a href="/" class="site-link">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-  Back to Home
-</a>
+<a href="/" class="back-link">&#8592; Back to Home</a>
 
-<div class="tools-page">
-  <div class="container">
-    <div class="tools-card">
-      <div class="tools-header">
-        <div class="icon-circle">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
-        <h1>Eligibility Pre-Assessment</h1>
-        <p>Answer 5 quick questions to see how you score for Vanuatu immigration programs and get personalized recommendations.</p>
-      </div>
+<!-- Wizard -->
+<div id="wizardView">
+  <div class="hero"><div class="container">
+    <div class="badge">&#9670; AI-Powered Assessment</div>
+    <h1>Eligibility <span>Check</span></h1>
+    <p>5 quick questions. Instant score, category breakdown, and tailored program recommendations.</p>
+  </div></div>
+  <div class="container"><div class="wizard-card" id="wizardCard"></div></div>
+</div>
 
-      <!-- Wizard -->
-      <div id="assessWizard">
-        <div class="progress-wrapper">
-          <div class="progress-steps" id="progressLabels"></div>
-          <div class="progress-bar-track" id="progressBar"></div>
-        </div>
-
-        <div class="wizard-step" id="aStep0">
-          <div class="step-counter">Step 1 of 5 &middot; Personal</div>
-          <span class="question-label">How old are you?<span class="question-hint">Vanuatu programs welcome applicants 18–65+.</span></span>
-          <input type="number" class="range-input" id="assessAge" placeholder="Enter your age" min="18" max="120" value="35">
-          <div class="wizard-nav"><div></div><button class="btn btn-success" onclick="aNext(0)">Next Step <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button></div>
-        </div>
-
-        <div class="wizard-step hidden" id="aStep1">
-          <div class="step-counter">Step 2 of 5 &middot; Education</div>
-          <span class="question-label">Highest education qualification?<span class="question-hint">Higher education strengthens your application profile.</span></span>
-          <div class="option-grid">
-            <button class="option-btn" onclick="aSelect('assessEdu', 'phd', this)">PhD / Doctorate</button>
-            <button class="option-btn selected" onclick="aSelect('assessEdu', 'master', this)">Master's Degree</button>
-            <button class="option-btn" onclick="aSelect('assessEdu', 'bachelor', this)">Bachelor's Degree</button>
-            <button class="option-btn" onclick="aSelect('assessEdu', 'diploma', this)">Diploma</button>
-            <button class="option-btn" onclick="aSelect('assessEdu', 'highschool', this)">High School</button>
-            <button class="option-btn" onclick="aSelect('assessEdu', 'other', this)">Other</button>
-          </div>
-          <div class="wizard-nav">
-            <button class="btn btn-outline" onclick="aPrev(1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-            <button class="btn btn-success" onclick="aNext(1)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-          </div>
-        </div>
-
-        <div class="wizard-step hidden" id="aStep2">
-          <div class="step-counter">Step 3 of 5 &middot; Experience</div>
-          <span class="question-label">Years of professional experience?<span class="question-hint">More experience opens up business & investor pathways.</span></span>
-          <input type="number" class="range-input" id="assessExp" placeholder="Years of experience" min="0" max="50" value="5">
-          <div class="wizard-nav">
-            <button class="btn btn-outline" onclick="aPrev(2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-            <button class="btn btn-success" onclick="aNext(2)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
-          </div>
-        </div>
-
-        <div class="wizard-step hidden" id="aStep3">
-          <div class="step-counter">Step 4 of 5 &middot; Language</div>
-          <span class="question-label">English proficiency level?<span class="question-hint">No minimum required, but it helps with business programs.</span></span>
-          <div class="option-grid">
-            <button class="option-btn" onclick="aSelect('assessEng', 'native', this)">Native</button>
-            <button class="option-btn selected" onclick="aSelect('assessEng', 'fluent', this)">Fluent</button>
-            <button class="option-btn" onclick="aSelect('assessEng', 'intermediate', this)">Intermediate</button>
-            <button class="option-btn" onclick="aSelect('assessEng', 'basic', this)">Basic</button>
-            <button class="option-btn" onclick="aSelect('assessEng', 'none', this)">None / Limited</button>
-          </div>
-          <div class="wizard-nav">
-            <button class="btn btn-outline" onclick="aPrev(3)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-            <button class="btn btn-success" onclick="aNext(3)">Next <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 5"/></svg></button>
-          </div>
-        </div>
-
-        <div class="wizard-step hidden" id="aStep4">
-          <div class="step-counter">Step 5 of 5 &middot; Budget</div>
-          <span class="question-label">What's your estimated budget (USD)?<span class="question-hint">Determines which program tiers you qualify for.</span></span>
-          <div class="option-grid">
-            <button class="option-btn" onclick="aSelect('assessBudget', '150000', this)">Over $150,000</button>
-            <button class="option-btn selected" onclick="aSelect('assessBudget', '130000', this)">$100,000 – $150,000</button>
-            <button class="option-btn" onclick="aSelect('assessBudget', '50000', this)">$50,000 – $100,000</button>
-            <button class="option-btn" onclick="aSelect('assessBudget', '10000', this)">$10,000 – $50,000</button>
-            <button class="option-btn" onclick="aSelect('assessBudget', '0', this)">Under $10,000</button>
-          </div>
-          <div class="wizard-nav">
-            <button class="btn btn-outline" onclick="aPrev(4)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>
-            <button class="btn btn-success" onclick="runAssessment()">Calculate My Score <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>
-          </div>
-        </div>
-      </div>
-
-      <div id="assessResults" style="display:none;"></div>
-    </div>
-  </div>
+<!-- Results -->
+<div id="resultsView" class="results hidden">
+  <div class="results-header"><div class="container">
+    <h2>Your Immigration <span style="color:var(--gold)">Profile</span></h2>
+    <p>Score breakdown based on your answers. All calculations are done locally — no data leaves your browser.</p>
+  </div></div>
+  <div class="container" id="resultsContent"></div>
+  <div class="legend">&#9432; This pre-assessment is indicative only. A licensed advisor provides definitive eligibility evaluation during your free consultation.</div>
 </div>
 
 <script>
-const STEPS = ['Profile', 'Education', 'Experience', 'Language', 'Budget'];
-const assessData = { age: '35', education: 'master', workExperience: '5', englishProficiency: 'fluent', budget: '130000' };
-let aStep = 0;
+let step = 0, totalSteps = 6;
+let answers = { age:35, education:'bachelor', workExperience:5, englishProficiency:'intermediate', budget:100000 };
+const steps = [
+  { key:'age', title:'What is your age?', hint:'Applicants 25–55 typically score highest. All ages are welcome to apply.', type:'number', min:18, max:120, default:35 },
+  { key:'education', title:'Highest education level?', type:'options', options:[
+    {id:'phd',label:'PhD / Doctorate'},{id:'master',label:"Master's Degree"},{id:'bachelor',label:"Bachelor's Degree"},
+    {id:'diploma',label:'Diploma / Associate'},{id:'highschool',label:'High School'},{id:'other',label:'Other'}
+  ]},
+  { key:'workExperience', title:'Years of professional experience?', hint:'Includes employment, business ownership, and freelancing.', type:'number', min:0, max:50, default:5 },
+  { key:'englishProficiency', title:'English language proficiency?', hint:'Vanuatu has no language test — this helps us recommend the right program.', type:'options', options:[
+    {id:'native',label:'Native'},{id:'fluent',label:'Fluent'},{id:'intermediate',label:'Intermediate'},{id:'basic',label:'Basic'},{id:'none',label:'Limited / None'}
+  ]},
+  { key:'budget', title:'Estimated investment budget (USD)?', hint:'Different programs require different investment levels.', type:'range', options:[
+    {id:150000,label:'$150,000+'},{id:100000,label:'$100,000–$150,000'},{id:50000,label:'$50,000–$100,000'},
+    {id:20000,label:'$20,000–$50,000'},{id:10000,label:'Under $20,000'}
+  ]},
+  { key:'review', title:'Review Your Profile', type:'review' }
+];
 
-// Build progress UI
-(function init() {
-  document.getElementById('progressLabels').innerHTML = STEPS.map((s, i) =>
-    `<span class="progress-step-label" id="alabel${i}">${s}</span>`
-  ).join('');
-  document.getElementById('progressBar').innerHTML = STEPS.map((_, i) =>
-    `<div class="progress-bar-segment" id="aseg${i}"></div>`
-  ).join('');
-  updateAProgress(0);
-})();
+function render() {
+  const s = steps[step];
+  let h = `<div class="wizard-progress">${steps.map((_,i)=>`<div class="wizard-dot ${i<step?'done':''} ${i===step?'active':''}"></div>`).join('')}</div>`;
+  h += `<div class="step-label">Step ${step+1} of ${totalSteps}</div>`;
+  h += `<div class="question-label">${s.title}</div>`;
+  if (s.hint) h += `<div class="question-hint">${s.hint}</div>`;
 
-function updateAProgress(step) {
-  for (let i = 0; i < STEPS.length; i++) {
-    const label = document.getElementById('alabel' + i);
-    const seg = document.getElementById('aseg' + i);
-    label.className = 'progress-step-label';
-    seg.className = 'progress-bar-segment';
-    if (i < step) { label.classList.add('done'); seg.classList.add('done'); }
-    if (i === step) { label.classList.add('active'); seg.classList.add('active'); }
+  if (s.type==='number') {
+    h += `<input type="number" class="range-input" id="fieldVal" value="${answers[s.key]||s.default}" min="${s.min||0}" max="${s.max||120}">`;
+  } else if (s.type==='options') {
+    h += `<div class="option-grid">${s.options.map(o=>{
+      const sel = answers[s.key]===o.id;
+      return `<button class="option-btn${sel?' selected':''}" onclick="pick('${s.key}','${o.id}',this)"><span class="icon">${sel?'✓':''}</span>${o.label}</button>`;
+    }).join('')}</div>`;
+  } else if (s.type==='range') {
+    h += `<div class="option-grid">${s.options.map(o=>{
+      const sel = answers[s.key]===o.id;
+      return `<button class="option-btn${sel?' selected':''}" onclick="pickNum('${s.key}',${o.id},this)"><span class="icon">${sel?'✓':''}</span>${o.label}</button>`;
+    }).join('')}</div>`;
+  } else {
+    const labels = {age:'Age',education:'Education',workExperience:'Work Experience',englishProficiency:'English',budget:'Budget'};
+    const fmt = (k,v) => {
+      if (k==='education') return ({phd:'PhD',master:"Master's",bachelor:"Bachelor's",diploma:'Diploma',highschool:'High School',other:'Other'})[v]||v;
+      if (k==='englishProficiency') return ({native:'Native',fluent:'Fluent',intermediate:'Intermediate',basic:'Basic',none:'Limited'})[v]||v;
+      if (k==='budget') return '$'+Number(v).toLocaleString();
+      if (k==='workExperience') return v+' years';
+      return v;
+    };
+    h += `<div style="background:var(--gray-50);border-radius:12px;padding:24px;margin-bottom:20px">${Object.entries(labels).map(([k,l])=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--gray-200)"><span style="color:var(--gray-500)">${l}</span><strong style="color:var(--navy)">${fmt(k,answers[k])}</strong></div>`).join('')}</div>`;
   }
+
+  h += `<div class="wizard-nav">${step>0?`<button class="btn btn-outline" onclick="prev()">&#8592; Back</button>`:`<div></div>`}<button class="btn btn-primary" onclick="next()">${step===totalSteps-1?'Calculate My Score →':'Next →'}</button></div>`;
+  document.getElementById('wizardCard').innerHTML = h;
 }
 
-function aShowStep(i) {
-  aStep = i;
-  document.querySelectorAll('#assessWizard .wizard-step').forEach((el, idx) => el.classList.toggle('hidden', idx !== i));
-  updateAProgress(i);
+function pick(key,val,btn) {
+  answers[key] = val;
+  btn.parentElement.querySelectorAll('.option-btn').forEach(b=>{b.classList.remove('selected');b.querySelector('.icon').textContent='';});
+  btn.classList.add('selected');btn.querySelector('.icon').textContent='✓';
 }
 
-function aNext(i) {
-  const el = document.getElementById('assessAge');
-  if (el) assessData.age = el.value;
-  const el2 = document.getElementById('assessExp');
-  if (el2) assessData.workExperience = el2.value;
-  if (i < 4) aShowStep(i + 1);
+function pickNum(key,val,btn) {
+  answers[key] = val;
+  btn.parentElement.querySelectorAll('.option-btn').forEach(b=>{b.classList.remove('selected');b.querySelector('.icon').textContent='';});
+  btn.classList.add('selected');btn.querySelector('.icon').textContent='✓';
 }
 
-function aPrev(i) { if (i > 0) aShowStep(i - 1); }
-
-function aSelect(field, value, btn) {
-  const key = field.replace('assess', '').toLowerCase();
-  assessData[key === 'eng' ? 'englishProficiency' : key === 'budget' ? 'budget' : key === 'edu' ? 'education' : key] = value;
-  btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
+function next() {
+  if (steps[step].type==='number') { const v=document.getElementById('fieldVal'); if(v) answers[steps[step].key]=parseInt(v.value)||steps[step].default; }
+  if (step<totalSteps-1) { step++; render(); } else showResults();
 }
+function prev() { if (step>0) { step--; render(); } }
 
-async function runAssessment() {
-  assessData.age = document.getElementById('assessAge').value;
-  assessData.workExperience = document.getElementById('assessExp').value;
+function showResults() {
+  document.getElementById('wizardView').classList.add('hidden');
+  document.getElementById('resultsView').classList.remove('hidden');
+  const r = calc(answers);
+  const circ = 2*Math.PI*60;
+  const sc = r.score;
+  const col = sc>=70?'var(--success)':sc>=50?'#2563eb':sc>=30?'var(--warning)':'var(--danger)';
+  const tierCls = ['','tier-strong','tier-good','tier-fair','tier-low'][sc>=70?1:sc>=50?2:sc>=30?3:4];
 
-  const btn = document.querySelector('#aStep4 .btn-success');
-  btn.disabled = true;
-  btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"><animate attributeName="stroke-dashoffset" values="32;0" dur="0.8s" repeatCount="indefinite"/></circle></svg> Analyzing...';
+  let h = `<div class="score-card">
+    <div class="score-ring"><svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="60" fill="none" stroke="var(--gray-100)" stroke-width="12"/><circle cx="80" cy="80" r="60" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" id="scoreArc"/></svg><div class="value-num"><div class="num">${sc}</div><div class="txt">out of 100</div></div></div>
+    <div class="score-tier ${tierCls}" style="background:${sc>=70?'var(--success-light)':sc>=50?'#dbeafe':sc>=30?'var(--warning-light)':'var(--danger-light)'};color:${col}">${r.tier}</div>
+    <p class="score-summary">${r.summary}</p></div>`;
 
-  try {
-    const res = await fetch('/api/recommend/assess', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(assessData)
-    });
-    const data = await res.json();
-
-    document.getElementById('assessWizard').style.display = 'none';
-    renderResults(data);
-  } catch (err) {
-    alert('Assessment failed. Please try again.');
-    btn.disabled = false;
-    btn.innerHTML = 'Calculate My Score <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  }
-}
-
-function renderResults(data) {
-  const levelLabels = { high: 'Strong Candidate', moderate: 'Good Candidate', fair: 'Fair Candidate', exploratory: 'Exploratory' };
-  const levelColors = { high: 'high', moderate: 'moderate', fair: 'fair', exploratory: 'exploratory' };
-  const gaugeColor = levelColors[data.level] || 'exploratory';
-  const circumference = 2 * Math.PI * 72;
-  const offset = circumference - (data.score / 100) * circumference;
-  const detailsMap = { age: 'Age', education: 'Education', workExperience: 'Work Experience', english: 'English Proficiency', budget: 'Budget' };
-
-  const container = document.getElementById('assessResults');
-  container.innerHTML = `
-    <div class="result-hero">
-      <div class="score-gauge">
-        <svg width="180" height="180" viewBox="0 0 180 180">
-          <circle class="bg" cx="90" cy="90" r="72"/>
-          <circle class="fill ${gaugeColor}" cx="90" cy="90" r="72"
-            stroke-dasharray="${circumference}" stroke-dashoffset="${circumference}" id="gaugeRing"/>
-        </svg>
-        <div class="gauge-text">
-          <span class="gauge-value" id="gaugeVal">0</span>
-          <span class="gauge-label">Eligibility Score</span>
-        </div>
-      </div>
-      <div class="result-level-badge ${gaugeColor}">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        ${levelLabels[data.level] || data.level}
-      </div>
-      <p class="result-summary-text">${data.summary}</p>
-    </div>
-
-    <div class="breakdown-card">
-      <h4>Score Breakdown</h4>
-      ${Object.entries(data.details).map(([key, val]) => `
-        <div class="breakdown-item">
-          <span class="label">${val.message}</span>
-          <span class="pts">+${val.score} pts</span>
-        </div>
-      `).join('')}
-      <div class="breakdown-item" style="border-top:2px solid var(--gray-200);margin-top:4px;padding-top:14px;">
-        <span class="label" style="font-weight:700;">Total</span>
-        <span class="pts" style="font-size:1.1rem;">${data.score} / 100</span>
-      </div>
-    </div>
-
-    <div style="margin-bottom:24px;">
-      <h4 style="font-size:0.9rem;font-weight:700;color:var(--navy);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em;">Recommended Next Steps</h4>
-      ${data.recommended.map(r => `
-        <div class="rec-card">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          ${r}
-        </div>
-      `).join('')}
-    </div>
-
-    <div class="result-actions">
-      <a href="/tools/book-appointment" class="btn btn-primary">
-        Book Free Consultation <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      </a>
-      <button class="btn btn-outline" onclick="resetAssess()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-        Start Over
-      </button>
-    </div>
-  `;
-
-  document.getElementById('assessResults').style.display = 'block';
-
-  // Animate
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      document.getElementById('gaugeRing').style.strokeDashoffset = offset;
-      animateNumber('gaugeVal', 0, data.score, 1400);
-    }, 200);
+  h += `<div class="breakdown"><h3>Category Breakdown</h3>`;
+  Object.entries(r.details).forEach(([k,d])=>{
+    const pct = Math.max((d.score/d.max)*100,4);
+    const bc = pct>=70?'var(--success)':pct>=45?'#2563eb':pct>=20?'var(--warning)':'var(--danger)';
+    h += `<div class="b-item"><span class="b-label">${d.label}</span><div class="b-bar"><div class="b-fill" style="width:${pct}%;background:${bc}"></div></div><span class="b-val">${d.score}/${d.max}</span></div>`;
   });
+  h += `</div>`;
+
+  h += `<div class="rec-cards">${r.recs.map((x,i)=>`<div class="rec-card"><span class="tag">${i===0?'★ Best Match':i===1?'Recommended':'Also Consider'}</span><h4>${x.name}</h4><p>${x.desc}</p><div class="rec-actions"><a href="/tools/book-appointment" class="btn btn-primary" style="font-size:0.85rem;padding:10px 20px">Book Consultation</a><a href="#contact" class="btn btn-outline" style="font-size:0.85rem;padding:10px 20px">Learn More</a></div></div>`).join('')}</div>`;
+  h += `<div style="text-align:center"><button class="btn btn-outline" onclick="restart()">&#8592; Retake Assessment</button></div>`;
+  document.getElementById('resultsContent').innerHTML = h;
+  setTimeout(()=>{ const a=document.getElementById('scoreArc'); if(a) a.style.strokeDashoffset=circ*(1-sc/100); },200);
 }
 
-function animateNumber(id, start, end, duration) {
-  const el = document.getElementById(id);
-  const startTime = performance.now();
-  function step(ts) {
-    const progress = Math.min((ts - startTime) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    el.textContent = Math.round(start + (end - start) * eased);
-    if (progress < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
+function restart() {
+  step=0;answers={age:35,education:'bachelor',workExperience:5,englishProficiency:'intermediate',budget:100000};
+  document.getElementById('wizardView').classList.remove('hidden');
+  document.getElementById('resultsView').classList.add('hidden');render();
 }
 
-function resetAssess() {
-  document.getElementById('assessWizard').style.display = 'block';
-  document.getElementById('assessResults').style.display = 'none';
-  document.getElementById('assessResults').innerHTML = '';
-  aShowStep(0);
+// ═══════ Deterministic Scoring Engine ════════════════
+function calc(a) {
+  let t=0, det={};
+  const age=parseInt(a.age)||35;
+  let as=age>=30&&age<=50?20:age>=25&&age<=60?16:age>=18&&age<=65?12:5;
+  det.age={label:'Age',score:as,max:20};t+=as;
+  const es={phd:20,master:18,bachelor:15,diploma:10,highschool:6,other:4};
+  const edu=es[a.education]||6;det.education={label:'Education',score:edu,max:20};t+=edu;
+  const exp=Math.round(Math.min((parseInt(a.workExperience)||0)*1.6,20));
+  det.workExperience={label:'Work Experience',score:exp,max:20};t+=exp;
+  const eng={native:15,fluent:13,intermediate:9,basic:5,none:2};
+  const eg=eng[a.englishProficiency]||5;det.english={label:'English',score:eg,max:15};t+=eg;
+  const bd=parseInt(a.budget)||0;
+  let bs=bd>=150000?25:bd>=100000?22:bd>=50000?16:bd>=20000?10:4;
+  det.budget={label:'Budget',score:bs,max:25};t+=bs;
+  const score=Math.round(Math.min(t,100));
+  let tier,sum,recs;
+  if(score>=70){tier='Strong Profile';sum='Excellent match for Vanuatu\'s top programs. You likely qualify for citizenship by investment.';recs=[{name:'Citizenship by Investment',desc:'1–2 months processing. Visa-free 100+ countries. No residency required. From $130,000.'},{name:'Business Immigration',desc:'Start or expand your business in Vanuatu with residence rights and tax advantages.'},{name:'Residence Permit',desc:'Flexible option to live, work, or retire in Vanuatu with straightforward requirements.'}];}
+  else if(score>=50){tier='Good Potential';sum='Solid profile. Several programs are within reach — a consultation will identify your optimal path.';recs=[{name:'Residence Permit',desc:'Work, retire, or invest — multiple categories available with 2–3 month processing.'},{name:'Family Sponsorship',desc:'If you have Vanuatu family ties, this efficient pathway includes spouse and dependents.'},{name:'Citizenship by Investment',desc:'Still achievable. We can advise on structuring your application for strongest results.'}];}
+  else if(score>=30){tier='Developing Profile';sum='Meets baseline for select programs. We can help strengthen your profile over 3–12 months.';recs=[{name:'Visitor & Tourist Visa',desc:'Start with a short-term visa. 5–10 day processing. Build your Vanuatu travel history.'},{name:'Visa Consulting',desc:'Our advisors create a personalized roadmap to position you for higher-tier programs.'}];}
+  else{tier='Exploratory';sum='Your profile is below typical thresholds — but every case is unique. Let us explore creative pathways together.';recs=[{name:'Free Consultation',desc:'Speak with a licensed advisor. We find creative solutions others miss. No obligation, 100% confidential.'}];}
+  return {score,tier,summary:sum,details:det,recs};
 }
+
+render();
 </script>
 </body>
 </html>
