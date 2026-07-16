@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tools — Priority Citizenship</title>
+<meta name="description" content="AI-powered immigration tools: visa matching, eligibility check, and more.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {--navy:#0a1628; --gold:#c9a84c; --gold-light:#e4c86a; --gold-dark:#a8892e; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db; --gray-500:#6b7280; --gray-700:#374151;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy)0%,#0d1f3c100%);color:#fff;min-height:100vh;-webkit-font-smoothing:antialiased}
+.container{max-width:1000px;margin:0 auto;padding:0 24px}
+
+.hero{padding:80px 0 20px;text-align:center}
+.hero h1{font-size:2.8rem;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em}
+.hero h1 span{color:var(--gold)}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:540px;margin:0 auto 40px}
+
+.back-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.9rem;margin-bottom:20px;transition:color 0.2s}
+.back-link:hover{color:var(--gold)}
+
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:20px 0 60px}
+
+.tool-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:32px 28px;transition:all 0.25s;text-decoration:none;color:inherit;display:flex;flex-direction:column}
+.tool-card:hover{background:rgba(255,255,255,0.1);border-color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.2)}
+.tool-card.available{cursor:pointer}
+.tool-card.coming-soon{opacity:0.5;cursor:default;pointer-events:none}
+.tool-card.coming-soon:hover{transform:none;border-color:rgba(255,255,255,0.1)}
+
+.tool-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:20px}
+.tool-icon.visa{background:rgba(201,168,76,0.2);color:var(--gold)}
+.tool-icon.check{background:rgba(5,150,105,0.2);color:#34d399}
+.tool-icon.future{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.3)}
+
+.tool-card h3{font-size:1.15rem;font-weight:700;margin-bottom:8px}
+.tool-card p{color:rgba(255,255,255,0.55);font-size:0.9rem;line-height:1.65;flex:1;margin-bottom:20px}
+
+.tool-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tag{font-size:0.72rem;padding:4px 10px;border-radius:100px;font-weight:500}
+.tag-active{background:rgba(201,168,76,0.15);color:var(--gold-light)}
+.tag-future{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.35)}
+
+.arrow{display:inline-flex;align-items:center;gap:6px;color:var(--gold);font-weight:600;font-size:0.9rem}
+.coming-soon-label{color:rgba(255,255,255,0.25);font-size:0.8rem;font-weight:500}
+
+.footer{text-align:center;padding:20px 0 60px;color:rgba(255,255,255,0.3);font-size:0.8rem}
+</style>
+</head>
+<body>
+
+<div class="hero"><div class="container">
+  <a href="/" class="back-link">&#8592; Back to Home</a>
+  <h1>AI <span>Tools</span></h1>
+  <p>Smart immigration tools powered by AI. Answer a few questions and get personalized results instantly.</p>
+</div></div>
+
+<div class="container">
+<div class="tools-grid">
+
+  <a href="/tools/visa-recommendation" class="tool-card available">
+    <div class="tool-icon visa">&#9670;</div>
+    <h3>Find Your Visa</h3>
+    <p>Tell us about your goals and profile. Our matching engine recommends the best Vanuatu visa program with detailed requirements, cost breakdown, and similar alternatives.</p>
+    <div class="tool-tags"><span class="tag tag-active">AI Matching</span><span class="tag tag-active">6 Questions</span><span class="tag tag-active">2 min</span></div>
+    <div class="arrow">Start Matching &#8594;</div>
+  </a>
+
+  <a href="/tools/eligibility-assessment" class="tool-card available">
+    <div class="tool-icon check">&#10003;</div>
+    <h3>Eligibility Check</h3>
+    <p>Get a 0–100 eligibility score with a detailed breakdown across 5 categories. See which immigration programs match your profile and where you can improve.</p>
+    <div class="tool-tags"><span class="tag tag-active">AI Scoring</span><span class="tag tag-active">5 Questions</span><span class="tag tag-active">1 min</span></div>
+    <div class="arrow">Start Assessment &#8594;</div>
+  </a>
+
+  <div class="tool-card coming-soon">
+    <div class="tool-icon future">&#9998;</div>
+    <h3>Document Checklist</h3>
+    <p>AI generates a personalized document checklist based on your selected visa program. Never miss a required document again.</p>
+    <div class="tool-tags"><span class="tag tag-future">Coming Soon</span></div>
+    <div class="coming-soon-label">Coming Soon</div>
+  </div>
+
+  <div class="tool-card coming-soon">
+    <div class="tool-icon future">&#9881;</div>
+    <h3>Fee Calculator</h3>
+    <p>Calculate total costs including government fees, due diligence, and professional services. Get an accurate estimate tailored to your family size and program.</p>
+    <div class="tool-tags"><span class="tag tag-future">Coming Soon</span></div>
+    <div class="coming-soon-label">Coming Soon</div>
+  </div>
+
+  <div class="tool-card coming-soon">
+    <div class="tool-icon future">&#128172;</div>
+    <h3>AI Interview Prep</h3>
+    <p>Practice for your immigration interview with our AI simulator. Get feedback and coaching on your responses.</p>
+    <div class="tool-tags"><span class="tag tag-future">Coming Soon</span></div>
+    <div class="coming-soon-label">Coming Soon</div>
+  </div>
+
+</div>
+</div>
+
+<div class="footer">More tools coming. Have an idea? Let us know at prioritycitizenship@gmail.com</div>
+
+</body>
+</html>

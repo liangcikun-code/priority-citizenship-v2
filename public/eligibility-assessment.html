@@ -213,7 +213,7 @@ function showResults() {
   });
   h += `</div>`;
 
-  h += `<div class="rec-cards">${r.recs.map((x,i)=>`<div class="rec-card"><span class="tag">${i===0?'★ Best Match':i===1?'Recommended':'Also Consider'}</span><h4>${x.name}</h4><p>${x.desc}</p><div class="rec-actions"><a href="/tools/book-appointment" class="btn btn-primary" style="font-size:0.85rem;padding:10px 20px">Book Consultation</a><a href="#contact" class="btn btn-outline" style="font-size:0.85rem;padding:10px 20px">Learn More</a></div></div>`).join('')}</div>`;
+  h += `<div class="rec-cards">${r.recs.map((x,i)=>`<div class="rec-card"><span class="tag">${i===0?'★ Best Match':i===1?'Recommended':'Also Consider'}</span><h4>${x.name}</h4><p>${x.desc}</p><div class="rec-actions"><a href="/tools/book-appointment" class="btn btn-primary" style="font-size:0.85rem;padding:10px 20px">Book Consultation</a><a href="/#services" class="btn btn-outline" style="font-size:0.85rem;padding:10px 20px">About Our Services →</a></div></div>`).join('')}</div>`;
   h += `<div style="text-align:center"><button class="btn btn-outline" onclick="restart()">&#8592; Retake Assessment</button></div>`;
   document.getElementById('resultsContent').innerHTML = h;
   setTimeout(()=>{ const a=document.getElementById('scoreArc'); if(a) a.style.strokeDashoffset=circ*(1-sc/100); },200);

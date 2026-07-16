@@ -56,6 +56,11 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// AI Tools hub
+app.get("/tools", (req, res) => {
+  res.sendFile(path.join(publicDir, "tools.html"));
+});
+
 app.get("/tools/:page", (req, res) => {
   const page = req.params.page;
   const validPages = ["visa-recommendation", "eligibility-assessment", "book-appointment"];
