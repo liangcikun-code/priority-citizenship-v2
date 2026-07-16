@@ -12,10 +12,14 @@
 body{font-family:'Inter',-apple-system,sans-serif;color:var(--gray-900);background:var(--gray-50);-webkit-font-smoothing:antialiased}
 .container{max-width:1200px;margin:0 auto;padding:0 24px}
 
-.blog-header{background:linear-gradient(135deg,var(--navy)0%,#0d1f3c100%);padding:80px 0 60px;color:var(--white);text-align:center}
+.blog-header{background:linear-gradient(135deg,var(--navy)0%,#0d1f3c100%);padding:100px 0 60px;color:var(--white);text-align:center}
 .blog-header h1{font-size:2.8rem;font-weight:800;margin-bottom:12px;letter-spacing:-0.02em}
 .blog-header h1 span{color:var(--gold)}
 .blog-header p{color:rgba(255,255,255,0.6);font-size:1.1rem;max-width:600px;margin:0 auto}
+.blog-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,22,40,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.blog-nav a{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.83rem;transition:color 0.2s}
+.blog-nav a:hover{color:var(--gold)}
+.blog-nav .sep{color:rgba(255,255,255,0.15);margin:0 2px}
 .home-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.5);text-decoration:none;font-size:0.9rem;margin-bottom:20px;transition:color 0.2s}
 .home-link:hover{color:var(--gold)}
 
@@ -50,9 +54,13 @@ body{font-family:'Inter',-apple-system,sans-serif;color:var(--gray-900);backgrou
 </head>
 <body>
 
+<nav class="blog-nav">
+  <div><a href="/">&#8592; Home</a></div>
+  <div><a href="/tools/visa-recommendation" style="color:var(--gold)">AI Visa Tool</a></div>
+</nav>
+
 <div id="listView">
 <div class="blog-header"><div class="container">
-  <a href="/" class="home-link">&#8592; Back to Home</a>
   <h1>Immigration <span>Insights</span></h1>
   <p>Latest guides, news, and updates on Vanuatu citizenship and immigration services.</p>
 </div></div>
@@ -121,8 +129,9 @@ body{font-family:'Inter',-apple-system,sans-serif;color:var(--gray-900);backgrou
         <h1>${esc(post.title)}</h1>
         <div class="meta">${fmtDate(post.createdAt)} &middot; ${esc(post.author || 'Priority Citizenship')}</div>
         <div class="content">${post.content || '<p>No content.</p>'}</div>
-        <div style="margin-top:40px;text-align:center">
-          <a href="/blog" class="back" style="font-size:1rem">&#8592; Back to Blog</a>
+        <div style="margin-top:40px;text-align:center;display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+          <a href="/blog" style="display:inline-flex;align-items:center;gap:6px;color:var(--gold-dark);text-decoration:none;font-weight:600;font-size:1rem;padding:10px 20px;border:2px solid var(--gold);border-radius:10px">&#8592; Back to Blog</a>
+          <a href="/" style="display:inline-flex;align-items:center;gap:6px;color:var(--gold-dark);text-decoration:none;font-weight:600;font-size:1rem;padding:10px 20px;border:2px solid var(--gold);border-radius:10px">&#8592; Back to Home</a>
         </div>`;
     } catch(e) {
       el.innerHTML = '<div class="empty-state"><h3>Error</h3><p>Could not load this article.</p></div>';

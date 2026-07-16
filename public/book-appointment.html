@@ -21,16 +21,19 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
 
-  .site-link {
-    position: fixed; top: 24px; left: 24px; z-index: 100;
-    display: inline-flex; align-items: center; gap: 8px;
-    color: rgba(255,255,255,0.65); font-size: 0.875rem; font-weight: 500;
-    text-decoration: none; transition: color 0.2s;
-    background: rgba(255,255,255,0.06); padding: 8px 16px; border-radius: 100px;
-    backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08);
+  .appt-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 24px; background: rgba(10,22,40,0.95);
+    backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.06);
   }
-  .site-link:hover { color: #fff; background: rgba(255,255,255,0.1); }
-  .site-link svg { width: 16px; height: 16px; }
+  .appt-nav a {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.83rem;
+    transition: color 0.2s;
+  }
+  .appt-nav a:hover { color: var(--gold); }
+  .appt-nav .sep { color: rgba(255,255,255,0.15); margin: 0 2px; }
 
   .tools-page {
     background: linear-gradient(135deg, var(--navy) 0%, #0d1f3c 50%, #13213e 100%);
@@ -173,10 +176,10 @@
 </head>
 <body>
 
-<a href="/" class="site-link">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-  Back to Home
-</a>
+<nav class="appt-nav">
+  <div><a href="/tools">&#8592; AI Tools</a><span class="sep">|</span><a href="/">&#8592; Home</a></div>
+  <div><a href="/tools/visa-recommendation" style="color:var(--gold)">Visa Recommendation</a></div>
+</nav>
 
 <div class="tools-page">
   <div class="container">
