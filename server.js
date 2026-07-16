@@ -46,6 +46,23 @@ app.get("/api/blog", async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+app.get("/api/debug", (req, res) => {
+  const info = {
+    node: process.version,
+    vercel: !!process.env.VERCEL,
+    supabaseUrl: !!process.env.SUPABASE_URL,
+    supabaseKey: !!process.env.SUPABASE_ANON_KEY,
+    geminiKey: !!process.env.GEMINI_API_KEY,
+    adminUser: !!process.env.ADMIN_USERNAME,
+    adminPass: !!process.env.ADMIN_PASSWORD,
+  };
+  try {
+    const supabase = require("./services/supabase");
+    info.supabaseModule = typeof supabase.getLeads;
+  } catch(e) { info.supabaseError = e.message; }
+  res.json(info);
+});
+
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
