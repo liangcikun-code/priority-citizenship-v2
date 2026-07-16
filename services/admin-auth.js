@@ -1,91 +1,42 @@
 /**
  * Admin Authentication Service
- * Simple token-based auth for the admin dashboard.
- * In production, replace with proper JWT + database auth.
+ * Vercel-compatible: uses env vars + in-memory tokens (no file I/O).
  */
 
 const crypto = require('crypto');
-const fs = require('fs');
-const path = require('path');
 
-const ADMIN_CONFIG_PATH = path.join(__dirname, '..', 'data', 'admin.json');
 const TOKEN_EXPIRY_MS = 8 * 60 * 60 * 1000; // 8 hours
+const tokens = {}; // In-memory only (resets on cold start — acceptable for admin panel)
 
-function getDefaultAdmin() {
-  const password = process.env.ADMIN_PASSWORD || crypto.randomUUID();
-  if (!process.env.ADMIN_PASSWORD) {
-    console.warn('[admin-auth] No ADMIN_PASSWORD env var set — using a one-time random password.');
-    console.warn('[admin-auth] Set ADMIN_PASSWORD in .env to persist your admin credentials.');
+// Clean expired tokens periodically
+setInterval(() => {
+  const now = Date.now();
+  for (const [t, d] of Object.entries(tokens)) {
+    if (new Date(d.expiresAt).getTime() < now) delete tokens[t];
   }
-  return {
-    username: process.env.ADMIN_USERNAME || 'admin',
-    passwordHash: crypto.createHash('sha256').update(password).digest('hex'),
-    createdAt: new Date().toISOString()
-  };
-}
-
-function loadConfig() {
-  try {
-    if (fs.existsSync(ADMIN_CONFIG_PATH)) {
-      return JSON.parse(fs.readFileSync(ADMIN_CONFIG_PATH, 'utf8'));
-    }
-  } catch (e) { /* fall through */ }
-  return null;
-}
-
-function saveConfig(config) {
-  const dir = path.dirname(ADMIN_CONFIG_PATH);
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(ADMIN_CONFIG_PATH, JSON.stringify(config, null, 2));
-}
+}, 60 * 60 * 1000); // Every hour
 
 /**
- * Initialize admin config if not exists
- */
-function initAdmin() {
-  let config = loadConfig();
-  if (!config) {
-    config = {
-      admin: getDefaultAdmin(),
-      tokens: {}
-    };
-    saveConfig(config);
-  }
-  // If ADMIN_PASSWORD env var is set, update the stored password hash
-  if (process.env.ADMIN_PASSWORD) {
-    const envHash = crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD).digest('hex');
-    if (config.admin.passwordHash !== envHash) {
-      config.admin.passwordHash = envHash;
-      if (process.env.ADMIN_USERNAME) config.admin.username = process.env.ADMIN_USERNAME;
-      saveConfig(config);
-    }
-  }
-  return config;
-}
-
-/**
- * Verify admin credentials
+ * Verify admin credentials against env vars.
  */
 function login(username, password) {
-  const config = initAdmin();
-  const hash = crypto.createHash('sha256').update(password).digest('hex');
+  const expectedUser = process.env.ADMIN_USERNAME || 'admin';
+  const expectedPass = process.env.ADMIN_PASSWORD;
 
-  if (username === config.admin.username && hash === config.admin.passwordHash) {
-    // Generate session token
+  if (!expectedPass) {
+    return { success: false, error: 'Admin password not configured. Set ADMIN_PASSWORD env var.' };
+  }
+
+  const expectedHash = crypto.createHash('sha256').update(expectedPass).digest('hex');
+  const providedHash = crypto.createHash('sha256').update(password).digest('hex');
+
+  if (username === expectedUser && providedHash === expectedHash) {
     const token = crypto.randomUUID();
-    config.tokens[token] = {
+    tokens[token] = {
       username,
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + TOKEN_EXPIRY_MS).toISOString()
     };
-    // Clean expired tokens
-    const now = Date.now();
-    for (const [t, data] of Object.entries(config.tokens)) {
-      if (new Date(data.expiresAt).getTime() < now) {
-        delete config.tokens[t];
-      }
-    }
-    saveConfig(config);
     return { success: true, token, expiresIn: TOKEN_EXPIRY_MS };
   }
 
@@ -93,52 +44,39 @@ function login(username, password) {
 }
 
 /**
- * Verify admin token
+ * Verify admin token.
  */
 function verifyToken(token) {
-  if (!token) return null;
-  const config = loadConfig();
-  if (!config || !config.tokens || !config.tokens[token]) return null;
-
-  const tokenData = config.tokens[token];
-  if (new Date(tokenData.expiresAt).getTime() < Date.now()) {
-    // Token expired, clean up
-    delete config.tokens[token];
-    saveConfig(config);
+  if (!token || !tokens[token]) return null;
+  if (new Date(tokens[token].expiresAt).getTime() < Date.now()) {
+    delete tokens[token];
     return null;
   }
-  return tokenData;
+  return tokens[token];
 }
 
 /**
- * Logout (invalidate token)
+ * Logout (invalidate token).
  */
 function logout(token) {
-  const config = loadConfig();
-  if (config && config.tokens) {
-    delete config.tokens[token];
-    saveConfig(config);
-  }
+  delete tokens[token];
 }
 
 /**
- * Express middleware for protecting admin routes
+ * Express middleware for protecting admin routes.
  */
 function requireAdmin(req, res, next) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Authentication required' });
   }
-
   const token = authHeader.split(' ')[1];
   const session = verifyToken(token);
-
   if (!session) {
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
-
   req.adminUser = session;
   next();
 }
 
-module.exports = { login, logout, verifyToken, requireAdmin, initAdmin };
+module.exports = { login, logout, verifyToken, requireAdmin };
