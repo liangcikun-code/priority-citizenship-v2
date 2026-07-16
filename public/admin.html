@@ -361,14 +361,14 @@ function openLeadModal(lead) {
 }
 async function editLead(id) { const leads = await api('/leads'); openLeadModal(leads.find(l => l.id === id)); }
 async function saveLead() {
-  const id = document.getElementById('leadEditId').value;
-  const body = { name: document.getElementById('leadName').value.trim(), email: document.getElementById('leadEmail').value.trim(), phone: document.getElementById('leadPhone').value.trim(), country: document.getElementById('leadCountry').value.trim(), service: document.getElementById('leadService').value, status: document.getElementById('leadStatus').value, message: document.getElementById('leadNotes').value.trim() };
-  if (!body.name || !body.email) return alert('Name and email required.');
   try {
+    const id = document.getElementById('leadEditId').value;
+    const body = { name: document.getElementById('leadName').value.trim(), email: document.getElementById('leadEmail').value.trim(), phone: document.getElementById('leadPhone').value.trim(), country: document.getElementById('leadCountry').value.trim(), service: document.getElementById('leadService').value, status: document.getElementById('leadStatus').value, message: document.getElementById('leadNotes').value.trim() };
+    if (!body.name || !body.email) return alert('Name and email required.');
     if (id) await api('/leads/' + id, { method: 'PUT', body: JSON.stringify(body) });
     else await api('/leads', { method: 'POST', body: JSON.stringify(body) });
     closeModal('leadModal'); loadLeads();
-  } catch (e) { alert(e.message); }
+  } catch (e) { alert('Save failed: ' + e.message); }
 }
 async function deleteLead(id) { if (!confirm('Delete?')) return; await api('/leads/' + id, { method: 'DELETE' }); loadLeads(); }
 
@@ -407,12 +407,14 @@ function openBlogModal(post) {
 }
 async function editBlog(id) { const posts = await api('/blog'); openBlogModal(posts.find(p => p.id === id)); }
 async function saveBlog() {
-  const id = document.getElementById('blogEditId').value;
-  const body = { title: document.getElementById('blogTitle').value.trim(), category: document.getElementById('blogCategory').value.trim(), published: document.getElementById('blogStatus').value === 'true', excerpt: document.getElementById('blogExcerpt').value.trim(), content: document.getElementById('blogContent').value.trim() };
-  if (!body.title) return alert('Title required.');
-  if (id) await api('/blog/' + id, { method: 'PUT', body: JSON.stringify(body) });
-  else await api('/blog', { method: 'POST', body: JSON.stringify(body) });
-  closeModal('blogModal'); loadBlog();
+  try {
+    const id = document.getElementById('blogEditId').value;
+    const body = { title: document.getElementById('blogTitle').value.trim(), category: document.getElementById('blogCategory').value.trim(), published: document.getElementById('blogStatus').value === 'true', excerpt: document.getElementById('blogExcerpt').value.trim(), content: document.getElementById('blogContent').value.trim() };
+    if (!body.title) return alert('Title required.');
+    if (id) await api('/blog/' + id, { method: 'PUT', body: JSON.stringify(body) });
+    else await api('/blog', { method: 'POST', body: JSON.stringify(body) });
+    closeModal('blogModal'); loadBlog();
+  } catch (e) { alert('Save failed: ' + e.message); }
 }
 async function deleteBlog(id) { if (!confirm('Delete?')) return; await api('/blog/' + id, { method: 'DELETE' }); loadBlog(); }
 
@@ -432,12 +434,14 @@ function openFaqModal(i) {
 }
 function editFaq(i) { openFaqModal(i); }
 async function saveFaq() {
-  const idx = document.getElementById('faqEditIdx').value;
-  const body = { q: document.getElementById('faqQ').value.trim(), a: document.getElementById('faqA').value.trim() };
-  if (!body.q || !body.a) return alert('Both fields required.');
-  if (idx !== '') await api('/faq/' + idx, { method: 'PUT', body: JSON.stringify(body) });
-  else await api('/faq', { method: 'POST', body: JSON.stringify(body) });
-  closeModal('faqModal'); loadFaq();
+  try {
+    const idx = document.getElementById('faqEditIdx').value;
+    const body = { q: document.getElementById('faqQ').value.trim(), a: document.getElementById('faqA').value.trim() };
+    if (!body.q || !body.a) return alert('Both fields required.');
+    if (idx !== '') await api('/faq/' + idx, { method: 'PUT', body: JSON.stringify(body) });
+    else await api('/faq', { method: 'POST', body: JSON.stringify(body) });
+    closeModal('faqModal'); loadFaq();
+  } catch (e) { alert('Save failed: ' + e.message); }
 }
 async function deleteFaq(i) { if (!confirm('Delete?')) return; await api('/faq/' + i, { method: 'DELETE' }); loadFaq(); }
 

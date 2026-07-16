@@ -30,6 +30,25 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/contact", contactRoutes);
 
+// Public Blog API (published posts only)
+app.get("/api/blog", (req, res) => {
+  const store = require("./services/data-store");
+  const posts = store.getPosts().filter(p => p.published);
+  res.json(posts.map(p => ({
+    id: p.id, title: p.title, slug: p.slug,
+    excerpt: p.excerpt, content: p.content,
+    category: p.category, author: p.author,
+    createdAt: p.createdAt, updatedAt: p.updatedAt
+  })));
+});
+
+app.get("/api/blog/:slug", (req, res) => {
+  const store = require("./services/data-store");
+  const post = store.getPosts().find(p => p.published && (p.slug === req.params.slug || p.id === req.params.slug));
+  if (!post) return res.status(404).json({ error: "Post not found" });
+  res.json(post);
+});
+
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
@@ -53,6 +72,15 @@ app.get("/tools/:page", (req, res) => {
 // Admin panel route
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(publicDir, "admin.html"));
+});
+
+// Blog pages
+app.get("/blog", (req, res) => {
+  res.sendFile(path.join(publicDir, "blog.html"));
+});
+
+app.get("/blog/:slug", (req, res) => {
+  res.sendFile(path.join(publicDir, "blog.html"));
 });
 
 app.get("*", (req, res) => {
