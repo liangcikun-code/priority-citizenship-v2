@@ -337,11 +337,13 @@ async function loadDashboard() {
 function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
 
 // ═══════ Leads ════════════════════════════════════════
+let _leadCache = [];
 async function loadLeads() {
   const search = document.getElementById('leadSearch')?.value || '';
   const status = document.getElementById('leadFilter')?.value || '';
   const params = new URLSearchParams(); if (search) params.set('search', search); if (status) params.set('status', status);
-  const leads = await api('/leads?' + params);
+  _leadCache = await api('/leads?' + params);
+  const leads = _leadCache;
   const tbody = document.getElementById('leadsTable');
   if (!leads.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No leads yet.</td></tr>'; return; }
   tbody.innerHTML = leads.map(l => `<tr>
@@ -359,7 +361,7 @@ function openLeadModal(lead) {
   document.getElementById('leadStatus').value = lead?.status || 'new';
   document.getElementById('leadModal').classList.add('open');
 }
-async function editLead(id) { const leads = await api('/leads'); openLeadModal(leads.find(l => l.id === id)); }
+function editLead(id) { openLeadModal(_leadCache.find(l => l.id === id)); }
 async function saveLead() {
   try {
     const id = document.getElementById('leadEditId').value;
@@ -389,9 +391,11 @@ async function loadAppts() {
 async function updateAppt(id, status) { await api('/appointments/' + id, { method: 'PUT', body: JSON.stringify({ status }) }); }
 
 // ═══════ Blog ═════════════════════════════════════════
+let _blogCache = [];
 async function loadBlog() {
-  const posts = await api('/blog');
+  _blogCache = await api('/blog');
   const tbody = document.getElementById('blogTable');
+  const posts = _blogCache;
   if (!posts.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No posts.</td></tr>'; return; }
   tbody.innerHTML = posts.map(p => `<tr>
     <td><strong>${esc(p.title)}</strong></td><td>${esc(p.category||'—')}</td>
@@ -405,7 +409,7 @@ function openBlogModal(post) {
   document.getElementById('blogExcerpt').value = post?.excerpt || ''; document.getElementById('blogContent').value = post?.content || '';
   document.getElementById('blogModal').classList.add('open');
 }
-async function editBlog(id) { const posts = await api('/blog'); openBlogModal(posts.find(p => p.id === id)); }
+function editBlog(id) { openBlogModal(_blogCache.find(p => p.id === id)); }
 async function saveBlog() {
   try {
     const id = document.getElementById('blogEditId').value;
