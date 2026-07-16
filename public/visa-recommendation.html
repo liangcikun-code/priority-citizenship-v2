@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Find Your Visa — Priority Citizenship</title>
+<title>AI Visa Recommendation — Priority Citizenship</title>
 <meta name="description" content="Discover which Vanuatu visa best matches your profile. Personalized recommendation with detailed program info and alternatives.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -114,7 +114,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 <div id="wizardView">
   <div class="hero"><div class="container">
     <div class="badge">&#9670; AI-Powered Matching</div>
-    <h1>Find Your <span>Visa</span></h1>
+    <h1>AI Visa <span>Recommendation</span></h1>
     <p>Answer 6 questions. We'll match you with the best Vanuatu visa program and show detailed requirements plus alternatives.</p>
   </div></div>
   <div class="container"><div class="wizard-card" id="wizardCard"></div></div>
@@ -293,7 +293,7 @@ function showResults() {
       <div class="info-item"><div class="ilabel">Processing Time</div><div class="ivalue">${top.processing}</div></div>
       <div class="info-item"><div class="ilabel">Estimated Cost</div><div class="ivalue">${top.cost}</div></div>
       <div class="info-item"><div class="ilabel">Visa-Free Travel</div><div class="ivalue" style="font-size:0.85rem">${top.visaFree}</div></div>
-      <div class="info-item"><div class="ilabel">Your Budget</div><div class="ivalue">$${(parseInt(answers.budget)||0).toLocaleString()}</div><div class="isub">${budget>=top.minBudget?'✓ Within range':'⚠ May need adjustment'}</div></div>
+      <div class="info-item"><div class="ilabel">Your Budget</div><div class="ivalue">$${(parseInt(answers.budget)||0).toLocaleString()}</div><div class="isub">${(parseInt(answers.budget)||0)>=top.minBudget?'✓ Within range':'⚠ May need adjustment'}</div></div>
     </div>
     <div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.95rem">Requirements:</strong><ul class="req-list">${top.requirements.map(r=>`<li>${r}</li>`).join('')}</ul></div>
     <div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.95rem">Key Features:</strong><ul class="req-list">${top.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>
@@ -326,7 +326,7 @@ function showResults() {
   });
   h += `</tbody></table></div>`;
 
-  h += `<div style="text-align:center;margin-top:24px"><button class="btn btn-outline" onclick="restart()">← Retake Quiz</button></div>`;
+  h += `<div style="text-align:center;margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><button class="btn btn-outline" onclick="restart()">← Retake Quiz</button><a href="/" class="btn btn-outline">← Back to Home</a></div>`;
   document.getElementById('resultsContent').innerHTML = h;
   document.getElementById('resultsView').scrollIntoView({behavior:'smooth'});
 }
