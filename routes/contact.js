@@ -5,6 +5,7 @@
 const express = require('express');
 const router = express.Router();
 const store = require('../services/data-store');
+const email = require('../services/email-service');
 
 // POST /api/contact - Submit contact form
 router.post('/', (req, res) => {
@@ -16,16 +17,13 @@ router.post('/', (req, res) => {
     }
 
     const lead = store.addLead({
-      name,
-      email,
-      phone: phone || '',
-      country: country || '',
-      service,
-      budget: budget || '',
-      message: message || '',
-      status: 'new',
-      source: 'website_contact_form'
+      name, email, phone: phone || '', country: country || '',
+      service, budget: budget || '', message: message || '',
+      status: 'new', source: 'website_contact_form'
     });
+
+    // Async email notification (fire-and-forget)
+    email.notifyNewLead(lead).catch(() => {});
 
     res.json({ success: true, leadId: lead.id });
   } catch (err) {
