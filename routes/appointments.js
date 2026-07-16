@@ -6,11 +6,16 @@ const store = require('../services/data-store');
 // Track used slot IDs to prevent double-booking
 const bookedSlots = new Set();
 
-// Initialize booked slots from persisted appointments
-(function init() {
-  const appts = store.getAppointments();
-  appts.forEach(a => { if (a.slotId) bookedSlots.add(a.slotId); });
-})();
+// Initialize booked slots from persisted appointments (async)
+let _initialized = false;
+async function initBookedSlots() {
+  if (_initialized) return;
+  try {
+    const appts = await store.getAppointments();
+    if (Array.isArray(appts)) appts.forEach(a => { if (a.slotId) bookedSlots.add(a.slotId); });
+    _initialized = true;
+  } catch (e) { console.error('Failed to load booked slots:', e.message); }
+}
 
 // Generate available time slots for next 14 days
 function generateTimeSlots() {
@@ -50,7 +55,8 @@ function generateTimeSlots() {
 }
 
 // GET /api/appointments/slots - Get available time slots
-router.get('/slots', (req, res) => {
+router.get('/slots', async (req, res) => {
+  await initBookedSlots();
   const slots = generateTimeSlots();
   const available = slots.filter(s => s.available).slice(0, 40);
   res.json(available);
