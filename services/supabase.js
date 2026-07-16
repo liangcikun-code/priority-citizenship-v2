@@ -10,9 +10,17 @@ catch (e) { /* supabase-js not installed */ }
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-const db = (supabaseUrl && supabaseKey && createClient)
-  ? createClient(supabaseUrl, supabaseKey)
-  : null;
+let db = null;
+try {
+  if (supabaseUrl && supabaseKey && createClient) {
+    const url = supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
+    db = createClient(url, supabaseKey);
+    console.log('[supabase] Connected to ' + url);
+  }
+} catch (e) {
+  console.error('[supabase] Failed to initialize:', e.message);
+  db = null;
+}
 
 if (!db) {
   console.warn('[supabase] Not configured — using in-memory storage. Data will NOT persist on Vercel.');
