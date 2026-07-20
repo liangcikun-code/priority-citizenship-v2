@@ -1,10 +1,7 @@
-// Bare-metal serverless entry — no Express, no external deps
-module.exports = async (req, res) => {
-  try {
-    // Try loading express
-    const express = require('express');
-    res.json({ ok: true, express: 'loaded', node: process.version });
-  } catch (e) {
-    res.json({ ok: false, error: e.message, code: e.code, node: process.version });
-  }
+module.exports = function handler(req, res) {
+  res.status(200).json({
+    ok: true,
+    node: process.version,
+    time: new Date().toISOString()
+  });
 };
