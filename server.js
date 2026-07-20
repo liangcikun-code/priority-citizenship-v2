@@ -46,6 +46,10 @@ app.get("/api/blog", async (req, res) => {
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+app.get("/api/test", (req, res) => {
+  res.json({ ok: true, node: process.version });
+});
+
 app.get("/api/debug", (req, res) => {
   const info = {
     node: process.version,
