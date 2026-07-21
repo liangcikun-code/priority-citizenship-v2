@@ -75,8 +75,15 @@ tr:hover td{background:rgba(201,168,76,0.02)}
 
 .badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:0.73rem;font-weight:600}
 .badge-new{background:var(--info-bg);color:var(--info)}
-.badge-contacted{background:var(--warning-bg);color:var(--warning)}
+.badge-contacted{background:#dbeafe;color:#1e40af}
+.badge-responded{background:#e0e7ff;color:#3730a3}
+.badge-qualified{background:var(--warning-bg);color:var(--warning)}
+.badge-proposal_sent{background:#fef3c7;color:#92400e}
+.badge-negotiating{background:#fce7f3;color:#9d174d}
 .badge-converted{background:var(--success-bg);color:var(--success)}
+.badge-closed_lost{background:var(--danger-light);color:var(--danger)}
+.badge-closed_duplicate{background:var(--gray-100);color:var(--gray-500)}
+.badge-closed_invalid{background:var(--gray-100);color:var(--gray-500)}
 .badge-closed{background:var(--gray-100);color:var(--gray-500)}
 .badge-published,.badge-confirmed,.badge-completed{background:var(--success-bg);color:var(--success)}
 .badge-draft{background:var(--gray-100);color:var(--gray-500)}
@@ -237,8 +244,10 @@ tr:hover td{background:rgba(201,168,76,0.02)}
 <h3 id="leadModalTitle">Add Lead</h3><input type="hidden" id="leadEditId">
 <div class="form-row"><div class="form-group"><label>Full Name *</label><input type="text" id="leadName"></div><div class="form-group"><label>Email *</label><input type="email" id="leadEmail"></div></div>
 <div class="form-row"><div class="form-group"><label>Phone</label><input type="text" id="leadPhone"></div><div class="form-group"><label>Country</label><input type="text" id="leadCountry"></div></div>
-<div class="form-row"><div class="form-group"><label>Service</label><select id="leadService"><option>citizenship</option><option>residence</option><option>family</option><option>business</option><option>visitor</option><option>other</option></select></div><div class="form-group"><label>Status</label><select id="leadStatus"><option value="new">New</option><option value="contacted">Contacted</option><option value="converted">Converted</option><option value="closed">Closed</option></select></div></div>
-<div class="form-group"><label>Notes / Message</label><textarea id="leadNotes" rows="2"></textarea></div>
+<div class="form-row"><div class="form-group"><label>Service</label><select id="leadService"><option>citizenship</option><option>residence</option><option>family</option><option>business</option><option>visitor</option><option>other</option></select></div><div class="form-group"><label>Status</label><select id="leadStatus"><option value="new">New — just submitted</option><option value="contacted">Contacted — reached out</option><option value="responded">Responded — in conversation</option><option value="qualified">Qualified — serious prospect</option><option value="proposal_sent">Proposal Sent — quoted</option><option value="negotiating">Negotiating — discussing terms</option><option value="converted">Converted — became client</option><option value="closed_lost">Closed Lost — no deal</option><option value="closed_duplicate">Duplicate — repeat lead</option><option value="closed_invalid">Invalid — spam/bad data</option></select></div></div>
+<div class="form-row"><div class="form-group"><label>Budget / Range</label><input type="text" id="leadBudget" placeholder="e.g. \$100K-\$130K"></div><div class="form-group"><label>Source</label><input type="text" id="leadSource" placeholder="website / referral / social"></div></div>
+	<div class="form-group"><label>Customer's Original Message</label><div id="leadMsgDisplay" style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:8px;padding:12px;font-size:0.9rem;color:var(--gray-700);line-height:1.5;min-height:40px;white-space:pre-wrap">—</div></div>
+	<div class="form-group"><label>Admin Notes</label><textarea id="leadNotes" rows="2" placeholder="Add internal notes..."></textarea></div>
 <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal('leadModal')">Cancel</button><button class="btn btn-primary" onclick="saveLead()">Save</button></div>
 </div></div>
 
@@ -347,8 +356,8 @@ async function loadLeads() {
   const tbody = document.getElementById('leadsTable');
   if (!leads.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No leads yet.</td></tr>'; return; }
   tbody.innerHTML = leads.map(l => `<tr>
-    <td><strong>${esc(l.name)}</strong></td><td>${esc(l.email)}</td><td>${esc(l.phone||'—')}</td>
-    <td>${esc(l.service||'—')}</td><td><span class="badge badge-${l.status}">${l.status}</span></td>
+    <td><strong>${esc(l.name)}</strong>${l.message?`<br><small style="color:var(--gray-500);font-size:0.75rem">"${esc(l.message.slice(0,60))}..."</small>`:''}</td><td>${esc(l.email)}</td><td>${esc(l.phone||'—')}</td>
+    <td>${esc(l.service||'—')}</td><td><span class="badge badge-${l.status}">${statusLabel(l.status)}</span></td>
     <td>${fmtDate(l.createdAt)}</td>
     <td><button class="btn-icon" onclick="editLead('${l.id}')" title="Edit">&#9998;</button><button class="btn-icon" onclick="deleteLead('${l.id}')" title="Delete" style="color:var(--danger)">&#10005;</button></td>
   </tr>`).join('');
@@ -356,21 +365,29 @@ async function loadLeads() {
 function openLeadModal(lead) {
   document.getElementById('leadEditId').value = lead?.id || '';
   document.getElementById('leadModalTitle').textContent = lead ? 'Edit Lead' : 'Add Lead';
-  ['leadName','leadEmail','leadPhone','leadCountry','leadNotes'].forEach(k => document.getElementById(k).value = lead ? (lead[k.replace('lead','').toLowerCase()] || '') : '');
+  ['leadName','leadEmail','leadPhone','leadCountry'].forEach(k => document.getElementById(k).value = lead ? (lead[k.replace('lead','').toLowerCase()] || '') : '');
   document.getElementById('leadService').value = lead?.service || 'other';
   document.getElementById('leadStatus').value = lead?.status || 'new';
+  document.getElementById('leadBudget').value = lead?.budget || '';
+  document.getElementById('leadSource').value = lead?.source || '';
+  document.getElementById('leadNotes').value = lead?.notes || '';
+  document.getElementById('leadMsgDisplay').textContent = lead?.message || 'No message provided.';
   document.getElementById('leadModal').classList.add('open');
 }
 function editLead(id) { openLeadModal(_leadCache.find(l => l.id === id)); }
 async function saveLead() {
   try {
     const id = document.getElementById('leadEditId').value;
-    const body = { name: document.getElementById('leadName').value.trim(), email: document.getElementById('leadEmail').value.trim(), phone: document.getElementById('leadPhone').value.trim(), country: document.getElementById('leadCountry').value.trim(), service: document.getElementById('leadService').value, status: document.getElementById('leadStatus').value, message: document.getElementById('leadNotes').value.trim() };
+    const body = { name: document.getElementById('leadName').value.trim(), email: document.getElementById('leadEmail').value.trim(), phone: document.getElementById('leadPhone').value.trim(), country: document.getElementById('leadCountry').value.trim(), service: document.getElementById('leadService').value, status: document.getElementById('leadStatus').value, budget: document.getElementById('leadBudget').value.trim(), source: document.getElementById('leadSource').value.trim(), notes: document.getElementById('leadNotes').value.trim() };
     if (!body.name || !body.email) return alert('Name and email required.');
     if (id) await api('/leads/' + id, { method: 'PUT', body: JSON.stringify(body) });
     else await api('/leads', { method: 'POST', body: JSON.stringify(body) });
     closeModal('leadModal'); loadLeads();
   } catch (e) { alert('Save failed: ' + e.message); }
+}
+function statusLabel(s) {
+  const labels = {new:'New',contacted:'Contacted',responded:'Responded',qualified:'Qualified',proposal_sent:'Proposal Sent',negotiating:'Negotiating',converted:'Converted',closed_lost:'Closed Lost',closed_duplicate:'Duplicate',closed_invalid:'Invalid'};
+  return labels[s] || s;
 }
 async function deleteLead(id) { if (!confirm('Delete?')) return; await api('/leads/' + id, { method: 'DELETE' }); loadLeads(); }
 
