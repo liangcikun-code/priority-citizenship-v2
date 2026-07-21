@@ -347,6 +347,7 @@ async function bookAppointment() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         slotId: selectedSlotId,
+        slotLabel: selectedSlotLabel,
         name, email,
         phone: document.getElementById('bookPhone').value,
         service: document.getElementById('bookService').value,

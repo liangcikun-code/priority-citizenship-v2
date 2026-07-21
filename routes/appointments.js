@@ -65,7 +65,7 @@ router.get('/slots', async (req, res) => {
 // POST /api/appointments/book - Book an appointment
 router.post('/book', async (req, res) => {
   try {
-    const { slotId, name, email, phone, service, message } = req.body;
+    const { slotId, name, email, phone, service, message, slotLabel } = req.body;
 
     if (!slotId || !name || !email) {
       return res.status(400).json({ error: 'Slot ID, name, and email are required' });
@@ -86,7 +86,7 @@ router.post('/book', async (req, res) => {
       phone: phone || '',
       service: service || 'general',
       message: message || '',
-      slotLabel: '',
+      slotLabel: slotLabel || '',
       status: 'confirmed'
     });
 

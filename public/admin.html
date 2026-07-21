@@ -198,7 +198,7 @@ tr:hover td{background:rgba(201,168,76,0.02)}
 <div class="toolbar">
   <a class="btn btn-outline btn-sm" href="/api/admin/export/appointments" onclick="return downloadCSV(event,'appointments')">&#8615; Export CSV</a>
 </div>
-<div class="panel"><div class="table-wrap"><table><thead><tr><th>Client</th><th>Email</th><th>Phone</th><th>Service</th><th>Status</th><th>Date</th><th></th></tr></thead><tbody id="apptsTable"></tbody></table></div></div>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>Client</th><th>Email</th><th>Service</th><th>Scheduled Time</th><th>Status</th><th>Booked</th><th></th></tr></thead><tbody id="apptsTable"></tbody></table></div></div>
 </div>
 
 <!-- ─── Blog ──────────────────────────────────────────── -->
@@ -395,10 +395,10 @@ async function deleteLead(id) { if (!confirm('Delete?')) return; await api('/lea
 async function loadAppts() {
   const a = await api('/appointments');
   const tbody = document.getElementById('apptsTable');
-  if (!a.length) { tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No appointments.</td></tr>'; return; }
+  if (!a.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No appointments.</td></tr>'; return; }
   tbody.innerHTML = a.map(x => `<tr>
-    <td><strong>${esc(x.name)}</strong></td><td>${esc(x.email)}</td><td>${esc(x.phone||'—')}</td>
-    <td>${esc(x.service)}</td><td><span class="badge badge-${x.status}">${x.status}</span></td><td>${fmtDate(x.createdAt)}</td>
+    <td><strong>${esc(x.name)}</strong></td><td>${esc(x.email)}</td>
+    <td>${esc(x.service)}</td><td style="font-weight:600;color:var(--navy);font-size:0.85rem">${esc(x.slotLabel||'—')}</td><td><span class="badge badge-${x.status}">${x.status}</span></td><td>${fmtDate(x.createdAt)}</td>
     <td><select onchange="updateAppt('${x.id}',this.value)" style="font-size:0.78rem;padding:4px 8px;border-radius:6px;border:1px solid var(--gray-200)">
       <option value="confirmed" ${x.status==='confirmed'?'selected':''}>Confirmed</option>
       <option value="completed" ${x.status==='completed'?'selected':''}>Completed</option>
