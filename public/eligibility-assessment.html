@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>Eligibility Assessment — Priority Citizenship</title>
 <meta name="description" content="Check your eligibility for Vanuatu immigration. Official criteria assessment, personalized score, and tailored program recommendations.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -116,6 +116,23 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   .hero h1{font-size:1.6rem}.wizard-card,.score-card,.breakdown,.req-checklist{padding:24px;margin:0 10px 40px}.option-grid{grid-template-columns:1fr}
   .cat-left{width:110px}
 }
+/* Print / Export PDF */
+@media print {
+  body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tool-nav,.hero,#wizardView,.btn,.legend{display:none!important}
+  .results{padding:0!important}
+  .results-header h2{color:#000!important;font-size:1.4rem}
+  .score-card,.breakdown,.req-checklist,.rec-card{box-shadow:none!important;border:1px solid #ddd!important;page-break-inside:avoid}
+  .rec-card{border-left:4px solid var(--gold)!important}
+  a{text-decoration:none!important;color:#000!important}
+  .rec-actions{display:none!important}
+}
+.result-toolbar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.result-toolbar .btn-export{background:#fff;color:var(--navy);border:2px solid var(--gold);padding:10px 20px;border-radius:10px;font-family:inherit;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px}
+.result-toolbar .btn-export:hover{background:var(--gold);color:#fff}
+.score-card{padding:28px 32px}.score-ring{width:120px;height:120px;margin:0 auto 14px}.score-ring .value-num .num{font-size:2.2rem}.score-ring .value-num .txt{font-size:0.75rem}
+.breakdown{padding:24px 28px}.req-checklist{padding:24px 28px}.rec-card{padding:20px 24px}
+.cat-item{padding:10px 0}
 </style>
 </head>
 <body>
@@ -413,12 +430,13 @@ function showResults() {
   document.getElementById('resultsView').classList.remove('hidden');
   const r = calc(answers);
   const reqs = evalRequirements(answers);
-  const circ = 2*Math.PI*60;
+  const circ = 2*Math.PI*48;
   const sc = r.score;
   const col = sc>=70?'var(--success)':sc>=50?'#2563eb':sc>=30?'var(--warning)':'var(--danger)';
 
-  let h = `<div class="score-card">
-    <div class="score-ring"><svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="60" fill="none" stroke="var(--gray-100)" stroke-width="12"/><circle cx="80" cy="80" r="60" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" id="scoreArc"/></svg><div class="value-num"><div class="num">${sc}</div><div class="txt">out of 100</div></div></div>
+  let h = `<div class="result-toolbar"><button class="btn-export" onclick="window.print()" title="Print or save as PDF">🖨️ Export / Print PDF</button></div>
+    <div class="score-card">
+    <div class="score-ring"><svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" fill="none" stroke="var(--gray-100)" stroke-width="10"/><circle cx="60" cy="60" r="48" fill="none" stroke="${col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" id="scoreArc"/></svg><div class="value-num"><div class="num">${sc}</div><div class="txt">/ 100</div></div></div>
     <div class="score-tier" style="background:${sc>=70?'var(--success-light)':sc>=50?'#dbeafe':sc>=30?'var(--warning-light)':'var(--danger-light)'};color:${col}">${r.tier}</div>
     <p class="score-summary">${r.summary}</p></div>`;
 
