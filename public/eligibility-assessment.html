@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eligibility Assessment — Priority Citizenship</title>
-<meta name="description" content="Check your eligibility for Vanuatu immigration. Personalized score, breakdown, and recommendations.">
+<meta name="description" content="Check your eligibility for Vanuatu immigration. Official criteria assessment, personalized score, and tailored program recommendations.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -26,12 +26,12 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .hero .badge{display:inline-block;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--gold-light);margin-bottom:16px}
 .hero h1{font-size:2.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
 .hero h1 span{color:var(--gold)}
-.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:520px;margin:0 auto}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:560px;margin:0 auto}
 
 .wizard-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
-.wizard-progress{display:flex;gap:8px;align-items:center;margin-bottom:24px}
-.wizard-dot{width:12px;height:12px;border-radius:50%;background:var(--gray-200);transition:all 0.3s}
-.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:14px;height:14px}
+.wizard-progress{display:flex;gap:6px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.wizard-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-200);transition:all 0.3s;flex-shrink:0}
+.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:12px;height:12px}
 .wizard-dot.done{background:var(--success)}
 .step-label{font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
 .question-label{display:block;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:24px}
@@ -53,6 +53,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .btn-primary:hover{background:var(--gold-light)}
 .btn-outline{background:transparent;color:var(--gray-500);border:2px solid var(--gray-200)}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-sm{padding:8px 18px;font-size:0.85rem}
 
 /* Results */
 .results{padding:60px 0 80px}
@@ -74,10 +75,24 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .breakdown h3{font-size:1.1rem;color:var(--navy);margin-bottom:20px}
 .b-item{display:flex;align-items:center;gap:14px;margin-bottom:16px}
 .b-item:last-child{margin-bottom:0}
-.b-label{width:130px;font-size:0.85rem;font-weight:600;color:var(--gray-700);flex-shrink:0}
+.b-label{width:150px;font-size:0.83rem;font-weight:600;color:var(--gray-700);flex-shrink:0}
 .b-bar{flex:1;height:10px;background:var(--gray-100);border-radius:5px;overflow:hidden}
 .b-fill{height:100%;border-radius:5px;transition:width 1s ease}
 .b-val{width:44px;text-align:right;font-size:0.85rem;font-weight:700;color:var(--navy);flex-shrink:0}
+
+/* Requirements checklist */
+.req-checklist{background:#fff;border-radius:20px;padding:32px 40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
+.req-checklist h3{font-size:1.1rem;color:var(--navy);margin-bottom:8px}
+.req-checklist .subtitle{font-size:0.85rem;color:var(--gray-500);margin-bottom:20px}
+.req-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-100)}
+.req-item:last-child{border-bottom:none}
+.req-icon{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0}
+.req-icon.met{background:var(--success-light);color:var(--success)}
+.req-icon.unmet{background:var(--danger-light);color:var(--danger)}
+.req-icon.partial{background:var(--warning-light);color:var(--warning)}
+.req-text{flex:1}
+.req-text .req-name{font-size:0.9rem;font-weight:600;color:var(--navy)}
+.req-text .req-detail{font-size:0.8rem;color:var(--gray-500)}
 
 .rec-cards{display:grid;gap:16px;margin-bottom:20px}
 .rec-card{background:#fff;border-radius:16px;padding:28px;box-shadow:0 2px 16px rgba(0,0,0,0.06);border-left:4px solid var(--gold);transition:all 0.2s}
@@ -92,8 +107,8 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .container{padding:0 20px}
 
 @media(max-width:600px){
-  .hero h1{font-size:1.6rem}.wizard-card{padding:24px;margin:0 10px 40px}.option-grid{grid-template-columns:1fr}
-  .score-card,.breakdown{padding:24px}.b-label{width:90px;font-size:0.75rem}
+  .hero h1{font-size:1.6rem}.wizard-card,.score-card,.breakdown,.req-checklist{padding:24px;margin:0 10px 40px}.option-grid{grid-template-columns:1fr}
+  .b-label{width:100px;font-size:0.75rem}
 }
 </style>
 </head>
@@ -107,9 +122,9 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 <!-- Wizard -->
 <div id="wizardView">
   <div class="hero"><div class="container">
-    <div class="badge">&#9670; AI-Powered Assessment</div>
+    <div class="badge">✓ AI-Powered Assessment</div>
     <h1>Eligibility <span>Check</span></h1>
-    <p>5 quick questions. Instant score, category breakdown, and tailored program recommendations.</p>
+    <p>11 questions covering official Vanuatu immigration requirements. Instant score, requirement-by-requirement breakdown, and tailored program matches.</p>
   </div></div>
   <div class="container"><div class="wizard-card" id="wizardCard"></div></div>
 </div>
@@ -118,30 +133,75 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 <div id="resultsView" class="results hidden">
   <div class="results-header"><div class="container">
     <h2>Your Immigration <span style="color:var(--gold)">Profile</span></h2>
-    <p>Score breakdown based on your answers. All calculations are done locally — no data leaves your browser.</p>
+    <p>Score based on official Vanuatu eligibility criteria. All calculations are done locally — no data leaves your browser.</p>
   </div></div>
   <div class="container" id="resultsContent"></div>
-  <div class="legend">&#9432; This pre-assessment is indicative only. A licensed advisor provides definitive eligibility evaluation during your free consultation.</div>
+  <div class="legend">&#9432; This pre-assessment is indicative only. A licensed immigration advisor provides definitive eligibility evaluation during your free consultation.</div>
 </div>
 
 <script>
-let step = 0, totalSteps = 6;
-let answers = { age:35, education:'bachelor', workExperience:5, englishProficiency:'intermediate', budget:100000 };
+let step = 0, totalSteps = 12;
+let answers = {
+  age:35, passportValidity:'valid6', education:'bachelor', workExperience:5,
+  englishProficiency:'intermediate', budget:100000, criminalRecord:'clean',
+  healthStatus:'good', fundSource:'employment', sanctionsStatus:'clear', netWorth:'moderate'
+};
+
 const steps = [
-  { key:'age', title:'What is your age?', hint:'Applicants 25–55 typically score highest. All ages are welcome to apply.', type:'number', min:18, max:120, default:35 },
-  { key:'education', title:'Highest education level?', type:'options', options:[
+  { key:'age', title:'What is your age?', hint:'Official requirement: applicants must be at least 18 years old. The 25–55 age range typically receives the most favorable assessment.', type:'number', min:18, max:120, default:35 },
+  { key:'passportValidity', title:'Is your passport valid for at least 6 months?', hint:'Official requirement: ALL Vanuatu visa and citizenship applications require a passport valid for at least 6 months beyond your planned stay.', type:'options', options:[
+    {id:'valid6', label:'✅ Yes — valid for 6+ months'},
+    {id:'validLess', label:'⚠️ Less than 6 months — needs renewal'},
+    {id:'noPassport', label:'🔴 No valid passport / expired'}
+  ]},
+  { key:'education', title:'What is your highest education level?', hint:'While Vanuatu has no strict education requirement, higher education improves your overall profile and business visa eligibility.', type:'options', options:[
     {id:'phd',label:'PhD / Doctorate'},{id:'master',label:"Master's Degree"},{id:'bachelor',label:"Bachelor's Degree"},
     {id:'diploma',label:'Diploma / Associate'},{id:'highschool',label:'High School'},{id:'other',label:'Other'}
   ]},
-  { key:'workExperience', title:'Years of professional experience?', hint:'Includes employment, business ownership, and freelancing.', type:'number', min:0, max:50, default:5 },
-  { key:'englishProficiency', title:'English language proficiency?', hint:'Vanuatu has no language test — this helps us recommend the right program.', type:'options', options:[
-    {id:'native',label:'Native'},{id:'fluent',label:'Fluent'},{id:'intermediate',label:'Intermediate'},{id:'basic',label:'Basic'},{id:'none',label:'Limited / None'}
+  { key:'workExperience', title:'Years of professional or business experience?', hint:'Official requirement for business/investor visas: you must demonstrate relevant professional or business experience. 5+ years is strongest.', type:'number', min:0, max:50, default:5 },
+  { key:'englishProficiency', title:'What is your English proficiency level?', hint:'Vanuatu has no official language test, but English is an official language. Proficiency helps with application processing and settlement.', type:'options', options:[
+    {id:'native',label:'Native / Bilingual'},{id:'fluent',label:'Fluent'},{id:'intermediate',label:'Intermediate'},{id:'basic',label:'Basic'},{id:'none',label:'Limited / None'}
   ]},
-  { key:'budget', title:'Estimated investment budget (USD)?', hint:'Different programs require different investment levels.', type:'range', options:[
-    {id:150000,label:'$150,000+'},{id:100000,label:'$100,000–$150,000'},{id:50000,label:'$50,000–$100,000'},
-    {id:20000,label:'$20,000–$50,000'},{id:10000,label:'Under $20,000'}
+  { key:'budget', title:'What is your available investment budget (USD)?', hint:'Official requirement: citizenship requires $130,000+ contribution. Residence permits vary by category. This is a mandatory financial threshold.', type:'range', options:[
+    {id:200000,label:'$200,000+'},
+    {id:150000,label:'$130,000–$200,000'},
+    {id:100000,label:'$80,000–$130,000'},
+    {id:50000,label:'$30,000–$80,000'},
+    {id:20000,label:'$10,000–$30,000'},
+    {id:10000,label:'Under $10,000'}
   ]},
-  { key:'review', title:'Review Your Profile', type:'review' }
+  { key:'criminalRecord', title:'Do you have any criminal record?', hint:'Official requirement: ALL Vanuatu programs require a clean criminal record. Police clearance certificates from your country of residence are mandatory.', type:'options', options:[
+    {id:'clean', label:'✅ Clean — no criminal record'},
+    {id:'minor', label:'⚠️ Minor/spent — traffic offense or expunged conviction'},
+    {id:'record', label:'🔴 Yes — I have a record I need to discuss'}
+  ]},
+  { key:'healthStatus', title:'What is your health status?', hint:'Official requirement: A medical certificate from an approved physician may be required. Serious communicable diseases can affect eligibility.', type:'options', options:[
+    {id:'good', label:'✅ Good health — no significant medical conditions'},
+    {id:'managed', label:'🩺 Managed condition — stable with regular treatment'},
+    {id:'serious', label:'🔴 Serious condition — may affect eligibility'}
+  ]},
+  { key:'fundSource', title:'Can you document the source of your investment funds?', hint:'Official requirement: Vanuatu requires proof of legal source of funds for anti-money laundering (AML) compliance. Bank statements, business income, or asset sales are acceptable.', type:'options', options:[
+    {id:'employment', label:'💼 Employment income / salary savings'},
+    {id:'business', label:'🏢 Business income / company dividends'},
+    {id:'investments', label:'📈 Investment returns / asset sales'},
+    {id:'inheritance', label:'📜 Inheritance / family wealth'},
+    {id:'crypto', label:'₿ Cryptocurrency / digital assets'},
+    {id:'other', label:'🔒 Other — I can document this'}
+  ]},
+  { key:'sanctionsStatus', title:'Are you subject to any international sanctions or watchlists?', hint:'Official requirement: Vanuatu cannot process applications from individuals on UN, EU, US, or other international sanctions lists. This is non-negotiable.', type:'options', options:[
+    {id:'clear', label:'✅ No — I am not on any sanctions lists'},
+    {id:'unsure', label:'⚠️ Unsure — I need to verify this'},
+    {id:'yes', label:'🔴 Yes — I may be on a list (let\'s discuss)'}
+  ]},
+  { key:'netWorth', title:'What is your approximate total net worth (USD)?', hint:'This helps us assess financial capacity beyond the immediate investment. Vanuatu programs look favorably on demonstrated financial stability.', type:'range', options:[
+    {id:1000000, label:'$1,000,000+'},
+    {id:500000, label:'$500,000–$1,000,000'},
+    {id:250000, label:'$250,000–$500,000'},
+    {id:100000, label:'$100,000–$250,000'},
+    {id:50000, label:'$50,000–$100,000'},
+    {id:25000, label:'Under $50,000'}
+  ]},
+  { key:'review', title:'Review Your Complete Profile', type:'review' }
 ];
 
 function render() {
@@ -164,11 +224,17 @@ function render() {
       return `<button class="option-btn${sel?' selected':''}" onclick="pickNum('${s.key}',${o.id},this)"><span class="icon">${sel?'✓':''}</span>${o.label}</button>`;
     }).join('')}</div>`;
   } else {
-    const labels = {age:'Age',education:'Education',workExperience:'Work Experience',englishProficiency:'English',budget:'Budget'};
+    const labels = {age:'Age', passportValidity:'Passport Validity', education:'Education', workExperience:'Work Experience', englishProficiency:'English Proficiency', budget:'Investment Budget', criminalRecord:'Criminal Record', healthStatus:'Health Status', fundSource:'Source of Funds', sanctionsStatus:'Sanctions Status', netWorth:'Net Worth'};
     const fmt = (k,v) => {
+      if (k==='passportValidity') return ({valid6:'Valid 6+ months', validLess:'Less than 6 months', noPassport:'No valid passport'})[v]||v;
       if (k==='education') return ({phd:'PhD',master:"Master's",bachelor:"Bachelor's",diploma:'Diploma',highschool:'High School',other:'Other'})[v]||v;
       if (k==='englishProficiency') return ({native:'Native',fluent:'Fluent',intermediate:'Intermediate',basic:'Basic',none:'Limited'})[v]||v;
-      if (k==='budget') return '$'+Number(v).toLocaleString();
+      if (k==='criminalRecord') return ({clean:'Clean — no record', minor:'Minor/spent only', record:'Record — needs discussion'})[v]||v;
+      if (k==='healthStatus') return ({good:'Good — no issues', managed:'Managed condition', serious:'Serious — may affect eligibility'})[v]||v;
+      if (k==='fundSource') return ({employment:'Employment/salary', business:'Business income', investments:'Investments/asset sales', inheritance:'Inheritance/family wealth', crypto:'Cryptocurrency', other:'Other — documented'})[v]||v;
+      if (k==='sanctionsStatus') return ({clear:'Not on sanctions lists', unsure:'Needs verification', yes:'May be on a list'})[v]||v;
+      if (k==='budget') return v>=200000?'$200,000+':v>=150000?'$130,000–$200,000':v>=100000?'$80,000–$130,000':v>=50000?'$30,000–$80,000':v>=20000?'$10,000–$30,000':'Under $10,000';
+      if (k==='netWorth') return v>=1000000?'$1,000,000+':v>=500000?'$500,000–$1,000,000':v>=250000?'$250,000–$500,000':v>=100000?'$100,000–$250,000':v>=50000?'$50,000–$100,000':'Under $50,000';
       if (k==='workExperience') return v+' years';
       return v;
     };
@@ -197,20 +263,162 @@ function next() {
 }
 function prev() { if (step>0) { step--; render(); } }
 
+// ═══════ Official Vanuatu Requirements Checklist ══════════
+function evalRequirements(a) {
+  const budget = parseInt(a.budget)||0;
+  const age = parseInt(a.age)||35;
+  const exp = parseInt(a.workExperience)||0;
+
+  return [
+    {
+      name: 'Minimum Age (18+)',
+      detail: 'Applicants must be at least 18 years old for all visa categories.',
+      met: age >= 18,
+      official: true
+    },
+    {
+      name: 'Valid Passport (6+ months)',
+      detail: 'Passport must have at least 6 months validity beyond your planned stay.',
+      met: a.passportValidity === 'valid6',
+      metPartial: a.passportValidity === 'validLess',
+      official: true
+    },
+    {
+      name: 'Clean Criminal Record',
+      detail: 'Police clearance certificate required. No serious criminal convictions.',
+      met: a.criminalRecord === 'clean',
+      metPartial: a.criminalRecord === 'minor',
+      official: true
+    },
+    {
+      name: 'Medical Certificate / Good Health',
+      detail: 'Basic medical examination may be required. No serious communicable diseases.',
+      met: a.healthStatus === 'good' || a.healthStatus === 'managed',
+      official: true
+    },
+    {
+      name: 'Proof of Legal Source of Funds',
+      detail: 'Documented evidence of where your investment funds came from (AML requirement).',
+      met: a.fundSource !== 'other',
+      metPartial: a.fundSource === 'other',
+      official: true
+    },
+    {
+      name: 'Not on International Sanctions Lists',
+      detail: 'Must not appear on UN, EU, US, or other international sanctions/warning lists.',
+      met: a.sanctionsStatus === 'clear',
+      official: true
+    },
+    {
+      name: 'Sufficient Investment Capital',
+      detail: 'Must meet the minimum investment threshold for your target program.',
+      met: budget >= 130000,
+      metPartial: budget >= 30000,
+      official: true
+    },
+    {
+      name: 'Professional / Business Experience',
+      detail: 'Relevant experience required for business and investor visa categories.',
+      met: exp >= 5,
+      metPartial: exp >= 2,
+      official: false
+    },
+    {
+      name: 'Education Background',
+      detail: 'Higher education strengthens your profile for most visa categories.',
+      met: ['phd','master','bachelor'].includes(a.education),
+      metPartial: ['diploma'].includes(a.education),
+      official: false
+    },
+    {
+      name: 'Net Worth & Financial Stability',
+      detail: 'Demonstrated overall financial capacity beyond the immediate investment.',
+      met: parseInt(a.netWorth) >= 250000,
+      metPartial: parseInt(a.netWorth) >= 100000,
+      official: false
+    }
+  ];
+}
+
+// ═══════ Enhanced Scoring Engine ══════════════════════════
+function calc(a) {
+  let t=0, det={};
+  const age=parseInt(a.age)||35;
+  let as=age>=30&&age<=50?20:age>=25&&age<=60?16:age>=18&&age<=65?12:5;
+  det.age={label:'Age',score:as,max:20};t+=as;
+
+  let ps=a.passportValidity==='valid6'?15:a.passportValidity==='validLess'?7:2;
+  det.passport={label:'Passport Validity',score:ps,max:15};t+=ps;
+
+  const es={phd:15,master:14,bachelor:12,diploma:9,highschool:6,other:4};
+  const edu=es[a.education]||6;det.education={label:'Education',score:edu,max:15};t+=edu;
+
+  const exp=Math.round(Math.min((parseInt(a.workExperience)||0)*1.5,15));
+  det.workExperience={label:'Work Experience',score:exp,max:15};t+=exp;
+
+  const eng={native:10,fluent:9,intermediate:7,basic:4,none:2};
+  const eg=eng[a.englishProficiency]||4;det.english={label:'English',score:eg,max:10};t+=eg;
+
+  const bd=parseInt(a.budget)||0;
+  let bs=bd>=200000?20:bd>=150000?18:bd>=100000?14:bd>=50000?10:bd>=20000?6:3;
+  det.budget={label:'Investment Budget',score:bs,max:20};t+=bs;
+
+  let cs=a.criminalRecord==='clean'?15:a.criminalRecord==='minor'?8:2;
+  det.criminal={label:'Criminal Record',score:cs,max:15};t+=cs;
+
+  let hs=a.healthStatus==='good'?10:a.healthStatus==='managed'?7:3;
+  det.health={label:'Health Status',score:hs,max:10};t+=hs;
+
+  let fs=a.fundSource==='other'?4:8;
+  det.fundSource={label:'Source of Funds',score:fs,max:8};t+=fs;
+
+  let ss=a.sanctionsStatus==='clear'?12:a.sanctionsStatus==='unsure'?5:1;
+  det.sanctions={label:'Sanctions Status',score:ss,max:12};t+=ss;
+
+  let nw=parseInt(a.netWorth)||25000;
+  let nws=nw>=1000000?10:nw>=500000?9:nw>=250000?7:nw>=100000?5:nw>=50000?3:1;
+  det.netWorth={label:'Net Worth',score:nws,max:10};t+=nws;
+
+  const score=Math.round(Math.min(t,100));
+  let tier,sum,recs;
+
+  if(score>=75){tier='Excellent — Strong Candidate';sum='Your profile meets or exceeds all key Vanuatu immigration requirements. You are an excellent candidate for the Citizenship by Investment program and all other visa categories.';recs=[{name:'🛂 Citizenship by Investment',desc:'Your strongest option. 1–2 months processing. Full passport with visa-free 100+ countries. Your profile meets all requirements — budget, clean record, and documentation readiness.'},{name:'💼 Business Immigration',desc:'With your professional experience and capital, you qualify for investor/business visa pathways with residence rights and tax advantages.'},{name:'🏠 Residence Permit',desc:'Multiple categories available based on your preference — work, retire, or investor residence with clear pathway to permanence.'}];}
+  else if(score>=55){tier:'Good — Solid Candidate';sum='Your profile is strong for most Vanuatu programs. Some categories may require additional documentation or a slightly adjusted approach. A consultation will identify the optimal path.';recs=[{name:'🏠 Residence Permit',desc:'Work, retire, or investor routes available. 2–3 month processing. Your profile meets core requirements with room to optimize.'},{name:'👨‍👩‍👧‍👦 Family Sponsorship',desc:'If family reunification is your goal, this efficient pathway typically processes in 1–3 months.'},{name:'🛂 Citizenship by Investment',desc:'Achievable with proper structuring. Our advisors can help position your application for the strongest outcome.'}];}
+  else if(score>=35){tier:'Moderate — Developing Profile';sum:'Your profile meets baseline requirements for select Vanuatu programs but has gaps in key areas. We recommend a tailored strategy to strengthen your eligibility over 3–6 months.';recs=[{name:'✈️ Visitor & Tourist Visa',desc:'Start with a short-term visa. 5–10 day processing. Build Vanuatu travel history and explore opportunities in person.'},{name:'💼 Business Immigration',desc:'If you have a solid business plan, this pathway may work with additional documentation and structuring.'},{name:'📋 Free Consultation',desc:'Our licensed advisor creates a personalized roadmap to address any gaps and position you for success.'}];}
+  else{tier:'Exploratory — Needs Strategy';sum:'Your current profile falls below standard Vanuatu thresholds in key areas. However, every case is unique — many successful applicants started here. Let us design a customized pathway for you.';recs=[{name:'📋 Free Consultation',desc:'Speak with a licensed advisor. We find creative solutions — documentation strengthening, alternative pathways, or phased approaches.'},{name:'✈️ Visitor & Tourist Visa',desc:'Explore Vanuatu first. Build familiarity with the country and meet advisors in person.'}];}
+
+  return {score,tier,summary:sum,details:det,recs};
+}
+
 function showResults() {
   document.getElementById('wizardView').classList.add('hidden');
   document.getElementById('resultsView').classList.remove('hidden');
   const r = calc(answers);
+  const reqs = evalRequirements(answers);
   const circ = 2*Math.PI*60;
   const sc = r.score;
   const col = sc>=70?'var(--success)':sc>=50?'#2563eb':sc>=30?'var(--warning)':'var(--danger)';
-  const tierCls = ['','tier-strong','tier-good','tier-fair','tier-low'][sc>=70?1:sc>=50?2:sc>=30?3:4];
 
   let h = `<div class="score-card">
     <div class="score-ring"><svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="60" fill="none" stroke="var(--gray-100)" stroke-width="12"/><circle cx="80" cy="80" r="60" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${circ}" id="scoreArc"/></svg><div class="value-num"><div class="num">${sc}</div><div class="txt">out of 100</div></div></div>
-    <div class="score-tier ${tierCls}" style="background:${sc>=70?'var(--success-light)':sc>=50?'#dbeafe':sc>=30?'var(--warning-light)':'var(--danger-light)'};color:${col}">${r.tier}</div>
+    <div class="score-tier" style="background:${sc>=70?'var(--success-light)':sc>=50?'#dbeafe':sc>=30?'var(--warning-light)':'var(--danger-light)'};color:${col}">${r.tier}</div>
     <p class="score-summary">${r.summary}</p></div>`;
 
+  // Requirements Checklist
+  h += `<div class="req-checklist"><h3>📋 Official Requirements Checklist</h3><p class="subtitle">Based on actual Vanuatu immigration criteria. ✓ = met, ⚠ = partial, ✗ = not met.</p>`;
+  reqs.forEach(req => {
+    let icon, cls;
+    if (req.met) { icon = '✓'; cls = 'met'; }
+    else if (req.metPartial) { icon = '⚠'; cls = 'partial'; }
+    else { icon = '✗'; cls = 'unmet'; }
+    h += `<div class="req-item">
+      <div class="req-icon ${cls}">${icon}</div>
+      <div class="req-text"><div class="req-name">${req.name} ${req.official?'<span style="font-size:0.7rem;color:var(--gold);font-weight:600">[OFFICIAL]</span>':''}</div><div class="req-detail">${req.detail}</div></div>
+    </div>`;
+  });
+  h += `</div>`;
+
+  // Category Breakdown
   h += `<div class="breakdown"><h3>Category Breakdown</h3>`;
   Object.entries(r.details).forEach(([k,d])=>{
     const pct = Math.max((d.score/d.max)*100,4);
@@ -219,40 +427,18 @@ function showResults() {
   });
   h += `</div>`;
 
+  // Program Recommendations
   h += `<div class="rec-cards">${r.recs.map((x,i)=>`<div class="rec-card"><span class="tag">${i===0?'★ Best Match':i===1?'Recommended':'Also Consider'}</span><h4>${x.name}</h4><p>${x.desc}</p><div class="rec-actions"><a href="/tools/book-appointment" class="btn btn-primary" style="font-size:0.85rem;padding:10px 20px">Book Consultation</a><a href="/#services" class="btn btn-outline" style="font-size:0.85rem;padding:10px 20px">About Our Services →</a></div></div>`).join('')}</div>`;
-  h += `<div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><button class="btn btn-outline" onclick="restart()">&#8592; Retake</button><a href="/tools" class="btn btn-outline">&#8592; AI Tools</a><a href="/" class="btn btn-outline">&#8592; Home</a></div>`;
+
+  h += `<div style="text-align:center;margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><button class="btn btn-outline" onclick="restart()">← Retake</button><a href="/tools" class="btn btn-outline">← AI Tools</a><a href="/" class="btn btn-outline">← Home</a></div>`;
   document.getElementById('resultsContent').innerHTML = h;
   setTimeout(()=>{ const a=document.getElementById('scoreArc'); if(a) a.style.strokeDashoffset=circ*(1-sc/100); },200);
 }
 
 function restart() {
-  step=0;answers={age:35,education:'bachelor',workExperience:5,englishProficiency:'intermediate',budget:100000};
+  step=0;answers={age:35, passportValidity:'valid6', education:'bachelor', workExperience:5, englishProficiency:'intermediate', budget:100000, criminalRecord:'clean', healthStatus:'good', fundSource:'employment', sanctionsStatus:'clear', netWorth:'moderate'};
   document.getElementById('wizardView').classList.remove('hidden');
   document.getElementById('resultsView').classList.add('hidden');render();
-}
-
-// ═══════ Deterministic Scoring Engine ════════════════
-function calc(a) {
-  let t=0, det={};
-  const age=parseInt(a.age)||35;
-  let as=age>=30&&age<=50?20:age>=25&&age<=60?16:age>=18&&age<=65?12:5;
-  det.age={label:'Age',score:as,max:20};t+=as;
-  const es={phd:20,master:18,bachelor:15,diploma:10,highschool:6,other:4};
-  const edu=es[a.education]||6;det.education={label:'Education',score:edu,max:20};t+=edu;
-  const exp=Math.round(Math.min((parseInt(a.workExperience)||0)*1.6,20));
-  det.workExperience={label:'Work Experience',score:exp,max:20};t+=exp;
-  const eng={native:15,fluent:13,intermediate:9,basic:5,none:2};
-  const eg=eng[a.englishProficiency]||5;det.english={label:'English',score:eg,max:15};t+=eg;
-  const bd=parseInt(a.budget)||0;
-  let bs=bd>=150000?25:bd>=100000?22:bd>=50000?16:bd>=20000?10:4;
-  det.budget={label:'Budget',score:bs,max:25};t+=bs;
-  const score=Math.round(Math.min(t,100));
-  let tier,sum,recs;
-  if(score>=70){tier='Strong Profile';sum='Excellent match for Vanuatu\'s top programs. You likely qualify for citizenship by investment.';recs=[{name:'Citizenship by Investment',desc:'1–2 months processing. Visa-free 100+ countries. No residency required. From $130,000.'},{name:'Business Immigration',desc:'Start or expand your business in Vanuatu with residence rights and tax advantages.'},{name:'Residence Permit',desc:'Flexible option to live, work, or retire in Vanuatu with straightforward requirements.'}];}
-  else if(score>=50){tier='Good Potential';sum='Solid profile. Several programs are within reach — a consultation will identify your optimal path.';recs=[{name:'Residence Permit',desc:'Work, retire, or invest — multiple categories available with 2–3 month processing.'},{name:'Family Sponsorship',desc:'If you have Vanuatu family ties, this efficient pathway includes spouse and dependents.'},{name:'Citizenship by Investment',desc:'Still achievable. We can advise on structuring your application for strongest results.'}];}
-  else if(score>=30){tier='Developing Profile';sum='Meets baseline for select programs. We can help strengthen your profile over 3–12 months.';recs=[{name:'Visitor & Tourist Visa',desc:'Start with a short-term visa. 5–10 day processing. Build your Vanuatu travel history.'},{name:'Visa Consulting',desc:'Our advisors create a personalized roadmap to position you for higher-tier programs.'}];}
-  else{tier='Exploratory';sum='Your profile is below typical thresholds — but every case is unique. Let us explore creative pathways together.';recs=[{name:'Free Consultation',desc:'Speak with a licensed advisor. We find creative solutions others miss. No obligation, 100% confidential.'}];}
-  return {score,tier,summary:sum,details:det,recs};
 }
 
 render();

@@ -27,12 +27,12 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .hero .badge{display:inline-block;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--gold-light);margin-bottom:16px}
 .hero h1{font-size:2.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
 .hero h1 span{color:var(--gold)}
-.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:540px;margin:0 auto}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:580px;margin:0 auto}
 
 .wizard-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
-.wizard-progress{display:flex;gap:8px;align-items:center;margin-bottom:24px}
-.wizard-dot{width:12px;height:12px;border-radius:50%;background:var(--gray-200);transition:all 0.3s}
-.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:14px;height:14px}
+.wizard-progress{display:flex;gap:6px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.wizard-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-200);transition:all 0.3s;flex-shrink:0}
+.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:12px;height:12px}
 .wizard-dot.done{background:var(--success)}
 .step-label{font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
 .question-label{display:block;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:24px}
@@ -63,7 +63,6 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .results-header h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px}
 .results-header p{color:rgba(255,255,255,0.6)}
 
-/* Main recommendation */
 .main-rec{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
 .main-rec-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:20px;flex-wrap:wrap}
 .main-rec-header .match-badge{display:flex;align-items:center;gap:8px;background:var(--success-light);color:var(--success);padding:8px 16px;border-radius:100px;font-weight:700;font-size:0.95rem;white-space:nowrap}
@@ -81,11 +80,16 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .req-list li{font-size:0.9rem;color:var(--gray-700);padding:4px 0}
 .req-list li::marker{color:var(--gold)}
 
-.why-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:20px;margin-bottom:24px}
+.why-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:20px;margin-bottom:16px}
 .why-box h4{color:var(--gold-dark);font-size:0.9rem;margin-bottom:8px}
 .why-box p{color:var(--gray-700);font-size:0.92rem;line-height:1.6}
 
-/* Alternatives */
+.benefit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+.benefit-item{display:flex;align-items:flex-start;gap:10px;background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.1);border-radius:10px;padding:14px}
+.benefit-item .b-icon{font-size:1.1rem;flex-shrink:0}
+.benefit-item .b-text{font-size:0.85rem;color:var(--gray-700);line-height:1.5}
+.benefit-item .b-text strong{color:var(--navy);display:block;font-size:0.82rem;margin-bottom:2px}
+
 .alts-title{font-size:1.2rem;font-weight:700;color:#fff;margin:40px 0 16px}
 .alt-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
 .alt-card{background:rgba(255,255,255,0.95);border-radius:14px;padding:24px;transition:all 0.2s;border:1px solid var(--gray-200)}
@@ -104,7 +108,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .hidden{display:none !important}
 
 @media(max-width:600px){
-  .hero h1{font-size:1.6rem}.wizard-card{padding:24px;margin:0 10px 40px}.option-grid,.info-grid,.alt-grid{grid-template-columns:1fr}
+  .hero h1{font-size:1.6rem}.wizard-card{padding:24px;margin:0 10px 40px}.option-grid,.info-grid,.alt-grid,.benefit-grid{grid-template-columns:1fr}
   .main-rec{padding:24px}
 }
 </style>
@@ -121,7 +125,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   <div class="hero"><div class="container">
     <div class="badge">&#9670; AI-Powered Matching</div>
     <h1>AI Visa <span>Recommendation</span></h1>
-    <p>Answer 6 questions. We'll match you with the best Vanuatu visa program and show detailed requirements plus alternatives.</p>
+    <p>Answer 12 questions. We'll match you with the best Vanuatu visa program, explain why, and show you exactly what benefits you'll gain.</p>
   </div></div>
   <div class="container"><div class="wizard-card" id="wizardCard"></div></div>
 </div>
@@ -130,36 +134,83 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 <div id="resultsView" class="results hidden">
   <div class="results-header"><div class="container">
     <h2>Your Visa <span style="color:var(--gold)">Match</span></h2>
-    <p>Based on your profile: age, budget, experience, and goals.</p>
+    <p>Based on your complete profile: goals, budget, timeline, background, and preferences.</p>
   </div></div>
   <div class="container" id="resultsContent"></div>
   <div class="legend">&#9432; Recommendations are algorithmic. A licensed advisor provides personalized guidance during your free consultation.</div>
 </div>
 
 <script>
-let step=0, totalSteps=7;
-let answers={age:35,education:'bachelor',workExperience:5,englishProficiency:'intermediate',budget:100000,hasFamily:false,goal:'mobility'};
+let step=0, totalSteps=13;
+let answers={
+  age:35, goal:'mobility', nationalityPassport:'strong', hasFamily:false,
+  budget:100000, timeline:'3months', workExperience:5, businessOwnership:'none',
+  criminalRecord:'clean', investmentType:'flexible', englishProficiency:'intermediate', healthStatus:'good'
+};
 
 const steps = [
-  {key:'age',title:'Your age?',hint:'All ages welcome. Different programs suit different life stages.',type:'number',min:18,max:120,default:35},
-  {key:'goal',title:'Your primary goal?',hint:'This helps us match you to the right visa category.',type:'options',options:[
-    {id:'mobility',label:'🗺️ Global mobility & second passport'},
-    {id:'residence',label:'🏠 Live, work, or retire in Vanuatu'},
-    {id:'family',label:'👨‍👩‍👧‍👦 Bring family / family reunification'},
-    {id:'business',label:'💼 Start or expand a business'},
-    {id:'visit',label:'✈️ Short-term visit or tourism'}
+  {key:'age', title:'What is your age?', hint:'Different Vanuatu programs suit different life stages. Citizenship programs favor applicants 25–55, while retirement residence is ideal for 50+.', type:'number', min:18, max:120, default:35},
+  {key:'goal', title:'What is your primary immigration goal?', hint:'Your core motivation determines which visa category fits best.', type:'options', options:[
+    {id:'mobility', label:'🗺️ Global mobility — second passport, visa-free travel'},
+    {id:'residence', label:'🏠 Live, work, or retire in Vanuatu long-term'},
+    {id:'family', label:'👨‍👩‍👧‍👦 Family reunification — bring spouse/children/parents'},
+    {id:'business', label:'💼 Start or expand a business in Vanuatu'},
+    {id:'investment', label:'💰 Pure investment — asset diversification & tax planning'},
+    {id:'visit', label:'✈️ Short-term visit — tourism, business trip, or exploration'}
   ]},
-  {key:'hasFamily',title:'Are you applying with family?',hint:'Spouse and dependent children can be included in most applications.',type:'options',options:[
-    {id:true,label:'Yes — including spouse/children'},{id:false,label:'No — just myself'}
+  {key:'nationalityPassport', title:'How would you rate your current passport?', hint:'This helps us quantify the mobility benefit you\'d gain from a Vanuatu second passport.', type:'options', options:[
+    {id:'weak', label:'🔴 Weak — limited visa-free access (most Asian/African/Middle Eastern)'},
+    {id:'moderate', label:'🟡 Moderate — decent access but restricted (e.g. China, India, South Africa)'},
+    {id:'strong', label:'🟢 Strong — good visa-free coverage (e.g. EU, UK, Australia, Canada, USA)'}
   ]},
-  {key:'budget',title:'Your estimated budget (USD)?',hint:'Investment thresholds vary. We\'ll match you to programs within your range.',type:'range',options:[
-    {id:150000,label:'$150,000+'},{id:100000,label:'$100,000–$150,000'},{id:50000,label:'$50,000–$100,000'},{id:20000,label:'$20,000–$50,000'},{id:10000,label:'Under $20,000'}
+  {key:'hasFamily', title:'Are you planning to include family members?', hint:'Most Vanuatu programs allow inclusion of spouse and dependent children. Some cover parents.', type:'options', options:[
+    {id:'yes', label:'Yes — spouse and/or children'},
+    {id:'parents', label:'Yes — including parents/elders'},
+    {id:'no', label:'No — just myself'}
   ]},
-  {key:'workExperience',title:'Years of professional experience?',hint:'Business and work history factor into program eligibility.',type:'number',min:0,max:50,default:5},
-  {key:'englishProficiency',title:'English proficiency?',hint:'Vanuatu has no language test — this is for our recommendation only.',type:'options',options:[
-    {id:'native',label:'Native'},{id:'fluent',label:'Fluent'},{id:'intermediate',label:'Intermediate'},{id:'basic',label:'Basic'},{id:'none',label:'Limited / None'}
+  {key:'budget', title:'What is your available investment budget (USD)?', hint:'This is the single most important factor — different programs have minimum investment thresholds.', type:'range', options:[
+    {id:200000, label:'$200,000+ — full program access'},
+    {id:150000, label:'$130,000–$200,000 — citizenship range'},
+    {id:100000, label:'$80,000–$130,000 — high-tier options'},
+    {id:50000, label:'$30,000–$80,000 — business/residence range'},
+    {id:20000, label:'$10,000–$30,000 — residence/startup range'},
+    {id:10000, label:'Under $10,000 — entry-level options'}
   ]},
-  {key:'review',title:'Review Your Profile',type:'review'}
+  {key:'timeline', title:'How soon do you need your visa or citizenship?', hint:'Different programs have vastly different timelines. Citizenship can be as fast as 1–2 months.', type:'options', options:[
+    {id:'urgent', label:'⚡ Urgent — within 1–2 months'},
+    {id:'3months', label:'⏱ Soon — within 3 months'},
+    {id:'6months', label:'📅 Moderate — within 6 months'},
+    {id:'flexible', label:'🕐 Flexible — timeline is not critical'}
+  ]},
+  {key:'workExperience', title:'Years of professional or business experience?', hint:'Relevant for business immigration, investor visas, and strengthening your overall profile.', type:'number', min:0, max:50, default:5},
+  {key:'businessOwnership', title:'Do you own or have you owned a business?', hint:'Vanuatu offers dedicated business immigration pathways for entrepreneurs and investors.', type:'options', options:[
+    {id:'current', label:'Yes — I currently own/operate a business'},
+    {id:'past', label:'Yes — I have previously owned a business'},
+    {id:'planning', label:'Not yet — but I plan to start one in Vanuatu'},
+    {id:'none', label:'No — I am not a business owner'}
+  ]},
+  {key:'criminalRecord', title:'Do you have any criminal record?', hint:'A clean criminal record is required for ALL Vanuatu visa and citizenship programs. Be honest — we can advise on minor cases.', type:'options', options:[
+    {id:'clean', label:'✅ Clean — no criminal record whatsoever'},
+    {id:'minor', label:'⚠️ Minor/expunged — traffic offense or spent conviction'},
+    {id:'disclose', label:'🔴 Yes — I need to discuss this confidentially'}
+  ]},
+  {key:'investmentType', title:'What type of investment do you prefer?', hint:'Vanuatu offers different investment channels — donation (fastest/simplest), real estate, or business investment.', type:'options', options:[
+    {id:'donation', label:'💵 Government contribution/donation — simplest & fastest'},
+    {id:'realestate', label:'🏗️ Real estate purchase — tangible asset in Vanuatu'},
+    {id:'business', label:'🏢 Business investment — active enterprise in Vanuatu'},
+    {id:'flexible', label:'🤝 Flexible — open to advisor recommendation'}
+  ]},
+  {key:'englishProficiency', title:'What is your English proficiency level?', hint:'Vanuatu has no mandatory language test, but English proficiency affects your settlement experience.', type:'options', options:[
+    {id:'native', label:'Native / Bilingual'}, {id:'fluent', label:'Fluent — professional working proficiency'},
+    {id:'intermediate', label:'Intermediate — conversational'}, {id:'basic', label:'Basic — limited working proficiency'},
+    {id:'none', label:'Minimal — prefer other languages'}
+  ]},
+  {key:'healthStatus', title:'What is your current health status?', hint:'A basic medical certificate may be required. This does not affect our recommendation but helps us give accurate guidance.', type:'options', options:[
+    {id:'good', label:'✅ Good health — no significant conditions'},
+    {id:'managed', label:'🩺 Managed condition — stable with treatment'},
+    {id:'disclose', label:'🔴 Prefer to discuss — I have a condition to disclose'}
+  ]},
+  {key:'review', title:'Review Your Complete Profile', type:'review'}
 ];
 
 function render() {
@@ -172,12 +223,18 @@ function render() {
   else if(s.type==='options') h+=`<div class="option-grid">${s.options.map(o=>{const sel=answers[s.key]===o.id;return`<button class="option-btn${sel?' selected':''}" onclick="pick('${s.key}','${o.id}',this)"><span class="icon">${sel?'✓':''}</span>${o.label}</button>`;}).join('')}</div>`;
   else if(s.type==='range') h+=`<div class="option-grid">${s.options.map(o=>{const sel=answers[s.key]===o.id;return`<button class="option-btn${sel?' selected':''}" onclick="pickNum('${s.key}',${o.id},this)"><span class="icon">${sel?'✓':''}</span>${o.label}</button>`;}).join('')}</div>`;
   else{
-    const labels={age:'Age',goal:'Primary Goal',hasFamily:'With Family',budget:'Budget',workExperience:'Work Experience',englishProficiency:'English'};
+    const labels={age:'Age', goal:'Primary Goal', nationalityPassport:'Current Passport', hasFamily:'Including Family', budget:'Budget (USD)', timeline:'Timeline', workExperience:'Work Experience', businessOwnership:'Business Ownership', criminalRecord:'Criminal Record', investmentType:'Investment Preference', englishProficiency:'English Proficiency', healthStatus:'Health Status'};
     const fmt=(k,v)=>{
-      if(k==='hasFamily') return v?'Yes':'No';
-      if(k==='goal') return ({mobility:'Global Mobility',residence:'Live & Work',family:'Family Reunification',business:'Business',visit:'Tourism'})[v]||v;
-      if(k==='englishProficiency') return ({native:'Native',fluent:'Fluent',intermediate:'Intermediate',basic:'Basic',none:'Limited'})[v]||v;
-      if(k==='budget') return '$'+Number(v).toLocaleString();
+      if(k==='goal') return ({mobility:'Global Mobility & Second Passport', residence:'Live, Work, or Retire', family:'Family Reunification', business:'Business Immigration', investment:'Investment & Tax Planning', visit:'Tourism & Short Visit'})[v]||v;
+      if(k==='nationalityPassport') return ({weak:'Weak — limited access', moderate:'Moderate — decent coverage', strong:'Strong — good coverage'})[v]||v;
+      if(k==='hasFamily') return ({yes:'Yes — spouse/children', parents:'Yes — including parents', no:'No — just myself'})[v]||v;
+      if(k==='timeline') return ({urgent:'Urgent — within 1–2 months', '3months':'Soon — within 3 months', '6months':'Moderate — within 6 months', flexible:'Flexible — no rush'})[v]||v;
+      if(k==='businessOwnership') return ({current:'Current business owner', past:'Previously owned business', planning:'Planning to start one', none:'Not a business owner'})[v]||v;
+      if(k==='criminalRecord') return ({clean:'Clean — no record', minor:'Minor/spent only', disclose:'To be discussed confidentially'})[v]||v;
+      if(k==='investmentType') return ({donation:'Government donation', realestate:'Real estate purchase', business:'Business investment', flexible:'Open to recommendation'})[v]||v;
+      if(k==='englishProficiency') return ({native:'Native/Bilingual', fluent:'Fluent', intermediate:'Intermediate', basic:'Basic', none:'Minimal'})[v]||v;
+      if(k==='healthStatus') return ({good:'Good — no issues', managed:'Managed condition', disclose:'To be discussed'})[v]||v;
+      if(k==='budget') return v>=200000?'$200,000+':v>=150000?'$130,000–$200,000':v>=100000?'$80,000–$130,000':v>=50000?'$30,000–$80,000':v>=20000?'$10,000–$30,000':'Under $10,000';
       if(k==='workExperience') return v+' years';
       return v;
     };
@@ -188,7 +245,7 @@ function render() {
 }
 
 function pick(key,val,btn){
-  answers[key]=val;if(key==='hasFamily') answers[key]=val==='true';
+  answers[key]=val;
   btn.parentElement.querySelectorAll('.option-btn').forEach(b=>{b.classList.remove('selected');b.querySelector('.icon').textContent='';});
   btn.classList.add('selected');btn.querySelector('.icon').textContent='✓';
 }
@@ -200,83 +257,168 @@ function pickNum(key,val,btn){
 function next(){if(steps[step].type==='number'){const v=document.getElementById('fieldVal');if(v)answers[steps[step].key]=parseInt(v.value)||steps[step].default;}if(step<totalSteps-1){step++;render();}else showResults();}
 function prev(){if(step>0){step--;render();}}
 
-// ═══════ Visa Database ════════════════════════════════
+// ═══════ Enhanced Visa Database ════════════════════════════════
 const VISAS = [
-  {id:'citizenship',name:'Citizenship by Investment',icon:'🛂',
-    match:['mobility','family'],minBudget:100000,
-    processing:'1–2 months',cost:'From $130,000 (single applicant)',
+  {
+    id:'citizenship', name:'Citizenship by Investment', icon:'🛂',
+    match:['mobility','investment','family'], minBudget:130000,
+    processing:'1–2 months', cost:'From $130,000 (single applicant)',
     visaFree:'100+ countries including UK, Schengen, Hong Kong, Singapore, Russia',
-    requirements:['Clean criminal record','Proof of investment funds','Valid passport & birth certificate','Medical certificate','Professional references'],
-    features:['No physical residency required','No language test','No interview','Dual citizenship allowed','Tax-neutral jurisdiction','Fastest citizenship program worldwide'],
-    why:'Your profile and budget align with Vanuatu\'s flagship program. You value speed, global mobility, and minimal bureaucracy — exactly what this program delivers.',
+    requirements:['Clean criminal record','Proof of investment funds ($130,000+)','Valid passport (6+ months validity)','Medical certificate','Professional reference letter','Source of funds declaration','No sanctions list presence'],
+    features:['No physical residency required','No language test','No interview required','Dual citizenship fully allowed','Tax-neutral jurisdiction — no income, wealth, or inheritance tax','Fastest citizenship program worldwide (1–2 months)','Lifetime citizenship — passes to future generations'],
+    timelineMatch: {urgent:15, '3months':12, '6months':6, flexible:3},
+    why:'Your profile shows you value global mobility, speed, and minimal bureaucracy. The Vanuatu Citizenship by Investment program delivers exactly that — a second passport in as fast as 1–2 months with no residency requirement, no language test, and no interview. It\'s the world\'s fastest citizenship program.',
+    benefits:[
+      {icon:'🌍', title:'Visa-Free Travel', text:'Access 100+ countries including UK, Schengen zone, Hong Kong, Singapore, and Russia — without visa applications.'},
+      {icon:'⚡', title:'Fastest Processing', text:'1–2 months from application to passport. No other citizenship program in the world is faster.'},
+      {icon:'🏠', title:'No Residency Required', text:'You never need to set foot in Vanuatu. Maintain your current life while gaining a second passport.'},
+      {icon:'💰', title:'Tax Optimization', text:'Vanuatu has zero income tax, zero capital gains tax, zero wealth tax, and zero inheritance tax.'},
+      {icon:'👨‍👩‍👧‍👦', title:'Family Inclusion', text:'Spouse, dependent children, and in some cases parents can be included in one application.'},
+      {icon:'🔒', title:'Lifetime Asset', text:'Citizenship is permanent and passes to future generations — a legacy for your family.'}
+    ],
     desc:'Obtain a second passport in as fast as 1–2 months. Full citizenship rights, visa-free travel to 100+ countries, and no requirement to ever live in Vanuatu.'
   },
-  {id:'residence',name:'Residence Permit',icon:'🏠',
-    match:['residence','family','business'],minBudget:10000,
-    processing:'2–3 months',cost:'Varies by category (work, retire, investor)',
-    visaFree:'N/A — residence permit (path to citizenship available)',
-    requirements:['Valid passport','Proof of purpose (work contract, retirement funds, or investment)','Medical certificate','Clean criminal record'],
-    features:['Work & retire options','Family members included','Pathway to permanent residence','No minimum income for retirees','Renewable'],
-    why:'You\'re looking for a long-term base in Vanuatu. The residence permit gives you the right to live, work, or retire with a clear pathway to permanence.',
-    desc:'Live, work, or retire in Vanuatu with full residence rights. Suitable for professionals, retirees, and investors seeking a Pacific base.'
+  {
+    id:'residence', name:'Residence Permit', icon:'🏠',
+    match:['residence','family','business','mobility'], minBudget:10000,
+    processing:'2–3 months', cost:'Varies by category (work, retire, investor)',
+    visaFree:'N/A — residence permit (pathway to citizenship available)',
+    requirements:['Valid passport (6+ months validity)','Proof of purpose (work contract / retirement funds / investment capital)','Medical certificate','Clean criminal record','Bank statements (3–6 months)','Proof of accommodation in Vanuatu'],
+    features:['Work, retire, or invest — multiple categories','Family members included (spouse + dependents)','Pathway to permanent residence','No minimum income requirement for retirees','Renewable — stay as long as you like','Access to Vanuatu banking & business registration'],
+    timelineMatch: {urgent:6, '3months':12, '6months':14, flexible:15},
+    why:'You\'re looking for a long-term base with flexibility. The Residence Permit gives you the right to live, work, or retire in Vanuatu across multiple categories, with a clear pathway to permanent residence and eventual citizenship. It\'s the most versatile option.',
+    benefits:[
+      {icon:'🏖️', title:'Pacific Lifestyle', text:'Live in a tropical paradise with low cost of living, English as an official language, and a welcoming community.'},
+      {icon:'💼', title:'Work Authorization', text:'Legally work in Vanuatu across multiple sectors. No labor market testing required for many categories.'},
+      {icon:'🧓', title:'Retirement Friendly', text:'No minimum income required for retiree category. Enjoy your retirement in a peaceful, tax-friendly jurisdiction.'},
+      {icon:'🏦', title:'Banking Access', text:'Open Vanuatu bank accounts, register businesses, and access Pacific financial services.'},
+      {icon:'🔄', title:'Pathway to Citizenship', text:'After establishing residence, you can pursue permanent residence and eventually citizenship.'},
+      {icon:'👨‍👩‍👧‍👦', title:'Family Coverage', text:'Spouse and dependent children are covered. Parents can be sponsored separately.'}
+    ],
+    desc:'Live, work, or retire in Vanuatu with full residence rights. Multiple categories available with 2–3 month processing and clear pathway to permanent residence.'
   },
-  {id:'business',name:'Business Immigration',icon:'💼',
-    match:['business','residence'],minBudget:30000,
-    processing:'2–4 months',cost:'From $30,000 (business setup + visa fees)',
+  {
+    id:'business', name:'Business Immigration', icon:'💼',
+    match:['business','investment','residence'], minBudget:30000,
+    processing:'2–4 months', cost:'From $30,000 (business setup + visa fees)',
     visaFree:'N/A — business residence permit',
-    requirements:['Business plan','Proof of investment capital','Company registration in Vanuatu','Clean criminal record','Professional references'],
-    features:['Investor visa pathways','Business registration support','Tax-efficient structuring','Access to Pacific markets','Hire local & international staff'],
-    why:'As an entrepreneur or investor, Vanuatu\'s business-friendly environment offers you tax efficiency, Pacific market access, and a straightforward immigration pathway.',
-    desc:'Establish or expand your business in Vanuatu. Investor visas with residence rights, tax advantages, and full business support services.'
+    requirements:['Detailed business plan','Proof of investment capital','Company registration in Vanuatu','Clean criminal record','Professional references (2+)','CV/resume demonstrating relevant experience','Source of funds documentation'],
+    features:['Investor visa pathways with residence rights','Fast company registration (24–48 hours)','Tax-efficient business structuring','Access to Pacific & Asian markets','Hire both local and international staff','100% foreign ownership allowed','No corporate tax on offshore income'],
+    timelineMatch: {urgent:8, '3months':12, '6months':14, flexible:12},
+    why:'As an entrepreneur, Vanuatu\'s business-friendly environment is ideal for you. With zero corporate tax on offshore income, 100% foreign ownership, 24–48 hour company registration, and a strategic Pacific location, you gain both immigration status and a powerful business hub.',
+    benefits:[
+      {icon:'🏢', title:'Fast Company Setup', text:'Register your Vanuatu company in 24–48 hours. 100% foreign ownership with no local partner required.'},
+      {icon:'📊', title:'Zero Offshore Tax', text:'No corporate income tax on income earned outside Vanuatu. Legally optimize your global tax position.'},
+      {icon:'🌏', title:'Strategic Location', text:'Bridge between Asian and Pacific markets. Ideal timezone for managing international operations.'},
+      {icon:'👥', title:'Staff Flexibility', text:'Hire local Vanuatu talent or bring international staff. No restrictive labor quotas for investors.'},
+      {icon:'🏠', title:'Residence Rights', text:'Your business visa includes full residence rights for you and your family.'},
+      {icon:'📈', title:'Growth Potential', text:'Expand into untapped Pacific markets. Vanuatu is a growing hub for finance, tourism, and technology.'}
+    ],
+    desc:'Establish or expand your business in Vanuatu. Investor visas with full residence rights, zero offshore corporate tax, and 24–48 hour company registration.'
   },
-  {id:'family',name:'Family Sponsorship',icon:'👨‍👩‍👧‍👦',
-    match:['family','residence'],minBudget:5000,
-    processing:'1–3 months',cost:'From $5,000 per application',
+  {
+    id:'family', name:'Family Sponsorship', icon:'👨‍👩‍👧‍👦',
+    match:['family','residence'], minBudget:5000,
+    processing:'1–3 months', cost:'From $5,000 per application',
     visaFree:'N/A — dependent/residence visa',
-    requirements:['Proof of family relationship','Sponsor\'s residence/citizenship status','Birth/marriage certificates','Clean criminal record (adults)','Financial support evidence'],
-    features:['Spouse & dependent children','Parent sponsorship available','Simple documentation','Can upgrade to permanent residence','Fast processing'],
-    why:'Family reunification is your priority. Vanuatu\'s family sponsorship program is straightforward, affordable, and processes quickly compared to other countries.',
-    desc:'Reunite with family in Vanuatu. Spouse, dependent children, and parent visas with simple documentation and fast processing.'
+    requirements:['Proof of family relationship (birth/marriage certificates)','Sponsor\'s valid residence or citizenship status in Vanuatu','Clean criminal record (adult applicants)','Evidence of financial support capacity','Valid passports for all applicants','Medical certificates'],
+    features:['Spouse & dependent children covered','Parent & grandparent sponsorship available','Simple documentation process','Fast processing (1–3 months)','Can upgrade to permanent residence','No language requirement for dependents','Children\'s education access in Vanuatu'],
+    timelineMatch: {urgent:8, '3months':14, '6months':12, flexible:10},
+    why:'Family reunification is your priority. Vanuatu\'s family sponsorship program is affordable, straightforward, and processes quickly. You can bring your spouse, children, and even parents with minimal bureaucracy compared to other countries.',
+    benefits:[
+      {icon:'❤️', title:'Family Reunification', text:'Bring your spouse, dependent children, and parents to live together in Vanuatu.'},
+      {icon:'📋', title:'Simple Process', text:'Minimal documentation compared to other countries. No interviews, no language tests for dependents.'},
+      {icon:'⚡', title:'Fast Approval', text:'1–3 month processing. Much faster than family sponsorship in Australia, NZ, or Canada.'},
+      {icon:'🎓', title:'Education Access', text:'Dependent children can attend Vanuatu schools. International school options available in Port Vila.'},
+      {icon:'🔓', title:'Pathway to Permanence', text:'Family residence visas can convert to permanent residence and eventually citizenship.'},
+      {icon:'💵', title:'Affordable', text:'Starting from just $5,000 per application — significantly cheaper than comparable programs.'}
+    ],
+    desc:'Reunite with family in Vanuatu. Spouse, dependent children, and parent visas with simple documentation, 1–3 month processing, and affordable fees.'
   },
-  {id:'visitor',name:'Visitor & Tourist Visa',icon:'✈️',
-    match:['visit'],minBudget:500,
-    processing:'5–10 business days',cost:'From $200',
+  {
+    id:'visitor', name:'Visitor & Tourist Visa', icon:'✈️',
+    match:['visit'], minBudget:500,
+    processing:'5–10 business days', cost:'From $200',
     visaFree:'N/A — short-stay visa',
-    requirements:['Valid passport (6+ months)','Return/onward ticket','Proof of accommodation','Sufficient funds for stay'],
-    features:['30–90 day stays','Fast online application','Tourism & business visits','Multiple entry available','Extendable'],
-    why:'You\'re planning a short visit to explore Vanuatu. This is the quickest, simplest option — and a great first step before pursuing longer-term programs.',
-    desc:'Short-stay visa for tourism, business visits, or family visits. Fast 5–10 business day processing with simple online application.'
+    requirements:['Valid passport (6+ months validity)','Return or onward travel ticket','Proof of accommodation','Sufficient funds for stay duration','Travel insurance recommended'],
+    features:['30–90 day stays','Fast online application (5–10 days)','Tourism and business visits','Multiple entry available for frequent travelers','Extendable while in Vanuatu','No criminal record check for most nationalities'],
+    timelineMatch: {urgent:15, '3months':8, '6months':4, flexible:2},
+    why:'You\'re looking for a quick, simple entry to Vanuatu. The Visitor Visa processes in just 5–10 business days, requires minimal documentation, and is perfect for exploring Vanuatu before committing to a longer-term program.',
+    benefits:[
+      {icon:'⚡', title:'Ultra-Fast Processing', text:'5–10 business days. Apply online with minimal documentation — the quickest path to Vanuatu.'},
+      {icon:'💵', title:'Minimal Cost', text:'From just $200. No large investment required — perfect for exploration or short visits.'},
+      {icon:'🔍', title:'Try Before You Commit', text:'Visit Vanuatu, experience the lifestyle, meet advisors in person, then decide on longer-term programs.'},
+      {icon:'🔄', title:'Extendable', text:'Can be extended while in Vanuatu. Multiple-entry option for frequent travelers.'},
+      {icon:'🏖️', title:'Tourism & Business', text:'Valid for both leisure travel and business meetings. Explore opportunities firsthand.'},
+      {icon:'📝', title:'Minimal Paperwork', text:'No criminal record check, no medical exam, no financial audits. Just your passport and travel plans.'}
+    ],
+    desc:'Short-stay visa for tourism, business visits, or exploration. Fast 5–10 business day processing, from just $200, with simple online application.'
   }
 ];
 
-// ═══════ Matching Engine ══════════════════════════════
+// ═══════ Enhanced Matching Engine ════════════════════════════
 function matchVisa(a) {
   const budget = parseInt(a.budget)||0;
   const goal = a.goal||'mobility';
   const exp = parseInt(a.workExperience)||0;
   const age = parseInt(a.age)||35;
-  const hasFamily = a.hasFamily===true;
+  const hasFamily = a.hasFamily==='yes'||a.hasFamily==='parents';
+  const hasParents = a.hasFamily==='parents';
+  const passportStrength = a.nationalityPassport||'strong';
+  const timeline = a.timeline||'flexible';
+  const businessBg = a.businessOwnership||'none';
+  const criminalOk = a.criminalRecord==='clean';
+  const investmentPref = a.investmentType||'flexible';
+  const healthOk = a.healthStatus==='good'||a.healthStatus==='managed';
 
-  // Score each visa by how well it matches the user
   const scored = VISAS.map(v => {
     let s = 0;
-    // Goal matching (core)
-    if (v.match.includes(goal)) s += 35;
-    else s += 5;
-    // Budget
-    if (budget >= v.minBudget) s += 30;
-    else if (budget >= v.minBudget * 0.7) s += 15;
-    else s += 3;
-    // Family
-    if (hasFamily && ['family','residence'].some(g=>v.match.includes(g))) s += 12;
-    // Experience
-    if (exp >= 5 && ['business','citizenship'].some(g=>v.match.includes(g))) s += 10;
-    // Age bonus for citizenship (prime age)
-    if (v.id==='citizenship' && age>=25 && age<=55) s += 8;
-    // Age bonus for retirement/residence
-    if (v.id==='residence' && age>=50) s += 8;
 
-    return {...v, score: Math.round((s/95)*100)};
+    // 1. Goal matching (core — 25 points)
+    if (v.match.includes(goal)) s += 25;
+    else s += 8;
+
+    // 2. Budget adequacy (25 points)
+    if (budget >= v.minBudget) s += 25;
+    else if (budget >= v.minBudget * 0.7) s += 14;
+    else if (budget >= v.minBudget * 0.4) s += 7;
+
+    // 3. Timeline compatibility (15 points)
+    s += (v.timelineMatch && v.timelineMatch[timeline]) ? v.timelineMatch[timeline] : 8;
+
+    // 4. Criminal record (mandatory — 10 points)
+    if (criminalOk || v.id==='visitor') s += 10;
+    else s += 2;
+
+    // 5. Passport benefit bonus (8 points) — weak passport = more benefit from citizenship
+    if (v.id==='citizenship' && (passportStrength==='weak'||passportStrength==='moderate')) s += 8;
+    if (v.id==='citizenship' && passportStrength==='strong') s += 3;
+
+    // 6. Family matching (7 points)
+    if (hasFamily && v.id==='family') s += 7;
+    if (hasFamily && v.id==='citizenship') s += 5;
+    if (hasParents && v.id==='family') s += 3;
+    if (!hasFamily && v.id!=='family') s += 3;
+
+    // 7. Business background (5 points)
+    if ((businessBg==='current'||businessBg==='past') && v.id==='business') s += 5;
+    if (businessBg==='planning' && (v.id==='residence'||v.id==='business')) s += 3;
+
+    // 8. Investment preference alignment (5 points)
+    if (investmentPref==='donation' && v.id==='citizenship') s += 5;
+    if (investmentPref==='realestate' && v.id==='residence') s += 5;
+    if (investmentPref==='business' && v.id==='business') s += 5;
+    if (investmentPref==='flexible') s += 3;
+
+    // 9. Age optimization (bonus)
+    if (v.id==='citizenship' && age>=25 && age<=55) s += 5;
+    if (v.id==='residence' && age>=45) s += 5;
+    if (v.id==='business' && age>=30 && age<=60) s += 3;
+
+    // 10. Health consideration
+    if (!healthOk && v.id==='citizenship') s -= 3;
+
+    return {...v, score: Math.round(Math.max(5, (s/103)*100))};
   });
 
   scored.sort((a,b)=>b.score-a.score);
@@ -299,11 +441,22 @@ function showResults() {
       <div class="info-item"><div class="ilabel">Processing Time</div><div class="ivalue">${top.processing}</div></div>
       <div class="info-item"><div class="ilabel">Estimated Cost</div><div class="ivalue">${top.cost}</div></div>
       <div class="info-item"><div class="ilabel">Visa-Free Travel</div><div class="ivalue" style="font-size:0.85rem">${top.visaFree}</div></div>
-      <div class="info-item"><div class="ilabel">Your Budget</div><div class="ivalue">$${(parseInt(answers.budget)||0).toLocaleString()}</div><div class="isub">${(parseInt(answers.budget)||0)>=top.minBudget?'✓ Within range':'⚠ May need adjustment'}</div></div>
+      <div class="info-item"><div class="ilabel">Your Budget</div><div class="ivalue">$${parseInt(answers.budget)>=200000?'200,000+':parseInt(answers.budget)>=150000?'130,000–200,000':parseInt(answers.budget)>=100000?'80,000–130,000':parseInt(answers.budget)>=50000?'30,000–80,000':parseInt(answers.budget)>=20000?'10,000–30,000':'Under 10,000'}</div><div class="isub">${(parseInt(answers.budget)||0)>=top.minBudget?'✓ Within required range':'⚠ May need budget adjustment'}</div></div>
     </div>
-    <div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.95rem">Requirements:</strong><ul class="req-list">${top.requirements.map(r=>`<li>${r}</li>`).join('')}</ul></div>
-    <div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.95rem">Key Features:</strong><ul class="req-list">${top.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>
-    <div class="why-box"><h4>Why This Visa?</h4><p>${top.why}</p></div>
+
+    <!-- Why This Visa? -->
+    <div class="why-box"><h4>💡 Why We Recommend This Visa</h4><p>${top.why}</p></div>
+
+    <!-- Benefits You'll Gain -->
+    <div style="margin-bottom:12px"><strong style="color:var(--navy);font-size:0.95rem">🎯 Key Benefits You'll Gain:</strong></div>
+    <div class="benefit-grid">${top.benefits.map(b=>`<div class="benefit-item"><span class="b-icon">${b.icon}</span><div class="b-text"><strong>${b.title}</strong>${b.text}</div></div>`).join('')}</div>
+
+    <!-- Requirements -->
+    <div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.95rem">📋 Requirements:</strong><ul class="req-list">${top.requirements.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+
+    <!-- Key Features -->
+    <div style="margin-bottom:20px"><strong style="color:var(--navy);font-size:0.95rem">✨ Program Features:</strong><ul class="req-list">${top.features.map(f=>`<li>${f}</li>`).join('')}</ul></div>
+
     <a href="/tools/book-appointment" class="btn btn-primary">Book Free Consultation →</a>
   </div>`;
 
@@ -315,7 +468,7 @@ function showResults() {
       <h4>${v.icon} ${v.name}</h4>
       <p class="alt-desc">${v.desc.slice(0,120)}...</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;font-size:0.8rem;color:var(--gray-500)">
-        <span>⏱ ${v.processing.split(' ')[0]}</span><span>💰 ${v.cost.split(',')[0]}</span>
+        <span>⏱ ${top.processing.split(' ')[0]}</span><span>💰 ${top.cost.split(',')[0]}</span>
       </div>
     </div>`;
   });
@@ -338,7 +491,7 @@ function showResults() {
 }
 
 function restart() {
-  step=0;answers={age:35,education:'bachelor',workExperience:5,englishProficiency:'intermediate',budget:100000,hasFamily:false,goal:'mobility'};
+  step=0;answers={age:35, goal:'mobility', nationalityPassport:'strong', hasFamily:false, budget:100000, timeline:'3months', workExperience:5, businessOwnership:'none', criminalRecord:'clean', investmentType:'flexible', englishProficiency:'intermediate', healthStatus:'good'};
   document.getElementById('wizardView').classList.remove('hidden');
   document.getElementById('resultsView').classList.add('hidden');render();
 }
