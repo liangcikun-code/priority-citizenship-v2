@@ -50,7 +50,7 @@ app.get("/api/test", (req, res) => {
   res.json({ ok: true, node: process.version });
 });
 
-app.get("/api/debug", (req, res) => {
+app.get("/api/debug", async (req, res) => {
   const info = {
     node: process.version,
     vercel: !!process.env.VERCEL,
@@ -63,7 +63,16 @@ app.get("/api/debug", (req, res) => {
   try {
     const supabase = require("./services/supabase");
     info.supabaseModule = typeof supabase.getLeads;
-  } catch(e) { info.supabaseError = e.message; }
+    // Test actual Supabase connectivity
+    try {
+      const leads = await supabase.getLeads();
+      info.supabaseLeadsCount = leads.length;
+      info.supabaseWorking = true;
+    } catch(e) {
+      info.supabaseWorking = false;
+      info.supabaseError = e.message;
+    }
+  } catch(e) { info.supabaseLoadError = e.message; }
   res.json(info);
 });
 

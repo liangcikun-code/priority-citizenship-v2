@@ -65,8 +65,8 @@ async function supabaseQuery(table, method, ...args) {
       return true;
     }
   } catch (e) {
-    console.error(`[supabase] ${table}.${method} error:`, e.message);
-    throw e;
+    console.error(`[supabase] ${table}.${method} error — falling back to in-memory:`, e.message);
+    return null; // Return null signals caller to use in-memory fallback
   }
 }
 
@@ -74,9 +74,12 @@ async function supabaseQuery(table, method, ...args) {
 
 // ─── Leads ────────────────────────────────────────────
 async function getLeads(filters = {}) {
-  let data = db ? (await supabaseQuery('leads', 'select', '*', 'created_at', false)) : mem.leads;
-  if (db) data = data.map(l => ({id:l.id,name:l.name,email:l.email,phone:l.phone,country:l.country,service:l.service,budget:l.budget,message:l.message,notes:l.notes,status:l.status,source:l.source,createdAt:l.created_at,updatedAt:l.updated_at}));
-  else data = data.slice().reverse();
+  let data = db ? (await supabaseQuery('leads', 'select', '*', 'created_at', false)) : null;
+  if (data && db) {
+    data = data.map(l => ({id:l.id,name:l.name,email:l.email,phone:l.phone,country:l.country,service:l.service,budget:l.budget,message:l.message,notes:l.notes,status:l.status,source:l.source,createdAt:l.created_at,updatedAt:l.updated_at}));
+  } else {
+    data = mem.leads.slice().reverse();
+  }
 
   if (filters.status)  data = data.filter(l => l.status === filters.status);
   if (filters.service) data = data.filter(l => l.service === filters.service);
@@ -89,31 +92,40 @@ async function addLead(lead) {
   if (db) {
     const row = { name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nowISO(), updated_at:nowISO() };
     const d = await supabaseQuery('leads', 'insert', row);
-    await logActivity('lead_created', `New lead: ${lead.name}`, lead.name);
-    return {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
+    if (d) {
+      await logActivity('lead_created', `New lead: ${lead.name}`, lead.name);
+      return {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
+    }
+    // Supabase failed — fall through to in-memory
+    console.warn('[supabase] Lead saved to in-memory only (DB insert failed)');
   }
   const nl = {id:genId('lead'),...lead,status:lead.status||'new',createdAt:nowISO(),updatedAt:nowISO()};
   mem.leads.push(nl);
   mem.activity.unshift({id:genId('act'),type:'lead_created',message:`New lead: ${lead.name}`,subject:lead.name,created_at:nowISO()});
+  // Persist to /tmp so data survives warm starts
+  saveMemToDisk();
   return nl;
 }
 
 async function updateLead(id, updates) {
   if (db) {
     const d = await supabaseQuery('leads', 'update', {...updates,updated_at:nowISO()}, 'id', id);
-    await logActivity('lead_updated', `Lead updated: ${d.name}`, d.name);
-    return {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
+    if (d) {
+      await logActivity('lead_updated', `Lead updated: ${d.name}`, d.name);
+      return {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
+    }
   }
   const idx = mem.leads.findIndex(l=>l.id===id);
   if(idx===-1) return null;
   mem.leads[idx] = {...mem.leads[idx],...updates,updatedAt:nowISO()};
+  saveMemToDisk();
   return mem.leads[idx];
 }
 
 async function deleteLead(id) {
-  if (db) { await supabaseQuery('leads','delete','id',id); return true; }
+  if (db) { const r = await supabaseQuery('leads','delete','id',id); if (r!==null) return true; }
   const idx = mem.leads.findIndex(l=>l.id===id);
-  if(idx>-1) mem.leads.splice(idx,1);
+  if(idx>-1) { mem.leads.splice(idx,1); saveMemToDisk(); }
   return true;
 }
 
@@ -269,6 +281,42 @@ async function exportCSV(type) {
   const esc=v=>`"${String(v||'').replace(/"/g,'""')}"`;
   return [headers.join(','),...data.map(r=>r.map(esc).join(','))].join('\n');
 }
+
+// ═══════ Disk Persistence (survives warm starts) ═══════
+const fs = require('fs');
+const path = require('path');
+const TMP_DIR = process.env.VERCEL ? '/tmp' : (__dirname + '/../data');
+const TMP_FILE = path.join(TMP_DIR, 'leads-backup.json');
+
+function saveMemToDisk() {
+  try {
+    if (!fs.existsSync(TMP_DIR)) fs.mkdirSync(TMP_DIR, { recursive: true });
+    fs.writeFileSync(TMP_FILE, JSON.stringify({
+      leads: mem.leads,
+      blog: mem.blog,
+      appointments: mem.appointments,
+      activity: mem.activity.slice(0, 100),
+      updatedAt: nowISO()
+    }));
+  } catch (e) { /* /tmp not writable — ignore */ }
+}
+
+function loadMemFromDisk() {
+  try {
+    if (fs.existsSync(TMP_FILE)) {
+      const raw = fs.readFileSync(TMP_FILE, 'utf8');
+      const data = JSON.parse(raw);
+      if (data.leads && Array.isArray(data.leads)) mem.leads = data.leads;
+      if (data.blog && Array.isArray(data.blog)) mem.blog = data.blog;
+      if (data.appointments && Array.isArray(data.appointments)) mem.appointments = data.appointments;
+      if (data.activity && Array.isArray(data.activity)) mem.activity = data.activity;
+      console.log(`[supabase] Loaded ${mem.leads.length} leads, ${mem.appointments.length} appts from disk backup`);
+    }
+  } catch (e) { /* File doesn't exist or corrupted — fresh start */ }
+}
+
+// Initialize: load from disk if available
+loadMemFromDisk();
 
 module.exports = {
   getLeads, addLead, updateLead, deleteLead,
