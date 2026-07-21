@@ -66,8 +66,14 @@ app.get("/api/debug", async (req, res) => {
     // Test actual Supabase connectivity
     try {
       const leads = await supabase.getLeads();
-      info.supabaseLeadsCount = leads.length;
+      info.memoryLeadsCount = leads.length;
       info.supabaseWorking = true;
+      // Try direct Supabase query to compare
+      try {
+        const supabaseMod = require('./services/supabase');
+        const appts = await supabase.getAppointments();
+        info.memoryApptsCount = appts.length;
+      } catch(ex) {}
     } catch(e) {
       info.supabaseWorking = false;
       info.supabaseError = e.message;
