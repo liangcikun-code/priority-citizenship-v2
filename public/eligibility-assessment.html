@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, maximum-scale=5.0">
 <title>Eligibility Assessment — Priority Citizenship</title>
 <meta name="description" content="Check your eligibility for Vanuatu immigration. Official criteria assessment, personalized score, and tailored program recommendations.">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -350,42 +350,54 @@ function evalRequirements(a) {
 function calc(a) {
   let t=0, det={};
   const age=parseInt(a.age)||35;
-  let as=age>=30&&age<=50?20:age>=25&&age<=60?16:age>=18&&age<=65?12:5;
-  det.age={label:'Age',score:as,max:20};t+=as;
+  // Age: best range 30-50 gets full 10 points
+  let as=age>=30&&age<=50?10:age>=25&&age<=60?8:age>=18&&age<=65?6:3;
+  det.age={label:'Age',score:as,max:10};t+=as;
 
-  let ps=a.passportValidity==='valid6'?15:a.passportValidity==='validLess'?7:2;
-  det.passport={label:'Passport Validity',score:ps,max:15};t+=ps;
+  // Passport: official requirement — 6+ months = full score
+  let ps=a.passportValidity==='valid6'?10:a.passportValidity==='validLess'?5:1;
+  det.passport={label:'Passport Validity',score:ps,max:10};t+=ps;
 
-  const es={phd:15,master:14,bachelor:12,diploma:9,highschool:6,other:4};
-  const edu=es[a.education]||6;det.education={label:'Education',score:edu,max:15};t+=edu;
+  // Education: enhances profile, not mandatory
+  const es={phd:6,master:6,bachelor:5,diploma:4,highschool:3,other:2};
+  const edu=es[a.education]||3;det.education={label:'Education',score:edu,max:6};t+=edu;
 
-  const exp=Math.round(Math.min((parseInt(a.workExperience)||0)*1.5,15));
-  det.workExperience={label:'Work Experience',score:exp,max:15};t+=exp;
+  // Work experience: key for business/investor visas
+  const exp=Math.round(Math.min((parseInt(a.workExperience)||0)*0.8,8));
+  det.workExperience={label:'Work Experience',score:exp,max:8};t+=exp;
 
-  const eng={native:10,fluent:9,intermediate:7,basic:4,none:2};
-  const eg=eng[a.englishProficiency]||4;det.english={label:'English',score:eg,max:10};t+=eg;
+  // English: no formal requirement but aids settlement
+  const eng={native:5,fluent:5,intermediate:4,basic:3,none:1};
+  const eg=eng[a.englishProficiency]||3;det.english={label:'English',score:eg,max:5};t+=eg;
 
+  // Budget: critical — determines which programs you qualify for
   const bd=parseInt(a.budget)||0;
-  let bs=bd>=200000?20:bd>=150000?18:bd>=100000?14:bd>=50000?10:bd>=20000?6:3;
-  det.budget={label:'Investment Budget',score:bs,max:20};t+=bs;
+  let bs=bd>=200000?15:bd>=150000?13:bd>=100000?10:bd>=50000?7:bd>=20000?4:2;
+  det.budget={label:'Investment Budget',score:bs,max:15};t+=bs;
 
-  let cs=a.criminalRecord==='clean'?15:a.criminalRecord==='minor'?8:2;
-  det.criminal={label:'Criminal Record',score:cs,max:15};t+=cs;
+  // Criminal record: mandatory for all permanent programs
+  let cs=a.criminalRecord==='clean'?12:a.criminalRecord==='minor'?6:1;
+  det.criminal={label:'Criminal Record',score:cs,max:12};t+=cs;
 
-  let hs=a.healthStatus==='good'?10:a.healthStatus==='managed'?7:3;
-  det.health={label:'Health Status',score:hs,max:10};t+=hs;
+  // Health: medical certificate may be needed
+  let hs=a.healthStatus==='good'?7:a.healthStatus==='managed'?5:2;
+  det.health={label:'Health Status',score:hs,max:7};t+=hs;
 
-  let fs=a.fundSource==='other'?4:8;
-  det.fundSource={label:'Source of Funds',score:fs,max:8};t+=fs;
+  // Source of funds: AML compliance required
+  let fs=a.fundSource==='other'?3:7;
+  det.fundSource={label:'Source of Funds',score:fs,max:7};t+=fs;
 
-  let ss=a.sanctionsStatus==='clear'?12:a.sanctionsStatus==='unsure'?5:1;
+  // Sanctions: non-negotiable official requirement
+  let ss=a.sanctionsStatus==='clear'?12:a.sanctionsStatus==='unsure'?4:0;
   det.sanctions={label:'Sanctions Status',score:ss,max:12};t+=ss;
 
+  // Net worth: signals overall financial capacity
   let nw=parseInt(a.netWorth)||25000;
-  let nws=nw>=1000000?10:nw>=500000?9:nw>=250000?7:nw>=100000?5:nw>=50000?3:1;
-  det.netWorth={label:'Net Worth',score:nws,max:10};t+=nws;
+  let nws=nw>=1000000?8:nw>=500000?7:nw>=250000?6:nw>=100000?4:nw>=50000?3:2;
+  det.netWorth={label:'Net Worth',score:nws,max:8};t+=nws;
 
-  const score=Math.round(Math.min(t,100));
+  // Final score: genuine sum of all categories (max = exactly 100, no capping)
+  const score=Math.round(t);
   let tier,sum,recs;
 
   if(score>=75){tier='Excellent — Strong Candidate';sum='Your profile meets or exceeds all key Vanuatu immigration requirements. You are an excellent candidate for the Citizenship by Investment program and all other visa categories.';recs=[{name:'🛂 Citizenship by Investment',desc:'Your strongest option. 1–2 months processing. Full passport with visa-free 100+ countries. Your profile meets all requirements — budget, clean record, and documentation readiness.'},{name:'💼 Business Immigration',desc:'With your professional experience and capital, you qualify for investor/business visa pathways with residence rights and tax advantages.'},{name:'🏠 Residence Permit',desc:'Multiple categories available based on your preference — work, retire, or investor residence with clear pathway to permanence.'}];}
