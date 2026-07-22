@@ -1,4 +1,5 @@
 const kb = require('./knowledge-base');
+const vectorStore = require('./vector-store');
 
 /**
  * AI Service for the Priority Citizenship chatbot.
@@ -15,7 +16,7 @@ const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 /**
  * Generate a system prompt from the knowledge base
  */
-function buildSystemPrompt() {
+function buildSystemPrompt(ragContext) {
   const data = kb.load();
   const c = data.company;
 
@@ -33,6 +34,9 @@ COMPANY INFORMATION:
 - Email: ${c.email}
 - Office hours: ${c.hours}
 - Address: ${c.address}
+
+OFFICIAL REFERENCE DOCUMENTS — use these official details for accurate answers:
+${ragContext || 'No additional references loaded.'}
 
 SERVICES OFFERED:
 ${data.services.map(s => `- ${s.name}: ${s.summary}. Processing: ${s.processingTime || 'Varies'}.${s.features ? ' Features: ' + s.features.join(', ') : ''}${s.requirements ? ' Requirements: ' + s.requirements.join(', ') : ''}`).join('\n')}
@@ -103,7 +107,13 @@ async function generateResponse(messages) {
     try {
       const https = require('https');
       
-      const systemPrompt = buildSystemPrompt();
+      // Retrieve relevant context from vector knowledge base
+      let ragContext = '';
+      try {
+        ragContext = await vectorStore.getContextForQuery(userQuery, 3);
+      } catch (e) { /* RAG unavailable, continue without context */ }
+
+      const systemPrompt = buildSystemPrompt(ragContext);
 
       // Convert messages to Gemini format
       const contents = messages.slice(-10).map(m => ({
@@ -116,7 +126,7 @@ async function generateResponse(messages) {
         systemInstruction: { parts: [{ text: systemPrompt }] },
         generationConfig: {
           temperature: 0.3,
-          maxOutputTokens: 500
+          maxOutputTokens: 600
         }
       });
 

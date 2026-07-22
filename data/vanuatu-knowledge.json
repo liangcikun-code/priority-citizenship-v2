@@ -1,0 +1,133 @@
+{
+  "version": "1.0",
+  "description": "Vanuatu Immigration Knowledge Base — sourced from official immigration documents and government publications",
+  "lastUpdated": "2026-07-22",
+  "chunks": [
+    {
+      "id": "dsp-01",
+      "title": "Citizenship DSP Program Overview",
+      "source": "Vanuatu Citizenship Commission — Development Support Program",
+      "category": "citizenship",
+      "content": "The Vanuatu Development Support Program (DSP) grants full citizenship and passport rights through a non-refundable contribution to the National Development Fund. Single applicant minimum contribution: US$130,000. Married couple: US$150,000. Family of three: US$165,000. Family of four: US$180,000. Each additional dependant: US$25,000. Due diligence fee: US$5,500 per applicant aged 16+. Minor government fees: approximately US$2,000–3,000 per person. Processing time: approximately 45 days from formal submission to passport issuance. No residency, language test, education requirement, or physical visit required. Oath can be taken virtually."
+    },
+    {
+      "id": "dsp-02",
+      "title": "Citizenship CIIP Program",
+      "source": "Vanuatu Citizenship Commission — Capital Investment Immigration Plan",
+      "category": "citizenship",
+      "content": "The Capital Investment Immigration Plan (CIIP) combines a government contribution with a US$50,000 capital component returned after five years. Family of up to four: US$165,000 flat fee. Each extra dependant: US$25,000. Both DSP and CIIP grant identical Vanuatu citizenship and passport rights with the same visa-free travel benefits. The CIIP option provides partial capital return after the 5-year holding period."
+    },
+    {
+      "id": "dsp-03",
+      "title": "Citizenship Eligibility Requirements",
+      "source": "Vanuatu Immigration Act & Citizenship Commission Guidelines",
+      "category": "citizenship",
+      "content": "Main applicant must be at least 18 years old with no maximum age limit. Must be of good character and in good health. Must demonstrate lawful source of funds. Must hold a valid passport with at least 12 months remaining validity. Police clearance required from each country of residence for the past 10 years, issued within last 6 months. Medical certificate showing good health and free from communicable diseases required. Bank reference letter and source-of-funds evidence required. Six passport photos 35mm×45mm with white background. Chronological CV required with no gaps. Proof of address (utility bill or bank statement within 3 months) required."
+    },
+    {
+      "id": "dsp-04",
+      "title": "Citizenship Application Process Steps",
+      "source": "Vanuatu Financial Intelligence Unit & Citizenship Commission",
+      "category": "citizenship",
+      "content": "Step 1: Free confidential consultation to assess eligibility. Step 2: Pre-screening with identity documents and internal compliance check. Step 3: Document compilation and due diligence fee payment (US$5,500 per adult). Step 4: Due diligence conducted by Vanuatu Financial Intelligence Unit and independent international firm covering identity, criminal background, sanctions, PEP screening, adverse media, and source-of-funds analysis (approximately 20 days). Step 5: Formal application lodged with Citizenship Commission. Step 6: Approval in Principle issued by Commission. Step 7: Main contribution paid via SWIFT USD bank wire to designated Vanuatu Government escrow account (no crypto, no installments). Step 8: Oath of Allegiance sworn before a Vanuatu Commissioner (in-person or video). Step 9: Citizenship Certificate issued and passport printed. Delivered by DHL/FedEx secure courier. The due diligence fee is non-refundable. Government recess mid-December to early January."
+    },
+    {
+      "id": "dsp-05",
+      "title": "Citizenship Family Inclusion Rules",
+      "source": "Vanuatu Citizenship Commission — Dependent Policy",
+      "category": "citizenship",
+      "content": "Eligible dependants: Legal spouse (US$20,000 above single DSP rate), dependent children under 18, adult children up to age 29 with proof of financial dependency (US$25,000 each), dependent parents aged 50+ (US$25,000 each), parents-in-law on same terms, stepchildren and adopted children with same age/dependency rules, children from prior marriage with custody/consent documents. Same-sex spouses cannot be included as spouse since Vanuatu does not recognize same-sex marriage — partners may apply separately. Grandparents and siblings are NOT eligible as dependants."
+    },
+    {
+      "id": "dsp-06",
+      "title": "Citizenship Visa-Free Travel",
+      "source": "Vanuatu Passport Office — Travel Privileges",
+      "category": "citizenship",
+      "content": "Vanuatu passport holders enjoy visa-free or visa-on-arrival access to approximately 88 destinations worldwide. Key destinations: Singapore (visa-free short stays), Hong Kong (visa-free up to 90 days), Malaysia (visa-free up to 90 days), Russia (visa-free short visits), most CARICOM Caribbean states (visa-free), most Pacific Island Forum nations (visa-free). UK requires ETA (not visa-free). Schengen area requires visa but approval rate exceeds 98%. United States, Australia, and New Zealand require visas. China offers limited entry schemes. Vanuatu fully recognizes dual citizenship — no renunciation required."
+    },
+    {
+      "id": "dsp-07",
+      "title": "Citizenship Tax Benefits",
+      "source": "Vanuatu Tax Authority & Citizenship Commission",
+      "category": "citizenship",
+      "content": "Vanuatu imposes ZERO personal income tax, capital gains tax, inheritance tax, wealth tax, and gift tax. No annual tax return filing requirement for individuals. VAT rate is 15%. Acquiring Vanuatu citizenship does NOT automatically make one a tax resident — physical presence and intent to reside are required. Home-country tax obligations remain if residency is maintained there. Corporate income tax does not exist in traditional form."
+    },
+    {
+      "id": "dsp-08",
+      "title": "Citizenship Restricted Nationalities",
+      "source": "Vanuatu Citizenship Commission — Country Eligibility",
+      "category": "citizenship",
+      "content": "North Korean citizens are ineligible for Vanuatu citizenship. Iranian and Syrian nationals face case-by-case review with additional scrutiny. Applicants must not appear on UN, EU, US, or other international sanctions or warning lists. Minor or historic criminal matters may not be disqualifying; serious offences particularly within the past 10 years typically disqualify. Applicants must be nationals of an eligible country."
+    },
+    {
+      "id": "res-01",
+      "title": "Residence Visa Categories",
+      "source": "Vanuatu Department of Immigration and Passport Services",
+      "category": "residence",
+      "content": "Vanuatu offers several residence visa categories: (1) Employment/Work Residence — for those with a confirmed job offer or employment contract in Vanuatu, requires work permit approval from the Department of Labour; (2) Investor Residence — for those investing in a Vanuatu-registered business, minimum investment varies by business type; (3) Retiree Residence — for those with demonstrated pension or retirement income, no minimum income requirement for the retiree category; (4) Family/Dependent Residence — for family members of Vanuatu citizens or permanent residents. All residence visas require: valid passport with 6+ months validity, clean criminal record, medical certificate, and proof of financial self-sufficiency."
+    },
+    {
+      "id": "res-02",
+      "title": "Residence Permit Application Requirements",
+      "source": "Vanuatu Department of Immigration — Visa Requirements",
+      "category": "residence",
+      "content": "Standard residence visa requirements: valid passport (6+ months validity beyond planned stay), completed application form, two passport-size photographs, police clearance certificate from country of origin and any country resided in for 12+ months in past 5 years, medical certificate issued within 3 months, proof of accommodation in Vanuatu (rental agreement or property ownership), bank statements for previous 3-6 months demonstrating financial capacity, purpose-specific documents (work contract, business registration, retirement income proof, or family relationship proof), and payment of prescribed fees. Processing time: 2-3 months for standard applications."
+    },
+    {
+      "id": "res-03",
+      "title": "Residence Permit Features and Benefits",
+      "source": "Vanuatu Immigration Department",
+      "category": "residence",
+      "content": "Residence permits in Vanuatu offer: right to live in Vanuatu for the permit duration, multiple entry and exit rights, pathway to permanent residence after meeting residence requirements, family members included (spouse and dependent children), renewable status, access to Vanuatu banking and business registration, no minimum income requirement for retiree category, work authorization (with appropriate work permit endorsement), and access to healthcare and education systems. Residence permits do NOT automatically grant citizenship — a separate naturalization or investment path is required."
+    },
+    {
+      "id": "biz-01",
+      "title": "Business Immigration Overview",
+      "source": "Vanuatu Investment Promotion Authority & Immigration Department",
+      "category": "business",
+      "content": "Vanuatu offers business immigration pathways for entrepreneurs and investors: (1) Investor Visa — for those investing significant capital in a Vanuatu enterprise, provides residence rights; (2) Business Owner Visa — for those establishing or acquiring a Vanuatu business; (3) Self-Employed Visa — for freelancers and consultants operating in Vanuatu. Key features: 100% foreign ownership allowed, company registration in 24-48 hours, zero corporate tax on offshore income, access to Pacific and Asian markets, ability to hire both local and international staff. Minimum business investment: approximately US$30,000 including business setup and visa fees. Processing: 2-4 months."
+    },
+    {
+      "id": "biz-02",
+      "title": "Business Immigration Requirements",
+      "source": "Vanuatu Investment Promotion Authority",
+      "category": "business",
+      "content": "Business immigration requirements: detailed business plan, proof of investment capital (bank statements or proof of funds), company registration certificate in Vanuatu (obtained from Vanuatu Financial Services Commission), clean criminal record certificate, professional references (minimum 2), CV/resume demonstrating relevant business or industry experience, source of funds documentation for AML compliance, valid passport with 6+ months validity, medical certificate, and proof of accommodation in Vanuatu. The business must be a genuine commercial enterprise that contributes to Vanuatu's economy."
+    },
+    {
+      "id": "fam-01",
+      "title": "Family Sponsorship",
+      "source": "Vanuatu Immigration Act & Department of Immigration",
+      "category": "family",
+      "content": "Family sponsorship allows Vanuatu citizens and permanent residents to sponsor family members: spouse (legally married), dependent children under 18 (and up to 25 if in full-time education), parents and parents-in-law aged 55+, and in some cases siblings under 18. Sponsor must demonstrate: valid citizenship or permanent residence status, financial capacity to support the sponsored family member(s) without government assistance, adequate accommodation, and a genuine family relationship. Processing time: 1-3 months. Cost: from approximately US$5,000 per application excluding government fees."
+    },
+    {
+      "id": "vis-01",
+      "title": "Visitor and Tourist Visa",
+      "source": "Vanuatu Department of Immigration — Visitor Information",
+      "category": "visitor",
+      "content": "Visitor visas for Vanuatu: available for tourism, business visits, family visits, and short-term study. Duration: typically 30 days, extendable to 90 days (and up to 120 days in special circumstances). Requirements: valid passport with 6+ months validity beyond intended stay, return or onward travel ticket, proof of sufficient funds for the duration of stay (bank statements or credit card), proof of accommodation (hotel booking or invitation letter), travel insurance recommended. Processing: 5-10 business days for standard applications. Cost: from approximately US$200. Multiple entry option available for frequent travelers. No criminal record check required for most nationalities."
+    },
+    {
+      "id": "gen-01",
+      "title": "General Immigration Legal Framework",
+      "source": "Vanuatu Immigration Act No. 13 of 2010",
+      "category": "general",
+      "content": "The Immigration Act 2010 is the primary legislation governing immigration in Vanuatu. Key provisions: establishes the Department of Immigration and Passport Services, defines visa categories and conditions, sets out entry and stay requirements, establishes the legal basis for residence permits and citizenship applications, defines prohibited immigrants (persons with serious criminal records, persons subject to international sanctions, persons likely to become a burden on the state, persons with serious communicable diseases), and establishes appeal mechanisms for immigration decisions. The Act works in conjunction with the Citizenship Act and the Passport Act."
+    },
+    {
+      "id": "gen-02",
+      "title": "Document Authentication Requirements",
+      "source": "Vanuatu Immigration Department — Document Guidelines",
+      "category": "general",
+      "content": "All foreign documents submitted for Vanuatu immigration applications must be: (1) in English or French (official languages of Vanuatu) or accompanied by a certified translation; (2) notarized or certified as true copies of the original; (3) apostilled or legalized if issued outside Vanuatu (unless exempt by bilateral agreement); (4) issued within the validity period specified for each document type (police clearance: 6 months, medical: 3 months, bank statements: 3 months, proof of address: 3 months). Documents in languages other than English or French require translation by a certified translator with both the original and translation submitted."
+    },
+    {
+      "id": "gen-03",
+      "title": "Prohibited and Restricted Persons",
+      "source": "Vanuatu Immigration Act — Section on Prohibited Immigrants",
+      "category": "general",
+      "content": "Persons who may be refused entry or visas to Vanuatu include: those convicted of serious criminal offenses (particularly within 10 years), persons appearing on international sanctions or watch lists, persons with serious communicable diseases posing public health risk, persons likely to become a financial burden on the Vanuatu state, persons who have previously been deported or removed from Vanuatu, persons who provided false or misleading information in any immigration application, and persons whose presence would be contrary to Vanuatu's national interest or public order."
+    }
+  ]
+}
