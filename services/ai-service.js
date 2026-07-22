@@ -10,7 +10,7 @@ const kb = require('./knowledge-base');
  */
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
 /**
  * Generate a system prompt from the knowledge base
@@ -150,7 +150,8 @@ async function generateResponse(messages) {
       throw new Error('Unexpected Gemini response format');
     } catch (err) {
       console.error('Gemini API error:', err.message);
-      return keywordFallback(userQuery) + '\n\n[AI service note: Could not connect to AI model, used local fallback]';
+      // Fall back to keyword matching without showing technical note
+      return keywordFallback(userQuery);
     }
   }
 
