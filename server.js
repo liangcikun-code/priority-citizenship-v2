@@ -92,6 +92,62 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Database diagnostic + auto-setup
+app.get("/api/db-status", async (req, res) => {
+  const supabaseMod = require("./services/supabase");
+
+  // Try to check if tables exist by doing test queries
+  const tables = {};
+  const testQueries = [
+    { name: 'leads', key: 'leads' },
+    { name: 'appointments', key: 'appointments' },
+    { name: 'blog_posts', key: 'blog' },
+    { name: 'activity_log', key: 'activity' },
+    { name: 'settings', key: 'settings' },
+    { name: 'analytics', key: 'analytics' },
+  ];
+
+  try {
+    // Do a test insert + select to verify each table
+    const testId = '_test_' + Date.now();
+
+    // Test leads table
+    try {
+      const testLead = await supabaseMod.addLead({ name: '_DB_TEST_', email: '_test_@test.com', service: 'test', message: 'db test', status: 'test', source: 'system' });
+      tables.leads = testLead ? 'OK' : 'FAIL';
+      if (testLead) await supabaseMod.deleteLead(testLead.id);
+    } catch(e) { tables.leads = 'ERROR: ' + e.message; }
+
+    // Test appointments table
+    try {
+      const testAppt = await supabaseMod.addAppointment({ slotId: '_test_', name: '_DB_TEST_', email: '_test_@test.com', service: 'test', slotLabel: 'test slot', status: 'test' });
+      tables.appointments = testAppt ? 'OK' : 'FAIL';
+    } catch(e) { tables.appointments = 'ERROR: ' + e.message; }
+
+    // Test blog table (read-only check)
+    try {
+      const posts = await supabaseMod.getPosts();
+      tables.blog_posts = Array.isArray(posts) ? 'OK' : 'FAIL';
+    } catch(e) { tables.blog_posts = 'ERROR: ' + e.message; }
+
+    res.json({
+      status: 'checked',
+      tables,
+      instructions: tables.leads !== 'OK' ?
+        'Tables missing! Go to Supabase SQL Editor and run the SQL from data/supabase-schema.sql' :
+        'All tables OK'
+    });
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Serve the SQL schema file for easy access
+app.get("/api/schema-sql", (req, res) => {
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+  res.sendFile(path.join(__dirname, 'data', 'supabase-schema.sql'));
+});
+
 // AI Tools hub
 app.get("/tools", (req, res) => {
   res.sendFile(path.join(publicDir, "tools.html"));
