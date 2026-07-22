@@ -149,9 +149,6 @@ async function deleteLead(id) {
   if(idx>-1) { mem.leads.splice(idx,1); saveMemToDisk(); }
   return true;
 }
-  if (db) { supabaseQuery('leads','delete','id',id).catch(() => {}); }
-  return true;
-}
 
 // ─── Blog ─────────────────────────────────────────────
 async function getPosts() {
