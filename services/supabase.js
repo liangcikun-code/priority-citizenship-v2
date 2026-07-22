@@ -70,25 +70,28 @@ async function supabaseQuery(table, method, ...args) {
   }
 }
 
-// ═══════ Public API — In-Memory Primary, Supabase Sync ═════
-// Data is always stored in-memory first (persisted to /tmp).
-// Supabase is a best-effort sync target — never the primary source.
+// ═══════ Public API — Supabase Primary, Memory Fallback ═════
+// Supabase PostgreSQL is the source of truth. In-memory is fallback only.
 
 // ─── Leads ────────────────────────────────────────────
 async function getLeads(filters = {}) {
-  // Always use in-memory data as the source of truth
-  let data = mem.leads.slice().reverse();
+  let data = [];
 
-  // If in-memory is empty, try to load from Supabase as fallback
-  if (data.length === 0 && db) {
+  // Read from Supabase first (primary source of truth)
+  if (db) {
     const rows = await supabaseQuery('leads', 'select', '*', 'created_at', false);
     if (rows && rows.length > 0) {
       data = rows.map(l => ({id:l.id,name:l.name,email:l.email,phone:l.phone,country:l.country,service:l.service,budget:l.budget,message:l.message,notes:l.notes,status:l.status,source:l.source,createdAt:l.created_at,updatedAt:l.updated_at}));
-      // Restore into memory
+      // Sync to memory for fast access
       mem.leads = data.map(l => ({...l}));
       saveMemToDisk();
-      console.log(`[supabase] Restored ${mem.leads.length} leads from Supabase into memory`);
     }
+  }
+
+  // Fallback to in-memory
+  if (data.length === 0) {
+    data = mem.leads.slice().reverse();
+    if (data.length > 0) console.log('[supabase] Using in-memory fallback:', data.length, 'leads');
   }
 
   if (filters.status)  data = data.filter(l => l.status === filters.status);
@@ -99,42 +102,53 @@ async function getLeads(filters = {}) {
 }
 
 async function addLead(lead) {
-  // Always save to in-memory first — this is the source of truth
+  // Write to Supabase first (primary storage)
+  if (db) {
+    const row = { name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nowISO(), updated_at:nowISO() };
+    const d = await supabaseQuery('leads', 'insert', row);
+    if (d) {
+      console.log('[supabase] Lead saved:', lead.email);
+      // Also cache in memory
+      const nl = {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
+      mem.leads.push(nl);
+      saveMemToDisk();
+      return nl;
+    }
+    console.error('[supabase] Lead insert FAILED — falling back to in-memory');
+  }
+
+  // In-memory fallback (only when Supabase fails or is unavailable)
   const nl = {id:genId('lead'),...lead,status:lead.status||'new',createdAt:nowISO(),updatedAt:nowISO()};
   mem.leads.push(nl);
   mem.activity.unshift({id:genId('act'),type:'lead_created',message:`New lead: ${lead.name}`,subject:lead.name,created_at:nowISO()});
   saveMemToDisk();
-
-  // Best-effort sync to Supabase
-  if (db) {
-    const row = {id:nl.id, name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nl.createdAt, updated_at:nl.updatedAt};
-    supabaseQuery('leads', 'insert', row).then(d => {
-      if (d) console.log('[supabase] Lead synced:', lead.email);
-    }).catch(() => {});
-  }
   return nl;
 }
 
 async function updateLead(id, updates) {
-  // Always update in-memory first
+  if (db) {
+    const d = await supabaseQuery('leads', 'update', {...updates,updated_at:nowISO()}, 'id', id);
+    if (d) {
+      // Also update memory cache
+      const idx = mem.leads.findIndex(l=>l.id===id);
+      if (idx >= 0) { mem.leads[idx] = {...mem.leads[idx],...updates,updatedAt:nowISO()}; saveMemToDisk(); }
+      return {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
+    }
+  }
+  // In-memory fallback
   const idx = mem.leads.findIndex(l=>l.id===id);
   if(idx===-1) return null;
   mem.leads[idx] = {...mem.leads[idx],...updates,updatedAt:nowISO()};
   saveMemToDisk();
-
-  // Best-effort sync to Supabase
-  if (db) {
-    supabaseQuery('leads', 'update', {...updates,updated_at:nowISO()}, 'id', id).catch(() => {});
-  }
   return mem.leads[idx];
 }
 
 async function deleteLead(id) {
-  // Always delete from in-memory first
+  if (db) { const r = await supabaseQuery('leads','delete','id',id); if (r !== null) { mem.leads = mem.leads.filter(l=>l.id!==id); saveMemToDisk(); return true; } }
   const idx = mem.leads.findIndex(l=>l.id===id);
   if(idx>-1) { mem.leads.splice(idx,1); saveMemToDisk(); }
-
-  // Best-effort sync to Supabase
+  return true;
+}
   if (db) { supabaseQuery('leads','delete','id',id).catch(() => {}); }
   return true;
 }
@@ -179,28 +193,38 @@ async function deletePost(id) {
 
 // ─── Appointments ─────────────────────────────────────
 async function getAppointments() {
+  let data = [];
   if (db) {
     const d = await supabaseQuery('appointments','select','*','created_at',false);
-    return d.map(a=>({id:a.id,slotId:a.slot_id,name:a.name,email:a.email,phone:a.phone,service:a.service,message:a.message,slotLabel:a.slot_label,status:a.status,createdAt:a.created_at}));
+    if (d && d.length > 0) {
+      data = d.map(a=>({id:a.id,slotId:a.slot_id,name:a.name,email:a.email,phone:a.phone,service:a.service,message:a.message,slotLabel:a.slot_label,status:a.status,createdAt:a.created_at}));
+      mem.appointments = data.map(a => ({...a}));
+      saveMemToDisk();
+    }
   }
-  return mem.appointments.slice().reverse();
+  if (data.length === 0) data = mem.appointments.slice().reverse();
+  return data;
 }
 
 async function addAppointment(appt) {
   if (db) {
     const row = {slot_id:appt.slotId,name:appt.name,email:appt.email,phone:appt.phone||'',service:appt.service||'general',message:appt.message||'',slot_label:appt.slotLabel||'',status:appt.status||'confirmed',created_at:nowISO()};
-    return supabaseQuery('appointments','insert',row);
+    const d = await supabaseQuery('appointments','insert',row);
+    if (d) { console.log('[supabase] Appointment saved'); return d; }
+    console.error('[supabase] Appointment insert FAILED — falling back to in-memory');
   }
   const na = {id:genId('appt'),...appt,status:appt.status||'confirmed',createdAt:nowISO()};
   mem.appointments.push(na);
+  saveMemToDisk();
   return na;
 }
 
 async function updateAppointment(id, updates) {
-  if (db) return supabaseQuery('appointments','update',{...updates,updated_at:nowISO()},'id',id);
+  if (db) { const d = await supabaseQuery('appointments','update',{...updates,updated_at:nowISO()},'id',id); if (d) return d; }
   const idx = mem.appointments.findIndex(a=>a.id===id);
   if(idx===-1) return null;
   mem.appointments[idx] = {...mem.appointments[idx],...updates,updatedAt:nowISO()};
+  saveMemToDisk();
   return mem.appointments[idx];
 }
 
