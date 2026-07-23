@@ -4,8 +4,18 @@
  */
 
 let createClient;
-try { createClient = require('@supabase/supabase-js').createClient; }
-catch (e) { /* supabase-js not installed */ }
+try {
+  const supabaseModule = require('@supabase/supabase-js');
+  createClient = supabaseModule.createClient;
+  console.log('[supabase] SDK loaded successfully, createClient type:', typeof createClient);
+} catch (e) {
+  console.error('[supabase] SDK load FAILED:', e.message);
+} finally {
+  // Always set up in-memory fallback even if SDK fails to load
+  if (!createClient) {
+    console.error('[supabase] createClient is not available - all data will use in-memory fallback');
+  }
+}
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
@@ -15,16 +25,21 @@ let db = null;
 try {
   if (supabaseUrl && supabaseKey && createClient) {
     const url = supabaseUrl.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
+    console.log('[supabase] Attempting connection to: ' + url.replace(/\/\/.*@/, '//***@'));
     db = createClient(url, supabaseKey);
-    console.log('[supabase] Connected to ' + url);
+    console.log('[supabase] Connected successfully! db type:', typeof db);
+  } else {
+    console.error('[supabase] Cannot initialize - URL present:', !!supabaseUrl, ', KEY present:', !!supabaseKey, ', createClient present:', !!createClient);
   }
 } catch (e) {
   console.error('[supabase] Failed to initialize:', e.message);
+  console.error('[supabase] Stack:', e.stack);
   db = null;
 }
 
 if (!db) {
   console.warn('[supabase] Not configured — using in-memory storage. Data will NOT persist on Vercel.');
+  console.warn('[supabase] Diagnostic: URL=' + !!supabaseUrl + ' KEY=' + !!supabaseKey + ' SDK=' + !!createClient);
 }
 
 const nowISO = () => new Date().toISOString();
