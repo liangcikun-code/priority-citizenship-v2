@@ -133,6 +133,11 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .tab-btn.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .tab-btn:hover:not(.active){color:var(--gray-700)}
 
+/* Card highlight transition */
+.cost-card{border:1px solid var(--gray-200);transition:border 0.3s, box-shadow 0.3s, opacity 0.3s}
+.cost-card.highlight-dsp{border:2px solid var(--gold)!important;box-shadow:0 0 0 6px rgba(201,168,76,0.1)!important}
+.cost-card.highlight-ciip{border:2px solid var(--success)!important;box-shadow:0 0 0 6px rgba(5,150,105,0.1)!important}
+
 .print-only{display:none}
 @media print{
   body{background:#fff;color:#000}
@@ -799,29 +804,30 @@ function setupTabs() {
   const tabs = document.querySelectorAll('#resultsTabs .tab-btn');
   const dspCard = document.getElementById('dspCard');
   const ciipCard = document.getElementById('ciipCard');
+  const container = dspCard.parentElement; // .dsp-vs-ciip grid
+
+  function highlightDSP() {
+    dspCard.classList.add('highlight-dsp');
+    dspCard.classList.remove('highlight-ciip');
+    ciipCard.classList.remove('highlight-ciip', 'highlight-dsp');
+  }
+  function highlightCIIP() {
+    ciipCard.classList.add('highlight-ciip');
+    ciipCard.classList.remove('highlight-dsp');
+    dspCard.classList.remove('highlight-dsp', 'highlight-ciip');
+  }
 
   tabs.forEach(tab => {
     tab.onclick = function() {
       tabs.forEach(t => t.classList.remove('active'));
       this.classList.add('active');
-      const target = this.dataset.tab;
-      if (target === 'dsp') {
-        dspCard.style.border = '2px solid var(--gold)';
-        dspCard.style.boxShadow = '0 0 0 4px rgba(201,168,76,0.1)';
-        ciipCard.style.border = '1px solid rgba(255,255,255,0.1)';
-        ciipCard.style.boxShadow = 'none';
-      } else {
-        ciipCard.style.border = '2px solid var(--success)';
-        ciipCard.style.boxShadow = '0 0 0 4px rgba(5,150,105,0.1)';
-        dspCard.style.border = '1px solid rgba(255,255,255,0.1)';
-        dspCard.style.boxShadow = 'none';
-      }
+      if (this.dataset.tab === 'dsp') highlightDSP();
+      else highlightCIIP();
     };
   });
 
-  // Initial: show both, highlight DSP
-  dspCard.style.border = '2px solid var(--gold)';
-  dspCard.style.boxShadow = '0 0 0 4px rgba(201,168,76,0.1)';
+  // Initial: DSP highlighted
+  highlightDSP();
 }
 
 // ═══════ RESET ═════════════════════════════════════════
