@@ -63,17 +63,16 @@ app.get("/api/debug", async (req, res) => {
   try {
     const supabase = require("./services/supabase");
     info.supabaseModule = typeof supabase.getLeads;
-    // Test actual Supabase connectivity
+    // Check Supabase directly (bypassing memory fallback)
     try {
+      const supabaseMod = require('./services/supabase');
+      info.supabaseWorking = !!supabaseMod._db;  // exposes whether db client is initialized
       const leads = await supabase.getLeads();
-      info.memoryLeadsCount = leads.length;
-      info.supabaseWorking = true;
-      // Try direct Supabase query to compare
-      try {
-        const supabaseMod = require('./services/supabase');
-        const appts = await supabase.getAppointments();
-        info.memoryApptsCount = appts.length;
-      } catch(ex) {}
+      info.leadsCount = leads.length;
+      const appts = await supabase.getAppointments();
+      info.apptsCount = appts.length;
+      const posts = await supabase.getPosts();
+      info.postsCount = posts.length;
     } catch(e) {
       info.supabaseWorking = false;
       info.supabaseError = e.message;
