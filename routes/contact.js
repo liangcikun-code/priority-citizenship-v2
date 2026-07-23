@@ -18,7 +18,7 @@ router.post('/', async (req, res) => {
     res.json({ success: true, leadId: lead.id });
   } catch (err) {
     console.error('Contact form error:', err);
-    res.status(500).json({ error: 'Failed to submit form' });
+    res.status(500).json({ error: 'Failed to submit form', details: err.message });
   }
 });
 
