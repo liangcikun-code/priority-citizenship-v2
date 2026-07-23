@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
       service, budget: budget || '', message: message || '',
       status: 'new', source: 'website_contact_form'
     });
-    email.notifyNewLead(lead).catch(() => {});
+    if (email && typeof email.notifyNewLead === 'function') email.notifyNewLead(lead).catch(() => {});
     res.json({ success: true, leadId: lead.id });
   } catch (err) {
     console.error('Contact form error:', err);

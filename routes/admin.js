@@ -47,7 +47,7 @@ router.get('/leads', requireAdmin, async (req, res) => {
 router.post('/leads', requireAdmin, async (req, res) => {
   try {
     const lead = await store.addLead(req.body);
-    email.notifyNewLead(lead).catch(() => {});
+    if (email && typeof email.notifyNewLead === 'function') email.notifyNewLead(lead).catch(() => {});
     res.status(201).json(lead);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });
