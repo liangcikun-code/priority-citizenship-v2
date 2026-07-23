@@ -198,7 +198,7 @@ app.get("/tools", (req, res) => {
 
 app.get("/tools/:page", (req, res) => {
   const page = req.params.page;
-  const validPages = ["visa-recommendation", "eligibility-assessment", "book-appointment", "fee-calculator"];
+  const validPages = ["visa-recommendation", "eligibility-assessment", "book-appointment", "fee-calculator", "document-checklist"];
   if (validPages.includes(page)) {
     res.sendFile(path.join(publicDir, page + ".html"));
   } else {

@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Document Checklist — Priority Citizenship</title>
+<meta name="description" content="AI generates a personalized document checklist for your Vanuatu visa application. Includes Apostille, notarization, and translation requirements.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628; --gold:#c9a84c; --gold-light:#e4c86a; --gold-dark:#a8892e;
+  --success:#059669; --success-light:#d1fae5; --warning:#d97706; --warning-light:#fef3c7;
+  --danger:#dc2626; --danger-light:#fee2e2;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db;
+  --gray-500:#6b7280; --gray-700:#374151;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy)0%,#0d1f3c100%);color:var(--gray-700);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.tool-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,22,40,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.tool-nav a,.tool-nav button{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.83rem;transition:color 0.2s;background:none;border:none;font-family:inherit;cursor:pointer;padding:6px 0}
+.tool-nav a:hover,.tool-nav button:hover{color:var(--gold)}
+.tool-nav .sep{color:rgba(255,255,255,0.15);margin:0 2px}
+.tool-nav-left,.tool-nav-right{display:flex;align-items:center;gap:4px}
+
+.hero{padding:100px 0 40px;text-align:center;color:#fff}
+.hero .badge{display:inline-block;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--gold-light);margin-bottom:16px}
+.hero h1{font-size:2.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
+.hero h1 span{color:var(--gold)}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:580px;margin:0 auto}
+
+.wizard-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
+.wizard-progress{display:flex;gap:6px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.wizard-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-200);transition:all 0.3s;flex-shrink:0}
+.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:12px;height:12px}
+.wizard-dot.done{background:var(--success)}
+.step-label{font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.question-label{display:block;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:24px}
+.question-hint{font-size:0.85rem;color:var(--gray-500);margin-top:-16px;margin-bottom:20px}
+
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+@media(max-width:500px){.option-grid{grid-template-columns:1fr}}
+.option-btn{display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;background:#fff;font-family:inherit;font-size:0.95rem;color:var(--gray-700);cursor:pointer;transition:all 0.2s;text-align:left}
+.option-btn:hover{border-color:var(--gold);background:rgba(201,168,76,0.03)}
+.option-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
+.option-btn .icon{width:20px;height:20px;border-radius:50%;border:2px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent}
+.option-btn.selected .icon{border-color:var(--gold);background:var(--gold);color:#fff}
+.option-btn .opt-icon{font-size:1.3rem}
+
+.select-input{width:100%;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;font-family:inherit;font-size:1rem;background:#fff;transition:border-color 0.2s;margin-bottom:12px}
+.select-input:focus{outline:none;border-color:var(--gold)}
+
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px}
+.btn{padding:12px 28px;border-radius:10px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--gold);color:var(--navy)}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;color:var(--gray-500);border:2px solid var(--gray-200)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-white{background:#fff;color:var(--navy);border:2px solid var(--gray-200)}
+.btn-white:hover{border-color:var(--gold);background:rgba(201,168,76,0.06)}
+.btn-sm{padding:8px 18px;font-size:0.85rem}
+
+/* Results */
+.results{padding:60px 0 80px}
+.results .container{max-width:800px;margin:0 auto;padding:0 20px}
+.results-header{text-align:center;margin-bottom:40px}
+.results-header h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px}
+.results-header p{color:rgba(255,255,255,0.6)}
+
+.summary-bar{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:32px}
+.summary-stat{flex:1;min-width:140px;background:rgba(255,255,255,0.95);border-radius:14px;padding:18px 20px;text-align:center}
+.summary-stat .ss-num{font-size:2rem;font-weight:800;color:var(--navy)}
+.summary-stat .ss-label{font-size:0.78rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;margin-top:4px}
+
+.checklist-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
+.checklist-card .cl-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.checklist-card .cl-cat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.cat-id{background:rgba(201,168,76,0.12);color:var(--gold-dark)}
+.cat-bg{background:rgba(5,150,105,0.1);color:var(--success)}
+.cat-health{background:rgba(37,99,235,0.1);color:#2563eb}
+.cat-form{background:rgba(147,51,234,0.1);color:#9333ea}
+
+.cl-cat-count{font-size:0.78rem;color:var(--gray-500);background:var(--gray-100);padding:3px 10px;border-radius:100px;font-weight:500;white-space:nowrap}
+.cl-item{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;margin:4px 0;border-radius:10px;transition:background 0.15s;cursor:pointer}
+.cl-item:hover{background:var(--gray-50)}
+.cl-item .custom-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent;transition:all 0.15s;margin-top:1px}
+.cl-item.checked .custom-check{background:var(--success);border-color:var(--success);color:#fff}
+.cl-item.checked .cl-text{text-decoration:line-through;color:var(--gray-500)}
+.cl-text{flex:1;font-size:0.92rem;color:var(--gray-700);line-height:1.5}
+.cl-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.cl-badge{font-size:0.7rem;padding:2px 8px;border-radius:100px;font-weight:500}
+.badge-apostille{background:var(--warning-light);color:var(--warning)}
+.badge-translate{background:rgba(37,99,235,0.08);color:#2563eb}
+.badge-notarize{background:rgba(147,51,234,0.08);color:#9333ea}
+.badge-timeline{background:var(--danger-light);color:var(--danger)}
+
+/* Mail modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:32px;max-width:420px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.2)}
+.modal-box h3{font-size:1.15rem;color:var(--navy);margin-bottom:8px}
+.modal-box p{font-size:0.9rem;color:var(--gray-500);margin-bottom:20px}
+.modal-box input{width:100%;padding:12px 16px;border:2px solid var(--gray-200);border-radius:10px;font-family:inherit;font-size:0.95rem;margin-bottom:16px}
+.modal-box input:focus{outline:none;border-color:var(--gold)}
+.modal-box .btn-row{display:flex;gap:10px;justify-content:flex-end}
+
+.actions-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:40px}
+@media(max-width:500px){.actions-row{flex-direction:column}}
+
+.progress-circle{width:80px;height:80px;margin:0 auto 16px;position:relative}
+.progress-circle svg{transform:rotate(-90deg);width:80px;height:80px}
+.progress-circle .pct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:var(--navy)}
+
+.retake-section{text-align:center;padding:40px 0 60px}
+.retake-section a{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-weight:600;font-size:0.95rem;padding:10px 24px;border:2px solid var(--gold);border-radius:10px;transition:all 0.2s}
+.retake-section a:hover{background:var(--gold);color:var(--navy)}
+
+.print-only{display:none}
+@media print{
+  body{background:#fff;color:#000}
+  .tool-nav,.hero,.wizard-card,.actions-row,.retake-section,.summary-bar{display:none!important}
+  .results{padding:0 10px}
+  .results-header h2,.results-header p{color:#000}
+  .checklist-card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+  .cl-item.checked .cl-text{text-decoration:line-through}
+  .print-only{display:block;text-align:center;padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="tool-nav">
+  <div class="tool-nav-left">
+    <a href="/">Home</a><span class="sep">/</span><a href="/tools">AI Tools</a><span class="sep">/</span><span style="color:var(--gold-light);font-size:0.83rem">Document Checklist</span>
+  </div>
+  <div class="tool-nav-right">
+    <button onclick="window.print()">&#128196; Print</button>
+  </div>
+</div>
+
+<div class="hero" id="heroSection">
+  <div class="badge">&#128203; P1 — Document Checklist</div>
+  <h1>AI <span>Document Checklist</span></h1>
+  <p>Personalized checklist based on your visa type and personal situation. Know exactly what you need, certification requirements, and estimated prep time.</p>
+</div>
+
+<!-- STEPPER -->
+<div class="wizard-card" id="stepper">
+  <div class="wizard-progress" id="progressBar"></div>
+  <div class="step-label" id="stepLabel">Step 1 of 3</div>
+  <div id="stepContent"></div>
+  <div class="wizard-nav" id="stepNav"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="results" id="resultsSection" style="display:none">
+  <div class="container">
+    <div class="results-header">
+      <h2>&#128203; Your Personalized Document Checklist</h2>
+      <p id="resultsSubtitle"></p>
+    </div>
+
+    <!-- Summary bar -->
+    <div class="summary-bar" id="summaryBar"></div>
+
+    <!-- Checklist groups -->
+    <div id="checklistGroups"></div>
+
+    <!-- Timeline & cost estimate -->
+    <div class="checklist-card" id="timelineCard" style="margin-top:24px"></div>
+
+    <!-- Actions -->
+    <div class="actions-row" style="margin-top:32px">
+      <button class="btn btn-primary" onclick="showEmailModal()">&#128231; Send to Email</button>
+      <button class="btn btn-white" onclick="window.print()">&#128196; Export PDF / Print</button>
+      <button class="btn btn-outline" onclick="resetTool()">&#8634; Start Over</button>
+    </div>
+
+    <div class="print-only">
+      <p>Generated by Priority Citizenship Document Checklist &mdash; prioritycitizenship@gmail.com</p>
+    </div>
+  </div>
+</div>
+
+<div class="retake-section" id="retakeSection" style="display:none">
+  <a href="#" onclick="resetTool();return false">&#8634; Get Another Checklist</a>
+</div>
+
+<!-- Email Modal -->
+<div class="modal-overlay" id="emailModal">
+  <div class="modal-box">
+    <h3>&#128231; Send Checklist to Email</h3>
+    <p>We'll send a copy of your personalized document checklist to this email address.</p>
+    <input type="email" id="emailInput" placeholder="your@email.com">
+    <div class="btn-row">
+      <button class="btn btn-outline btn-sm" onclick="closeEmailModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="sendChecklist()">Send &#8594;</button>
+    </div>
+    <div id="emailMsg" style="margin-top:12px;font-size:0.85rem"></div>
+  </div>
+</div>
+
+<script>
+// ═══════ CHECKLIST DATA ═════════════════════════════════
+const DOC_DATA = {
+  citizenship: {
+    name: 'Citizenship by Investment (DSP/CIIP)',
+    summary: 'Full citizenship application — requires the most comprehensive document package.',
+    categories: [
+      {
+        id: 'identity',
+        icon: '&#128196;',
+        title: 'Identity Documents',
+        cls: 'cat-id',
+        items: [
+          { text: 'Valid passport (12+ months remaining)', badges: [] },
+          { text: 'Birth certificate (original + certified copy)', badges: ['apostille', 'translate'] },
+          { text: '6 passport photos (35×45mm, white background, <6 months old)', badges: [] },
+          { text: 'Marriage certificate (if including spouse)', badges: ['apostille', 'translate', 'notarize'] },
+          { text: 'Divorce decree / death certificate of former spouse (if applicable)', badges: ['apostille', 'translate'] },
+        ]
+      },
+      {
+        id: 'background',
+        icon: '&#128269;',
+        title: 'Background Checks & Due Diligence',
+        cls: 'cat-bg',
+        items: [
+          { text: 'Police clearance certificate — country of nationality (issued within 6 months)', badges: ['timeline'] },
+          { text: 'Police clearance certificate — each country of residence past 10 years', badges: ['timeline'] },
+          { text: 'Chronological CV/resume (no gaps, from age 18)', badges: [] },
+          { text: 'Bank reference letter (on bank letterhead, recent 3 months)', badges: [] },
+          { text: 'Professional reference letters (minimum 2)', badges: [] },
+          { text: 'Proof of address (utility bill or bank statement, within 3 months)', badges: [] },
+        ]
+      },
+      {
+        id: 'health',
+        icon: '&#127973;',
+        title: 'Health & Financial',
+        cls: 'cat-health',
+        items: [
+          { text: 'Medical certificate — general health & communicable disease screening', badges: ['timeline'] },
+          { text: 'Source of funds documentation (bank statements, dividend records, asset sale proofs)', badges: ['notarize', 'translate'] },
+          { text: 'Bank statements — past 3-6 months showing financial capacity', badges: [] },
+        ]
+      },
+      {
+        id: 'forms',
+        icon: '&#128221;',
+        title: 'Application Forms & Declarations',
+        cls: 'cat-form',
+        items: [
+          { text: 'DSP/CIIP application form (completed by licensed agent)', badges: [] },
+          { text: 'Declaration of lawful source of funds', badges: [] },
+          { text: 'PEP (Politically Exposed Person) declaration (if applicable)', badges: [] },
+          { text: 'Sanctions self-declaration form', badges: [] },
+          { text: 'Consent form for due diligence investigation', badges: [] },
+        ]
+      },
+    ],
+    timeline: '4-6 weeks',
+    costRange: 'US$500 — US$1,500',
+    costNote: 'Depends on number of countries for police clearance and documents requiring Apostille + certified translation.'
+  },
+  residence: {
+    name: 'Residence Permit',
+    summary: 'Right to live and work in Vanuatu. Simpler than citizenship but still requires thorough documentation.',
+    categories: [
+      {
+        id: 'identity',
+        icon: '&#128196;',
+        title: 'Identity Documents',
+        cls: 'cat-id',
+        items: [
+          { text: 'Valid passport (6+ months validity beyond planned stay)', badges: [] },
+          { text: '2 passport-size photographs', badges: [] },
+          { text: 'Birth certificate (certified copy)', badges: ['apostille', 'translate'] },
+          { text: 'Marriage certificate (if applying with spouse)', badges: ['apostille', 'translate'] },
+        ]
+      },
+      {
+        id: 'background',
+        icon: '&#128269;',
+        title: 'Background Checks',
+        cls: 'cat-bg',
+        items: [
+          { text: 'Police clearance — country of origin (issued within 6 months)', badges: ['timeline'] },
+          { text: 'Police clearance — countries resided 12+ months in past 5 years', badges: ['timeline'] },
+          { text: 'CV/resume showing employment and residence history', badges: [] },
+        ]
+      },
+      {
+        id: 'health',
+        icon: '&#127973;',
+        title: 'Health & Financial',
+        cls: 'cat-health',
+        items: [
+          { text: 'Medical certificate (issued within 3 months)', badges: ['timeline'] },
+          { text: 'Bank statements — past 3-6 months', badges: [] },
+          { text: 'Proof of accommodation in Vanuatu (rental agreement or property title)', badges: [] },
+        ]
+      },
+      {
+        id: 'forms',
+        icon: '&#128221;',
+        title: 'Purpose-Specific Documents',
+        cls: 'cat-form',
+        items: [
+          { text: 'Work permit / employment contract (for work residence)', badges: [] },
+          { text: 'Business registration certificate (for investor residence)', badges: [] },
+          { text: 'Proof of pension or retirement income (for retiree residence)', badges: [] },
+          { text: 'Completed residence visa application form', badges: [] },
+        ]
+      },
+    ],
+    timeline: '2-3 weeks',
+    costRange: 'US$300 — US$800',
+    costNote: 'Varies by number of documents requiring certification and translation.'
+  },
+  business: {
+    name: 'Business Immigration',
+    summary: 'For entrepreneurs and investors establishing or acquiring a Vanuatu enterprise.',
+    categories: [
+      {
+        id: 'identity',
+        icon: '&#128196;',
+        title: 'Identity Documents',
+        cls: 'cat-id',
+        items: [
+          { text: 'Valid passport (6+ months validity)', badges: [] },
+          { text: '2 passport-size photographs', badges: [] },
+          { text: 'Birth certificate (certified copy)', badges: ['apostille', 'translate'] },
+        ]
+      },
+      {
+        id: 'background',
+        icon: '&#128269;',
+        title: 'Background & Professional',
+        cls: 'cat-bg',
+        items: [
+          { text: 'Police clearance certificate (issued within 6 months)', badges: ['timeline'] },
+          { text: 'Professional references (minimum 2 letters)', badges: [] },
+          { text: 'CV/resume with business/industry experience', badges: [] },
+        ]
+      },
+      {
+        id: 'health',
+        icon: '&#127973;',
+        title: 'Business & Financial',
+        cls: 'cat-health',
+        items: [
+          { text: 'Medical certificate (issued within 3 months)', badges: ['timeline'] },
+          { text: 'Proof of investment capital (bank statements or proof of funds)', badges: [] },
+          { text: 'Business plan (detailed)', badges: ['notarize'] },
+          { text: 'Source of funds documentation for AML compliance', badges: ['notarize', 'translate'] },
+          { text: 'Vanuatu company registration certificate (VFSC)', badges: [] },
+          { text: 'Proof of accommodation in Vanuatu', badges: [] },
+        ]
+      },
+    ],
+    timeline: '3-4 weeks',
+    costRange: 'US$500 — US$1,200',
+    costNote: 'Business plan preparation and certification of corporate documents.'
+  },
+  family: {
+    name: 'Family Sponsorship',
+    summary: 'For family members of Vanuatu citizens or permanent residents.',
+    categories: [
+      {
+        id: 'identity',
+        icon: '&#128196;',
+        title: 'Identity Documents',
+        cls: 'cat-id',
+        items: [
+          { text: 'Valid passport (6+ months validity)', badges: [] },
+          { text: 'Birth certificate', badges: ['apostille', 'translate'] },
+          { text: '2 passport-size photographs', badges: [] },
+          { text: 'Marriage certificate (for spouse sponsorship)', badges: ['apostille', 'translate', 'notarize'] },
+        ]
+      },
+      {
+        id: 'background',
+        icon: '&#128269;',
+        title: 'Sponsor Documents',
+        cls: 'cat-bg',
+        items: [
+          { text: 'Sponsor proof of Vanuatu citizenship or permanent residence', badges: [] },
+          { text: 'Sponsor proof of financial capacity', badges: [] },
+          { text: 'Sponsor proof of accommodation', badges: [] },
+          { text: 'Relationship evidence (photos, correspondence, family records)', badges: [] },
+        ]
+      },
+      {
+        id: 'health',
+        icon: '&#127973;',
+        title: 'Health & Background',
+        cls: 'cat-health',
+        items: [
+          { text: 'Medical certificate (issued within 3 months)', badges: ['timeline'] },
+          { text: 'Police clearance (for applicants 18+)', badges: ['timeline'] },
+        ]
+      },
+      {
+        id: 'forms',
+        icon: '&#128221;',
+        title: 'Forms',
+        cls: 'cat-form',
+        items: [
+          { text: 'Completed sponsorship application form', badges: [] },
+          { text: 'Declaration of financial support from sponsor', badges: [] },
+        ]
+      },
+    ],
+    timeline: '2-3 weeks',
+    costRange: 'US$200 — US$600',
+    costNote: 'Main costs are for certified translations and Apostille of relationship documents.'
+  },
+  visitor: {
+    name: 'Visitor / Tourist Visa',
+    summary: 'Short-term visit to Vanuatu for tourism, business visits, or family visits.',
+    categories: [
+      {
+        id: 'identity',
+        icon: '&#128196;',
+        title: 'Identity & Travel',
+        cls: 'cat-id',
+        items: [
+          { text: 'Valid passport (6+ months validity beyond intended stay)', badges: [] },
+          { text: '1 passport-size photograph', badges: [] },
+          { text: 'Return or onward travel ticket', badges: [] },
+        ]
+      },
+      {
+        id: 'background',
+        icon: '&#128269;',
+        title: 'Proof of Stay',
+        cls: 'cat-bg',
+        items: [
+          { text: 'Hotel booking or invitation letter from host', badges: [] },
+          { text: 'Proof of sufficient funds (bank statements or credit card)', badges: [] },
+          { text: 'Travel insurance (recommended)', badges: [] },
+        ]
+      },
+      {
+        id: 'forms',
+        icon: '&#128221;',
+        title: 'Forms',
+        cls: 'cat-form',
+        items: [
+          { text: 'Completed visitor visa application form', badges: [] },
+          { text: 'Travel itinerary', badges: [] },
+        ]
+      },
+    ],
+    timeline: '1 week',
+    costRange: 'US$50 — US$200',
+    costNote: 'Minimal certification requirements. No police clearance needed for most nationalities.'
+  },
+};
+
+// Dynamic rules per nationality/country
+function getNationalityExtras(nationality, residenceCountry) {
+  const nonEnglishCountries = ['china','japan','korea','taiwan','hong kong','thailand','vietnam','indonesia','russia','ukraine','france','germany','italy','spain','portugal','brazil','argentina','mexico','saudi arabia','uae','qatar','kuwait','iran','turkey','egypt'];
+  const nLower = (nationality||'').toLowerCase();
+  const rLower = (residenceCountry||'').toLowerCase();
+  const extras = { needsTranslation: false, needsExtraApostille: false, extraNotes: [] };
+
+  // Translation: if nationality or residence is non-English-speaking
+  if (nonEnglishCountries.some(c => nLower.includes(c) || rLower.includes(c))) {
+    extras.needsTranslation = true;
+    extras.extraNotes.push('All non-English documents require certified English translation');
+  }
+  // Extra Apostille for all non-Vanuatu origin documents
+  if (nLower && nLower !== 'vanuatu') {
+    extras.needsExtraApostille = true;
+    extras.extraNotes.push('Documents issued outside Vanuatu need Apostille or legalization');
+  }
+
+  return extras;
+}
+
+// ═══════ STATE ══════════════════════════════════════════
+const state = {
+  step: 0,
+  program: null,       // 'citizenship' | 'residence' | 'business' | 'family' | 'visitor'
+  nationality: '',
+  residenceCountry: '',
+  hasSpouse: false,
+  hasChildren: false,
+  hasParents: false,
+  checkedItems: {}     // { 'categoryIndex-itemIndex': true }  persisted in localStorage
+};
+
+// ═══════ STEPS ══════════════════════════════════════════
+const STEPS = [
+  {
+    title: 'Select Program Type',
+    hint: 'Which Vanuatu immigration program are you applying for?',
+    render() {
+      const opts = [
+        { id:'citizenship', icon:'&#127757;', name:'Citizenship by Investment (DSP/CIIP)', sub:'Full passport, investment-based' },
+        { id:'residence', icon:'&#127968;', name:'Residence Permit', sub:'Live & work in Vanuatu' },
+        { id:'business', icon:'&#128188;', name:'Business Immigration', sub:'Start/invest in a business' },
+        { id:'family', icon:'&#128106;', name:'Family Sponsorship', sub:'Join family in Vanuatu' },
+        { id:'visitor', icon:'&#9992;', name:'Visitor / Tourist Visa', sub:'Short-term visit' },
+      ];
+      return `
+        <div class="question-label">What type of application are you preparing for?</div>
+        ${opts.map(o => `
+          <div class="option-grid" style="grid-template-columns:1fr" onclick="selectProgram('${o.id}')">
+            <button class="option-btn${state.program===o.id?' selected':''}" data-opt="${o.id}" style="width:100%">
+              <span class="opt-icon">${o.icon}</span>
+              <div>
+                <div style="font-weight:600">${o.name}</div>
+                <div style="font-size:0.78rem;color:var(--gray-500)">${o.sub}</div>
+              </div>
+            </button>
+          </div>
+        `).join('')}
+      `;
+    }
+  },
+  {
+    title: 'Your Profile',
+    hint: 'Tell us about yourself — this affects certification and translation requirements.',
+    render() {
+      const commonCountries = ['China','Hong Kong','Singapore','Malaysia','Thailand','Vietnam','Indonesia','India','Philippines','Japan','South Korea','Taiwan','Australia','New Zealand','United States','United Kingdom','Canada','France','Germany','Russia','UAE','Saudi Arabia','Other'];
+      return `
+        <div class="question-label">Tell us about your situation</div>
+        <p class="question-hint">This helps us determine Apostille, translation, and extra document requirements.</p>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;font-weight:600;color:var(--navy);display:block;margin-bottom:6px">Your nationality</label>
+          <select class="select-input" id="nationalitySelect" onchange="state.nationality=this.value;renderCurrentStep()">
+            <option value="">-- Select --</option>
+            ${commonCountries.map(c => `<option value="${c}" ${state.nationality===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;font-weight:600;color:var(--navy);display:block;margin-bottom:6px">Current country of residence</label>
+          <select class="select-input" id="residenceSelect" onchange="state.residenceCountry=this.value;renderCurrentStep()">
+            <option value="">-- Select --</option>
+            ${commonCountries.map(c => `<option value="${c}" ${state.residenceCountry===c?'selected':''}>${c}</option>`).join('')}
+          </select>
+        </div>
+        <div style="margin-bottom:16px">
+          <label style="font-size:0.85rem;font-weight:600;color:var(--navy);display:block;margin-bottom:8px">Additional applicants</label>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="option-btn btn-sm${state.hasSpouse?' selected':''}" onclick="state.hasSpouse=!state.hasSpouse;renderCurrentStep()"><span class="opt-icon">&#128106;</span> Spouse</button>
+            <button class="option-btn btn-sm${state.hasChildren?' selected':''}" onclick="state.hasChildren=!state.hasChildren;renderCurrentStep()"><span class="opt-icon">&#128118;</span> Children</button>
+            <button class="option-btn btn-sm${state.hasParents?' selected':''}" onclick="state.hasParents=!state.hasParents;renderCurrentStep()"><span class="opt-icon">&#128117;</span> Parents</button>
+          </div>
+        </div>
+      `;
+    }
+  },
+  {
+    title: 'Generate Checklist',
+    hint: 'Review your profile and generate the checklist.',
+    render() {
+      const prog = DOC_DATA[state.program];
+      const extras = getNationalityExtras(state.nationality, state.residenceCountry);
+      const totalItems = (prog ? prog.categories.reduce((sum, c) => sum + c.items.length, 0) : 0);
+      return `
+        <div class="question-label">&#9989; Ready to generate your checklist</div>
+        <div style="background:var(--gray-50);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Program</span><span style="font-weight:600;color:var(--navy)">${prog?prog.name:'—'}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Nationality</span><span style="font-weight:600;color:var(--navy)">${state.nationality||'Not specified'}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Residence</span><span style="font-weight:600;color:var(--navy)">${state.residenceCountry||'Not specified'}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Family members</span><span style="font-weight:600;color:var(--navy)">${[state.hasSpouse?'Spouse':'', state.hasChildren?'Children':'', state.hasParents?'Parents':''].filter(Boolean).join(', ')||'None'}</span></div>
+          ${extras.extraNotes.length ? `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Extra requirements</span><span style="font-weight:600;color:var(--warning)">${extras.extraNotes.join(' · ')}</span></div>` : ''}
+          <div style="display:flex;justify-content:space-between;padding:10px 0 0;margin-top:10px;border-top:2px solid var(--gray-200);font-size:0.95rem"><span style="font-weight:700;color:var(--navy)">Estimated items</span><span style="font-weight:800;color:var(--navy)">~${totalItems} documents</span></div>
+        </div>
+      `;
+    }
+  }
+];
+
+function selectProgram(prog) { state.program = prog; renderCurrentStep(); }
+
+// ═══════ RENDER WIZARD ════════════════════════════════
+function renderCurrentStep() {
+  const step = STEPS[state.step];
+  document.getElementById('stepLabel').textContent = `Step ${state.step+1} of ${STEPS.length}`;
+  document.getElementById('stepContent').innerHTML = step.render();
+  renderProgress();
+  renderNav();
+}
+
+function renderProgress() {
+  document.getElementById('progressBar').innerHTML = STEPS.map((_,i) => {
+    let cls = i < state.step ? 'done' : (i === state.step ? 'active' : '');
+    return `<div class="wizard-dot ${cls}"></div>`;
+  }).join('');
+}
+
+function renderNav() {
+  const isLast = state.step === STEPS.length - 1;
+  const canProceed = state.program !== null;
+  document.getElementById('stepNav').innerHTML = `
+    <div>${state.step > 0 ? `<button class="btn btn-outline btn-sm" onclick="prevStep()">&#8592; Back</button>` : ''}</div>
+    <div>
+      ${isLast
+        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="generateChecklist()" style="${canProceed?'':'opacity:0.4;pointer-events:none'}">&#128203; Generate Checklist &#8594;</button>`
+        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="nextStep()" style="${canProceed?'':'opacity:0.4;pointer-events:none'}">Continue &#8594;</button>`
+      }
+    </div>
+  `;
+}
+
+function nextStep() { if (state.step < STEPS.length-1) { state.step++; renderCurrentStep(); } }
+function prevStep() { if (state.step > 0) { state.step--; renderCurrentStep(); } }
+
+// ═══════ GENERATE CHECKLIST ════════════════════════════
+function generateChecklist() {
+  const data = DOC_DATA[state.program];
+  if (!data) return;
+
+  // Load saved checkmarks
+  loadCheckedState();
+
+  // Hide stepper, show results
+  document.getElementById('stepper').style.display = 'none';
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  document.getElementById('retakeSection').style.display = 'block';
+
+  const extras = getNationalityExtras(state.nationality, state.residenceCountry);
+  document.getElementById('resultsSubtitle').textContent = `${data.name} · ${state.nationality||'Any'} Nationality`;
+
+  // Summary bar
+  const totalItems = data.categories.reduce((sum, c) => sum + c.items.length, 0);
+  const completed = Object.keys(state.checkedItems).filter(k => state.checkedItems[k]).length;
+  const pct = totalItems > 0 ? Math.round((completed / totalItems) * 100) : 0;
+  document.getElementById('summaryBar').innerHTML = `
+    <div class="summary-stat">
+      <div class="ss-num">${totalItems}</div>
+      <div class="ss-label">Total Documents</div>
+    </div>
+    <div class="summary-stat">
+      <div class="ss-num" id="completedNum">${completed}</div>
+      <div class="ss-label">Completed</div>
+    </div>
+    <div class="summary-stat">
+      <div class="progress-circle">
+        <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" fill="none" stroke="var(--gray-200)" stroke-width="8"/><circle cx="40" cy="40" r="34" fill="none" stroke="var(--success)" stroke-width="8" stroke-dasharray="${(pct/100)*214} 214" stroke-linecap="round"/></svg>
+        <div class="pct">${pct}%</div>
+      </div>
+      <div class="ss-label">Ready</div>
+    </div>
+    <div class="summary-stat">
+      <div class="ss-num">${data.timeline}</div>
+      <div class="ss-label">Est. Prep Time</div>
+    </div>
+  `;
+
+  // Checklist groups
+  let groupsHTML = '';
+  data.categories.forEach((cat, ci) => {
+    let itemsHTML = cat.items.map((item, ii) => {
+      const key = `${ci}-${ii}`;
+      const isChecked = state.checkedItems[key] || false;
+      // Apply nationality extras to relevant items
+      let badgesHTML = item.badges.map(b => {
+        const labels = { apostille:'Apostille', translate:'Translate', notarize:'Notarize', timeline:'Time-sensitive' };
+        const clsMap = { apostille:'badge-apostille', translate:'badge-translate', notarize:'badge-notarize', timeline:'badge-timeline' };
+        return `<span class="cl-badge ${clsMap[b]||''}">${labels[b]||b}</span>`;
+      }).join('');
+      return `
+        <div class="cl-item${isChecked?' checked':''}" data-key="${key}" onclick="toggleItem('${key}', this)">
+          <div class="custom-check">&#10003;</div>
+          <div style="flex:1">
+            <div class="cl-text">${item.text}</div>
+            ${badgesHTML ? `<div class="cl-badges">${badgesHTML}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    groupsHTML += `
+      <div class="checklist-card">
+        <div class="cl-header">
+          <div class="cl-cat-icon ${cat.cls}">${cat.icon}</div>
+          <div style="flex:1">
+            <h3 style="font-size:1.1rem;color:var(--navy)">${cat.title}</h3>
+            <div class="cl-cat-count">${cat.items.length} items</div>
+          </div>
+        </div>
+        ${itemsHTML}
+      </div>
+    `;
+  });
+
+  document.getElementById('checklistGroups').innerHTML = groupsHTML;
+
+  // Timeline card
+  document.getElementById('timelineCard').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+      <div class="cl-cat-icon" style="background:var(--warning-light);color:var(--warning)">&#9200;</div>
+      <div>
+        <h3 style="font-size:1.1rem;color:var(--navy)">Estimated Preparation Timeline & Costs</h3>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:var(--gray-50);border-radius:12px;padding:20px">
+        <div style="font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:6px">Estimated Time</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--navy)">${data.timeline}</div>
+        <div style="font-size:0.82rem;color:var(--gray-500);margin-top:4px">Document gathering & certification</div>
+      </div>
+      <div style="background:var(--gray-50);border-radius:12px;padding:20px">
+        <div style="font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:6px">Certification Cost Estimate</div>
+        <div style="font-size:1.5rem;font-weight:800;color:var(--navy)">${data.costRange}</div>
+        <div style="font-size:0.82rem;color:var(--gray-500);margin-top:4px">${data.costNote}</div>
+      </div>
+    </div>
+    ${extras.extraNotes.length ? `
+    <div style="margin-top:16px;padding:16px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:12px">
+      <strong style="color:var(--gold-dark);display:block;margin-bottom:4px">&#9888; Based on your profile:</strong>
+      <ul style="padding-left:18px;margin-top:4px">${extras.extraNotes.map(n => `<li style="font-size:0.88rem;color:var(--gray-700);padding:2px 0">${n}</li>`).join('')}</ul>
+    </div>
+    ` : ''}
+  `;
+
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ═══════ CHECKMARK LOGIC ═════════════════════════════
+function toggleItem(key, el) {
+  state.checkedItems[key] = !state.checkedItems[key];
+  if (state.checkedItems[key]) {
+    el.classList.add('checked');
+    el.querySelector('.custom-check').style.color = '#fff';
+  } else {
+    el.classList.remove('checked');
+  }
+  saveCheckedState();
+  updateCompletedCount();
+}
+
+function updateCompletedCount() {
+  const total = Object.keys(state.checkedItems).length;
+  const completed = Object.values(state.checkedItems).filter(Boolean).length;
+  const numEl = document.getElementById('completedNum');
+  if (numEl) numEl.textContent = completed;
+  // Update progress circle
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const circle = document.querySelector('.progress-circle circle:last-child');
+  if (circle) circle.setAttribute('stroke-dasharray', `${(pct/100)*214} 214`);
+  const pctEl = document.querySelector('.progress-circle .pct');
+  if (pctEl) pctEl.textContent = `${pct}%`;
+}
+
+function saveCheckedState() {
+  try { localStorage.setItem(`pcl-checklist-${state.program}`, JSON.stringify(state.checkedItems)); } catch(e) {}
+}
+function loadCheckedState() {
+  try {
+    const saved = localStorage.getItem(`pcl-checklist-${state.program}`);
+    if (saved) state.checkedItems = JSON.parse(saved);
+  } catch(e) { state.checkedItems = {}; }
+}
+
+// ═══════ EMAIL ══════════════════════════════════════
+function showEmailModal() { document.getElementById('emailModal').classList.add('show'); }
+function closeEmailModal() { document.getElementById('emailModal').classList.remove('show'); document.getElementById('emailMsg').textContent = ''; }
+
+async function sendChecklist() {
+  const email = document.getElementById('emailInput').value.trim();
+  const msgEl = document.getElementById('emailMsg');
+  if (!email || !email.includes('@')) { msgEl.innerHTML = '<span style="color:var(--danger)">Please enter a valid email.</span>'; return; }
+
+  const data = DOC_DATA[state.program];
+  const totalItems = data.categories.reduce((sum, c) => sum + c.items.length, 0);
+  const completed = Object.values(state.checkedItems).filter(Boolean).length;
+
+  // Build checklist text
+  let checklistText = '';
+  data.categories.forEach((cat, ci) => {
+    checklistText += `\n📋 ${cat.title}\n`;
+    cat.items.forEach((item, ii) => {
+      const key = `${ci}-${ii}`;
+      const check = state.checkedItems[key] ? '✅' : '⬜';
+      checklistText += `  ${check}  ${item.text}\n`;
+    });
+  });
+
+  const payload = {
+    to: email,
+    subject: `Your Vanuatu Document Checklist — ${data.name}`,
+    html: `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:20px">
+<h2 style="color:#0a1628">📋 Your Document Checklist</h2>
+<p>Program: <strong>${data.name}</strong></p>
+<p>Nationality: ${state.nationality||'Not specified'} | Residence: ${state.residenceCountry||'Not specified'}</p>
+<p>Progress: ${completed}/${totalItems} completed (${Math.round((completed/totalItems)*100)}%)</p>
+<pre style="white-space:pre-wrap;font-family:inherit;background:#f9fafb;padding:16px;border-radius:10px;font-size:14px">${checklistText}</pre>
+<p style="font-size:12px;color:#6b7280;margin-top:16px">Generated by Priority Citizenship — ${new Date().toISOString().slice(0,10)}</p>
+</body></html>`
+  };
+
+  try {
+    const resp = await fetch('/api/admin/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (resp.ok) {
+      msgEl.innerHTML = '<span style="color:var(--success)">✅ Checklist sent! Check your inbox.</span>';
+      setTimeout(closeEmailModal, 2000);
+    } else {
+      msgEl.innerHTML = '<span style="color:var(--danger)">Failed to send. Please try again.</span>';
+    }
+  } catch(e) {
+    // Fallback: open mailto
+    const body = encodeURIComponent(checklistText);
+    window.open(`mailto:${email}?subject=${encodeURIComponent(payload.subject)}&body=${body}`, '_blank');
+    msgEl.innerHTML = '<span style="color:var(--success)">✅ Mail app opened. Please send from your email client.</span>';
+    setTimeout(closeEmailModal, 2000);
+  }
+}
+
+// ═══════ RESET ═══════════════════════════════════════
+function resetTool() {
+  state.step = 0;
+  state.program = null;
+  state.nationality = '';
+  state.residenceCountry = '';
+  state.hasSpouse = false;
+  state.hasChildren = false;
+  state.hasParents = false;
+  state.checkedItems = {};
+  document.getElementById('stepper').style.display = '';
+  document.getElementById('heroSection').style.display = '';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('retakeSection').style.display = 'none';
+  renderCurrentStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════ INIT ═══════════════════════════════════════
+renderCurrentStep();
+</script>
+
+</body>
+</html>
