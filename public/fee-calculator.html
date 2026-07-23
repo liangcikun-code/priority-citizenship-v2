@@ -797,16 +797,31 @@ function renderInsight(dsp, ciip) {
 
 function setupTabs() {
   const tabs = document.querySelectorAll('#resultsTabs .tab-btn');
+  const dspCard = document.getElementById('dspCard');
+  const ciipCard = document.getElementById('ciipCard');
+
   tabs.forEach(tab => {
     tab.onclick = function() {
       tabs.forEach(t => t.classList.remove('active'));
       this.classList.add('active');
       const target = this.dataset.tab;
-      document.getElementById('dspCard').parentElement.style.display = (target === 'dsp' || target === 'ciip') ? '' : '';
-      document.getElementById('dspCard').style.display = target === 'dsp' ? '' : 'none';
-      document.getElementById('ciipCard').style.display = target === 'ciip' ? '' : 'none';
+      if (target === 'dsp') {
+        dspCard.style.border = '2px solid var(--gold)';
+        dspCard.style.boxShadow = '0 0 0 4px rgba(201,168,76,0.1)';
+        ciipCard.style.border = '1px solid rgba(255,255,255,0.1)';
+        ciipCard.style.boxShadow = 'none';
+      } else {
+        ciipCard.style.border = '2px solid var(--success)';
+        ciipCard.style.boxShadow = '0 0 0 4px rgba(5,150,105,0.1)';
+        dspCard.style.border = '1px solid rgba(255,255,255,0.1)';
+        dspCard.style.boxShadow = 'none';
+      }
     };
   });
+
+  // Initial: show both, highlight DSP
+  dspCard.style.border = '2px solid var(--gold)';
+  dspCard.style.boxShadow = '0 0 0 4px rgba(201,168,76,0.1)';
 }
 
 // ═══════ RESET ═════════════════════════════════════════
