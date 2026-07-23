@@ -66,7 +66,7 @@ app.get("/api/debug", async (req, res) => {
     // Check Supabase directly (bypassing memory fallback)
     try {
       const supabaseMod = require('./services/supabase');
-      info.supabaseWorking = !!supabaseMod._db;
+      info.supabaseWorking = !!supabaseMod.db;
       const leads = await supabase.getLeads();
       info.leadsCount = leads.length;
       const appts = await supabase.getAppointments();

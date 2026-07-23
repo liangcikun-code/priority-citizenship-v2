@@ -10,6 +10,7 @@ catch (e) { /* supabase-js not installed */ }
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
+// Expose db reference for debug endpoint
 let db = null;
 try {
   if (supabaseUrl && supabaseKey && createClient) {
@@ -39,9 +40,6 @@ const mem = {
 
 function genUUID() { try { return require('crypto').randomUUID(); } catch(e) { return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,14); } }
 function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
-
-// Expose db reference for debug endpoint
-const _db = db;
 
 // ─── When DB is configured, delegate to Supabase ─────
 
@@ -422,5 +420,5 @@ module.exports = {
   getSettings, updateSettings,
   trackEvent, getAnalyticsSummary,
   exportCSV,
-  _db,
+  get db() { return db; }
 };
