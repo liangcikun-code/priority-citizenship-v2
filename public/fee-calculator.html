@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Fee Calculator — Priority Citizenship</title>
+<meta name="description" content="Calculate your total Vanuatu citizenship or residence costs. Real-time DSP vs CIIP comparison, family pricing, and due diligence fees.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628; --gold:#c9a84c; --gold-light:#e4c86a; --gold-dark:#a8892e;
+  --success:#059669; --success-light:#d1fae5; --warning:#d97706; --warning-light:#fef3c7;
+  --danger:#dc2626; --danger-light:#fee2e2;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db;
+  --gray-500:#6b7280; --gray-700:#374151;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy)0%,#0d1f3c100%);color:var(--gray-700);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.tool-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,22,40,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.tool-nav a,.tool-nav button{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.83rem;transition:color 0.2s;background:none;border:none;font-family:inherit;cursor:pointer;padding:6px 0}
+.tool-nav a:hover,.tool-nav button:hover{color:var(--gold)}
+.tool-nav .sep{color:rgba(255,255,255,0.15);margin:0 2px}
+.tool-nav-left,.tool-nav-right{display:flex;align-items:center;gap:4px}
+
+.hero{padding:100px 0 40px;text-align:center;color:#fff}
+.hero .badge{display:inline-block;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--gold-light);margin-bottom:16px}
+.hero h1{font-size:2.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
+.hero h1 span{color:var(--gold)}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:580px;margin:0 auto}
+
+.wizard-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
+.wizard-progress{display:flex;gap:6px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.wizard-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-200);transition:all 0.3s;flex-shrink:0}
+.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:12px;height:12px}
+.wizard-dot.done{background:var(--success)}
+.step-label{font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.question-label{display:block;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:24px}
+
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+@media(max-width:500px){.option-grid{grid-template-columns:1fr}}
+.option-btn{display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;background:#fff;font-family:inherit;font-size:0.95rem;color:var(--gray-700);cursor:pointer;transition:all 0.2s;text-align:left}
+.option-btn:hover{border-color:var(--gold);background:rgba(201,168,76,0.03)}
+.option-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
+.option-btn .icon{width:20px;height:20px;border-radius:50%;border:2px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent}
+.option-btn.selected .icon{border-color:var(--gold);background:var(--gold);color:#fff}
+.option-btn .opt-icon{font-size:1.3rem}
+
+.counter-row{display:flex;align-items:center;gap:14px;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;margin-bottom:10px;background:#fff;transition:border-color 0.2s}
+.counter-row:focus-within{border-color:var(--gold)}
+.counter-row.has-count{border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.02)}
+.counter-info{flex:1}
+.counter-info .ci-label{font-size:0.95rem;font-weight:600;color:var(--navy)}
+.counter-info .ci-hint{font-size:0.78rem;color:var(--gray-500);margin-top:2px}
+.counter-controls{display:flex;align-items:center;gap:8px}
+.counter-btn{width:36px;height:36px;border-radius:50%;border:2px solid var(--gray-200);background:#fff;font-size:1.2rem;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;line-height:1}
+.counter-btn:hover{background:var(--gray-50);border-color:var(--gold)}
+.counter-btn:active{background:var(--gold);color:#fff}
+.counter-val{font-size:1.3rem;font-weight:700;color:var(--navy);min-width:32px;text-align:center}
+.counter-check{display:flex;align-items:center;gap:10px;padding:10px 0;margin-bottom:8px}
+.counter-check input[type="checkbox"]{width:20px;height:20px;accent-color:var(--gold);cursor:pointer}
+.counter-check label{font-size:0.95rem;color:var(--gray-700);cursor:pointer;display:flex;align-items:center;gap:6px}
+.counter-check .extra-cost{font-size:0.78rem;color:var(--gold-dark);font-weight:500}
+
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px}
+.btn{padding:12px 28px;border-radius:10px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--gold);color:var(--navy)}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-outline{background:transparent;color:var(--gray-500);border:2px solid var(--gray-200)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-white{background:#fff;color:var(--navy);border:2px solid var(--gray-200)}
+.btn-white:hover{border-color:var(--gold);background:rgba(201,168,76,0.06)}
+.btn-sm{padding:8px 18px;font-size:0.85rem}
+
+/* Results */
+.results{padding:60px 0 80px}
+.results .container{max-width:900px;margin:0 auto;padding:0 20px}
+.results-header{text-align:center;margin-bottom:40px}
+.results-header h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px}
+.results-header p{color:rgba(255,255,255,0.6)}
+
+.cost-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
+.cost-card h3{font-size:1.25rem;color:var(--navy);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.cost-card .cc-badge{font-size:0.72rem;padding:4px 10px;border-radius:100px;font-weight:600}
+.cc-dsp{background:rgba(201,168,76,0.15);color:var(--gold-dark)}
+.cc-ciip{background:rgba(5,150,105,0.1);color:var(--success)}
+
+.cost-section{margin:24px 0;padding:20px;background:var(--gray-50);border-radius:14px}
+.cost-section h4{font-size:0.85rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.05em;font-weight:600;margin-bottom:12px}
+.cost-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;font-size:0.95rem}
+.cost-row .cr-label{color:var(--gray-700);font-size:0.92rem}
+.cost-row .cr-amount{font-weight:600;color:var(--navy);font-size:0.92rem;white-space:nowrap}
+.cost-row .cr-sub{font-size:0.75rem;color:var(--gray-500)}
+.cost-row.total-row{border-top:2px solid var(--gray-200);padding-top:14px;margin-top:8px}
+.cost-row.total-row .cr-label{font-size:1.1rem;font-weight:700;color:var(--navy)}
+.cost-row.total-row .cr-amount{font-size:1.5rem;font-weight:800;color:var(--navy)}
+.cost-row .cr-highlight{background:rgba(201,168,76,0.08);padding:4px 10px;border-radius:6px}
+
+.dsp-vs-ciip{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px}
+@media(max-width:700px){.dsp-vs-ciip{grid-template-columns:1fr}}
+
+.chart-section{background:#fff;border-radius:20px;padding:32px 40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
+.chart-section h3{font-size:1.15rem;color:var(--navy);margin-bottom:20px}
+.bar-chart{display:flex;flex-direction:column;gap:14px}
+.bar-row{display:flex;align-items:center;gap:12px}
+.bar-label{width:80px;font-size:0.85rem;font-weight:600;color:var(--navy);text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:36px;background:var(--gray-100);border-radius:8px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:8px;transition:width 0.6s cubic-bezier(0.22,0.61,0.36,1);display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:0.82rem;font-weight:700;color:#fff;min-width:60px}
+.bar-dsp{background:linear-gradient(90deg,var(--gold),var(--gold-light))}
+.bar-ciip{background:linear-gradient(90deg,var(--success),#34d399)}
+
+.insight-box{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:14px;padding:20px;margin-top:16px}
+.insight-box h4{color:var(--gold-dark);font-size:0.9rem;margin-bottom:6px}
+.insight-box p{color:var(--gray-700);font-size:0.92rem;line-height:1.6}
+.insight-box ul{padding-left:18px;margin-top:8px}
+.insight-box li{font-size:0.88rem;color:var(--gray-700);padding:3px 0;line-height:1.5}
+.insight-box li::marker{color:var(--gold)}
+
+.actions-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
+@media(max-width:500px){.actions-row{flex-direction:column}}
+
+.program-summary{padding:16px 20px;background:#fff;border-radius:14px;border:1px solid var(--gray-200);margin-bottom:12px}
+.program-summary .ps-title{font-size:0.95rem;font-weight:700;color:var(--navy);margin-bottom:6px}
+.program-summary .ps-detail{font-size:0.82rem;color:var(--gray-500);line-height:1.5}
+
+.retake-section{text-align:center;padding:40px 0 60px}
+.retake-section a{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-weight:600;font-size:0.95rem;padding:10px 24px;border:2px solid var(--gold);border-radius:10px;transition:all 0.2s}
+.retake-section a:hover{background:var(--gold);color:var(--navy)}
+
+/* Tabs */
+.tabs{display:flex;gap:0;margin-bottom:24px;background:var(--gray-100);border-radius:12px;padding:4px}
+.tab-btn{flex:1;padding:10px 20px;border:none;background:transparent;font-family:inherit;font-weight:600;font-size:0.88rem;color:var(--gray-500);cursor:pointer;border-radius:10px;transition:all 0.2s}
+.tab-btn.active{background:#fff;color:var(--navy);box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+.tab-btn:hover:not(.active){color:var(--gray-700)}
+
+.print-only{display:none}
+@media print{
+  body{background:#fff;color:#000}
+  .tool-nav,.hero,.wizard-card,.actions-row,.retake-section,.tabs{display:none!important}
+  .results{padding:0}
+  .results-header h2,.results-header p{color:#000}
+  .cost-card,.chart-section{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+  .print-only{display:block}
+}
+</style>
+</head>
+<body>
+
+<div class="tool-nav">
+  <div class="tool-nav-left">
+    <a href="/">Home</a><span class="sep">/</span><a href="/tools">AI Tools</a><span class="sep">/</span><span style="color:var(--gold-light);font-size:0.83rem">Fee Calculator</span>
+  </div>
+  <div class="tool-nav-right">
+    <button onclick="window.print()" style="display:inline-flex;align-items:center;gap:4px;color:rgba(255,255,255,0.5);background:none;border:none;font-family:inherit;font-size:0.8rem;cursor:pointer">Print</button>
+  </div>
+</div>
+
+<div class="hero" id="heroSection">
+  <div class="badge">&#128176; P0 — Fee Calculator</div>
+  <h1>Vanuatu Immigration <span>Fee Calculator</span></h1>
+  <p>Get an instant, accurate cost breakdown for Vanuatu citizenship and residence programs. DSP vs CIIP comparison, real-time family pricing.</p>
+</div>
+
+<!-- STEPPER -->
+<div class="wizard-card" id="stepper">
+  <div class="wizard-progress" id="progressBar"></div>
+  <div class="step-label" id="stepLabel">Step 1 of 3</div>
+  <div id="stepContent"></div>
+  <div class="wizard-nav" id="stepNav"></div>
+</div>
+
+<!-- RESULTS -->
+<div class="results" id="resultsSection" style="display:none">
+  <div class="container">
+    <div class="results-header">
+      <h2>&#128176; Your Cost Breakdown</h2>
+      <p id="resultsSubtitle">Based on your selection — DSP Citizenship by Investment</p>
+    </div>
+
+    <!-- Tabs: DSP vs CIIP -->
+    <div class="tabs" id="resultsTabs">
+      <button class="tab-btn active" data-tab="dsp">DSP Program</button>
+      <button class="tab-btn" data-tab="ciip">CIIP Program</button>
+    </div>
+
+    <div class="dsp-vs-ciip">
+      <div class="cost-card" id="dspCard"></div>
+      <div class="cost-card" id="ciipCard"></div>
+    </div>
+
+    <!-- DSP vs CIIP Bar Chart -->
+    <div class="chart-section" id="chartSection">
+      <h3>&#128202; DSP vs CIIP Cost Comparison</h3>
+      <div class="bar-chart" id="barChart"></div>
+      <div class="insight-box" id="insightBox"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-row" style="justify-content:center;margin-bottom:20px">
+      <button class="btn btn-primary" onclick="window.print()">&#128196; Export PDF / Print</button>
+      <a href="/tools/book-appointment" class="btn btn-white">&#128197; Book a Consultation</a>
+      <button class="btn btn-outline" onclick="resetCalculator()">&#8634; Recalculate</button>
+    </div>
+
+    <div class="print-only" style="text-align:center;padding:20px;color:var(--gray-500);font-size:0.85rem">
+      <p>Generated by Priority Citizenship Fee Calculator &mdash; prioritycitizenship@gmail.com &mdash; +678 7773595</p>
+      <p>Estimates based on 2026 official fee schedules. Actual fees may vary. This is not a binding quote.</p>
+    </div>
+  </div>
+</div>
+
+<div class="retake-section" id="retakeSection" style="display:none">
+  <a href="#" onclick="resetCalculator();return false">&#8634; Calculate Again</a>
+</div>
+
+<script>
+// ═══════ FEE DATA ══════════════════════════════════════
+const FEE_DATA = {
+  dsp: {
+    name: 'DSP — Development Support Program',
+    description: 'Non-refundable contribution to the National Development Fund. Full citizenship and passport.',
+    government: {
+      single: 130000,
+      couple: 150000,
+      family3: 165000,
+      family4: 180000,
+      extraDependent: 25000
+    },
+    dueDiligence: {
+      adult: 5500,
+      childUnder16: 0
+    },
+    admin: {
+      perPerson: 2500,
+      documentCert: 1500,
+      courier: 500
+    }
+  },
+  ciip: {
+    name: 'CIIP — Capital Investment Immigration Plan',
+    description: 'Government contribution + US$50,000 capital returned after 5 years. Same passport rights.',
+    government: {
+      family4: 165000,
+      extraDependent: 25000,
+      capitalReturned: 50000
+    },
+    dueDiligence: {
+      adult: 5500,
+      childUnder16: 0
+    },
+    admin: {
+      perPerson: 2500,
+      documentCert: 1500,
+      courier: 500
+    }
+  },
+  residence: {
+    name: 'Residence Permit',
+    description: 'Right to live in Vanuatu. Does not include citizenship.',
+    cost: { single: 10000, couple: 15000, family: 20000 },
+    admin: 1500
+  },
+  business: {
+    name: 'Business Immigration',
+    description: 'For entrepreneurs investing in a Vanuatu business.',
+    cost: { single: 30000, extraPerson: 5000 },
+    admin: 2000
+  }
+};
+
+// ═══════ STATE ══════════════════════════════════════════
+const state = {
+  step: 0,
+  program: null,        // 'dsp' | 'ciip' | 'residence' | 'business'
+  mainApplicants: 1,
+  hasSpouse: false,
+  children: 0,
+  parents: 0,
+  otherAdults: 0       // adult children 18-29
+};
+
+// ═══════ STEPS ══════════════════════════════════════════
+const STEPS = [
+  {
+    title: 'Select Program Type',
+    hint: 'What kind of Vanuatu immigration program are you interested in?',
+    render() {
+      return `
+        <div class="question-label">Which program would you like to price?</div>
+        <div class="option-grid">
+          <button class="option-btn${state.program==='dsp'?' selected':''}" onclick="selectProgram('dsp')" data-opt="dsp">
+            <span class="opt-icon">&#127757;</span>
+            <div>
+              <div style="font-weight:600">DSP — Investment Citizenship</div>
+              <div style="font-size:0.78rem;color:var(--gray-500)">Full passport, no residency required</div>
+            </div>
+          </button>
+          <button class="option-btn${state.program==='ciip'?' selected':''}" onclick="selectProgram('ciip')" data-opt="ciip">
+            <span class="opt-icon">&#128184;</span>
+            <div>
+              <div style="font-weight:600">CIIP — Capital Investment Plan</div>
+              <div style="font-size:0.78rem;color:var(--gray-500)">US$50K returned after 5 years</div>
+            </div>
+          </button>
+          <button class="option-btn${state.program==='residence'?' selected':''}" onclick="selectProgram('residence')" data-opt="residence">
+            <span class="opt-icon">&#127968;</span>
+            <div>
+              <div style="font-weight:600">Residence Permit</div>
+              <div style="font-size:0.78rem;color:var(--gray-500)">Live & work in Vanuatu</div>
+            </div>
+          </button>
+          <button class="option-btn${state.program==='business'?' selected':''}" onclick="selectProgram('business')" data-opt="business">
+            <span class="opt-icon">&#128188;</span>
+            <div>
+              <div style="font-weight:600">Business Immigration</div>
+              <div style="font-size:0.78rem;color:var(--gray-500)">Start or invest in a Vanuatu business</div>
+            </div>
+          </button>
+        </div>
+      `;
+    }
+  },
+  {
+    title: 'Family Composition',
+    hint: 'Tell us who will be included in the application.',
+    render() {
+      const isCitizenship = state.program === 'dsp' || state.program === 'ciip';
+      return `
+        <div class="question-label">Who will be included in your application?</div>
+        ${isCitizenship ? `
+        <div class="counter-check">
+          <input type="checkbox" id="chkSpouse" ${state.hasSpouse?'checked':''} onchange="toggleSpouse(this.checked)">
+          <label for="chkSpouse">&#128106; Include Spouse <span class="extra-cost">${state.program==='dsp'? '+US$20,000': '+US$25,000'}</span></label>
+        </div>
+        ` : ''}
+        <div class="counter-row${state.children>0?' has-count':''}">
+          <div class="counter-info">
+            <div class="ci-label">&#128118; Children (under 18)</div>
+            ${isCitizenship ? `<div class="ci-hint">${state.program==='dsp'?'Included in family rate; extra children US$25,000 each':'Extra children US$25,000 each'}</div>` : `<div class="ci-hint">Dependent children</div>`}
+          </div>
+          <div class="counter-controls">
+            <button class="counter-btn" onclick="adjustCount('children',-1)">−</button>
+            <span class="counter-val">${state.children}</span>
+            <button class="counter-btn" onclick="adjustCount('children',1)">+</button>
+          </div>
+        </div>
+        ${isCitizenship ? `
+        <div class="counter-row${state.parents>0?' has-count':''}">
+          <div class="counter-info">
+            <div class="ci-label">&#128117; Parents / Parents-in-law (50+)</div>
+            <div class="ci-hint">US$25,000 each</div>
+          </div>
+          <div class="counter-controls">
+            <button class="counter-btn" onclick="adjustCount('parents',-1)">−</button>
+            <span class="counter-val">${state.parents}</span>
+            <button class="counter-btn" onclick="adjustCount('parents',1)">+</button>
+          </div>
+        </div>
+        <div class="counter-row${state.otherAdults>0?' has-count':''}">
+          <div class="counter-info">
+            <div class="ci-label">&#128104; Adult children (18–29, dependent)</div>
+            <div class="ci-hint">US$25,000 each</div>
+          </div>
+          <div class="counter-controls">
+            <button class="counter-btn" onclick="adjustCount('otherAdults',-1)">−</button>
+            <span class="counter-val">${state.otherAdults}</span>
+            <button class="counter-btn" onclick="adjustCount('otherAdults',1)">+</button>
+          </div>
+        </div>
+        ` : ''}
+        ${!isCitizenship ? `
+        <div class="program-summary" style="margin-top:16px">
+          <div class="ps-title">${state.program==='residence'?FEE_DATA.residence.name:FEE_DATA.business.name}</div>
+          <div class="ps-detail">${state.program==='residence'?FEE_DATA.residence.description:FEE_DATA.business.description}</div>
+        </div>
+        ` : ''}
+      `;
+    }
+  },
+  {
+    title: 'Review & Calculate',
+    hint: 'Review your selections and see the full cost breakdown.',
+    render() {
+      const totalPeople = getTotalPeople();
+      return `
+        <div class="question-label">&#9989; Ready to calculate</div>
+        <div style="background:var(--gray-50);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Program</span><span style="font-weight:600;color:var(--navy)">${getProgramName()}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Main Applicants</span><span style="font-weight:600;color:var(--navy)">${state.mainApplicants}</span></div>
+          ${state.hasSpouse ? `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Spouse</span><span style="font-weight:600;color:var(--navy)">Included</span></div>` : ''}
+          ${state.children > 0 ? `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Children (under 18)</span><span style="font-weight:600;color:var(--navy)">${state.children}</span></div>` : ''}
+          ${state.parents > 0 ? `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Parents (50+)</span><span style="font-weight:600;color:var(--navy)">${state.parents}</span></div>` : ''}
+          ${state.otherAdults > 0 ? `<div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Adult children (18-29)</span><span style="font-weight:600;color:var(--navy)">${state.otherAdults}</span></div>` : ''}
+          <div style="display:flex;justify-content:space-between;padding:10px 0 0;margin-top:10px;border-top:2px solid var(--gray-200);font-size:0.95rem"><span style="font-weight:700;color:var(--navy)">Total People</span><span style="font-weight:800;color:var(--navy)">${totalPeople}</span></div>
+        </div>
+      `;
+    }
+  }
+];
+
+function getProgramName() {
+  const names = {dsp:'DSP — Investment Citizenship',ciip:'CIIP — Capital Investment Plan',residence:'Residence Permit',business:'Business Immigration'};
+  return names[state.program] || '';
+}
+
+function getTotalPeople() {
+  return state.mainApplicants + (state.hasSpouse?1:0) + state.children + state.parents + state.otherAdults;
+}
+
+// ═══════ STATE HANDLERS ════════════════════════════════
+function selectProgram(prog) {
+  state.program = prog;
+  // Reset family members for non-citizenship programs
+  if (prog === 'residence' || prog === 'business') {
+    state.hasSpouse = false;
+    state.children = 0;
+    state.parents = 0;
+    state.otherAdults = 0;
+  }
+  renderCurrentStep();
+}
+
+function toggleSpouse(val) { state.hasSpouse = val; renderCurrentStep(); }
+function adjustCount(field, delta) {
+  state[field] = Math.max(0, Math.min(field==='children'?10:4, state[field] + delta));
+  renderCurrentStep();
+}
+
+// ═══════ RENDER ════════════════════════════════════════
+function renderCurrentStep() {
+  const step = STEPS[state.step];
+  document.getElementById('stepLabel').textContent = `Step ${state.step+1} of ${STEPS.length}`;
+  document.getElementById('stepContent').innerHTML = step.render();
+  renderProgress();
+  renderNav();
+}
+
+function renderProgress() {
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = STEPS.map((_,i) => {
+    let cls = '';
+    if (i < state.step) cls = 'done';
+    else if (i === state.step) cls = 'active';
+    return `<div class="wizard-dot ${cls}"></div>`;
+  }).join('');
+}
+
+function renderNav() {
+  const nav = document.getElementById('stepNav');
+  const isLast = state.step === STEPS.length - 1;
+  const canProceed = state.program !== null;
+  nav.innerHTML = `
+    <div>
+      ${state.step > 0 ? `<button class="btn btn-outline btn-sm" onclick="prevStep()">&#8592; Back</button>` : ''}
+    </div>
+    <div>
+      ${isLast
+        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="calculate()" style="${canProceed?'':'opacity:0.4;pointer-events:none'}">&#128176; Calculate Fees &#8594;</button>`
+        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="nextStep()" style="${canProceed?'':'opacity:0.4;pointer-events:none'}">Continue &#8594;</button>`
+      }
+    </div>
+  `;
+}
+
+function nextStep() { if (state.step < STEPS.length-1) { state.step++; renderCurrentStep(); } }
+function prevStep() { if (state.step > 0) { state.step--; renderCurrentStep(); } }
+
+// ═══════ CALCULATION ENGINE ════════════════════════════
+function calculateDSP() {
+  const { government, dueDiligence, admin } = FEE_DATA.dsp;
+  const totalPeople = getTotalPeople();
+  const familySize = state.mainApplicants + (state.hasSpouse?1:0) + state.children;
+
+  // Government contribution
+  let govAmount;
+  if (familySize <= 1) govAmount = government.single;
+  else if (familySize === 2) govAmount = state.hasSpouse ? government.couple : government.single;
+  else if (familySize === 3) govAmount = government.family3;
+  else if (familySize === 4) govAmount = government.family4;
+  else govAmount = government.family4 + (familySize - 4) * government.extraDependent;
+
+  // Additional dependants (parents + adult children)
+  const extraDependants = state.parents + state.otherAdults;
+  const extraDependantCost = extraDependants * government.extraDependent;
+
+  // Due diligence
+  const adultsForDD = state.mainApplicants + (state.hasSpouse?1:0) + state.parents + state.otherAdults;
+  const ddCost = adultsForDD * dueDiligence.adult;
+
+  // Admin
+  const adminCost = totalPeople * admin.perPerson + admin.documentCert + admin.courier;
+
+  const total = govAmount + extraDependantCost + ddCost + adminCost;
+
+  return {
+    breakdown: [
+      { label: `Main applicant${state.mainApplicants>1?'s':''} government contribution`, amount: govAmount },
+      ...(extraDependants > 0 ? [{ label: `Extra dependants (${extraDependants} × US$${government.extraDependent.toLocaleString()})`, amount: extraDependantCost, sub: 'Parents & adult children 18-29' }] : []),
+    ],
+    dueDiligence: [
+      { label: `Due diligence — ${adultsForDD} adult${adultsForDD>1?'s':''} × US$${dueDiligence.adult.toLocaleString()}`, amount: ddCost, sub: 'Adults 16+ only' }
+    ],
+    admin: [
+      { label: `Admin fee — ${totalPeople} person${totalPeople>1?'s':''} × US$${admin.perPerson.toLocaleString()}`, amount: totalPeople * admin.perPerson },
+      { label: 'Document translation & certification', amount: admin.documentCert, sub: 'Estimated' },
+      { label: 'Courier / passport delivery', amount: admin.courier }
+    ],
+    total,
+    govAmount,
+    extraDependantCost,
+    ddCost,
+    adminCost,
+    totalPeople,
+    adultsForDD
+  };
+}
+
+function calculateCIIP() {
+  const { government, dueDiligence, admin } = FEE_DATA.ciip;
+  const totalPeople = getTotalPeople();
+  const familySize = state.mainApplicants + (state.hasSpouse?1:0) + state.children;
+
+  // Government: family up to 4 = $165K flat, then $25K per extra
+  let govAmount;
+  if (familySize <= 4) govAmount = government.family4;
+  else govAmount = government.family4 + (familySize - 4) * government.extraDependent;
+
+  const extraDependants = state.parents + state.otherAdults;
+  const extraDependantCost = extraDependants * government.extraDependent;
+
+  const adultsForDD = state.mainApplicants + (state.hasSpouse?1:0) + state.parents + state.otherAdults;
+  const ddCost = adultsForDD * dueDiligence.adult;
+
+  const adminCost = totalPeople * admin.perPerson + admin.documentCert + admin.courier;
+
+  const total = govAmount + extraDependantCost + ddCost + adminCost;
+  const effectiveTotal = total - government.capitalReturned; // after capital return
+
+  return {
+    breakdown: [
+      { label: `Family contribution (up to ${Math.min(familySize,4)} members)`, amount: govAmount },
+      ...(extraDependants > 0 ? [{ label: `Extra dependants (${extraDependants} × US$${government.extraDependent.toLocaleString()})`, amount: extraDependantCost }] : []),
+    ],
+    dueDiligence: [
+      { label: `Due diligence — ${adultsForDD} adult${adultsForDD>1?'s':''} × US$${dueDiligence.adult.toLocaleString()}`, amount: ddCost }
+    ],
+    admin: [
+      { label: `Admin fee — ${totalPeople} person${totalPeople>1?'s':''} × US$${admin.perPerson.toLocaleString()}`, amount: totalPeople * admin.perPerson },
+      { label: 'Document translation & certification', amount: admin.documentCert, sub: 'Estimated' },
+      { label: 'Courier / passport delivery', amount: admin.courier }
+    ],
+    total,
+    effectiveTotal,
+    capitalReturned: government.capitalReturned,
+    govAmount,
+    extraDependantCost,
+    ddCost,
+    adminCost,
+    totalPeople,
+    adultsForDD
+  };
+}
+
+function calculateResidence() {
+  const totalPeople = getTotalPeople();
+  let baseCost;
+  if (totalPeople <= 1) baseCost = FEE_DATA.residence.cost.single;
+  else if (totalPeople === 2) baseCost = FEE_DATA.residence.cost.couple;
+  else baseCost = FEE_DATA.residence.cost.family;
+  const adminCost = totalPeople * FEE_DATA.residence.admin;
+  return {
+    breakdown: [{ label: 'Residence permit base fee', amount: baseCost }],
+    dueDiligence: [],
+    admin: [
+      { label: `Processing fee — ${totalPeople} person${totalPeople>1?'s':''}`, amount: adminCost }
+    ],
+    total: baseCost + adminCost,
+    totalPeople
+  };
+}
+
+function calculateBusiness() {
+  const totalPeople = getTotalPeople();
+  const baseCost = FEE_DATA.business.cost.single + (totalPeople - 1) * FEE_DATA.business.cost.extraPerson;
+  const adminCost = totalPeople * FEE_DATA.business.admin;
+  return {
+    breakdown: [{ label: 'Business immigration base fee', amount: baseCost }],
+    dueDiligence: [],
+    admin: [
+      { label: `Processing fee — ${totalPeople} person${totalPeople>1?'s':''}`, amount: adminCost }
+    ],
+    total: baseCost + adminCost,
+    totalPeople
+  };
+}
+
+function fmt(amount) { return 'US$' + amount.toLocaleString(); }
+
+// ═══════ MAIN CALCULATE ════════════════════════════════
+function calculate() {
+  const isCitizenship = state.program === 'dsp' || state.program === 'ciip';
+  const dspResult = isCitizenship ? calculateDSP() : null;
+  const ciipResult = isCitizenship ? calculateCIIP() : null;
+  const resResult = (!isCitizenship && state.program === 'residence') ? calculateResidence() : null;
+  const bizResult = (!isCitizenship && state.program === 'business') ? calculateBusiness() : null;
+
+  // Hide stepper, show results
+  document.getElementById('stepper').style.display = 'none';
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  document.getElementById('retakeSection').style.display = 'block';
+
+  // Update subtitle
+  const progNames = {dsp:'DSP — Citizenship by Investment',ciip:'CIIP — Capital Investment Immigration Plan',residence:'Residence Permit',business:'Business Immigration'};
+  document.getElementById('resultsSubtitle').textContent = `Based on your selection — ${progNames[state.program]} · ${getTotalPeople()} person${getTotalPeople()>1?'s':''}`;
+
+  if (isCitizenship) {
+    renderCostCard('dspCard', dspResult, 'dsp');
+    renderCostCard('ciipCard', ciipResult, 'ciip');
+    document.getElementById('resultsTabs').style.display = 'flex';
+    document.getElementById('chartSection').style.display = 'block';
+    renderBarChart(dspResult, ciipResult);
+    renderInsight(dspResult, ciipResult);
+  } else {
+    // Single program (residence or business)
+    const result = resResult || bizResult;
+    document.getElementById('dspCard').innerHTML = renderSingleProgram(result);
+    document.getElementById('ciipCard').innerHTML = '';
+    document.getElementById('dspCard').style.gridColumn = '1 / -1';
+    document.getElementById('ciipCard').style.display = 'none';
+    document.getElementById('resultsTabs').style.display = 'none';
+    document.getElementById('chartSection').style.display = 'none';
+  }
+
+  // Tab switching
+  setupTabs();
+
+  // Scroll to results
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderCostCard(cardId, result, type) {
+  const card = document.getElementById(cardId);
+  const isDSP = type === 'dsp';
+  const badge = isDSP ? '<span class="cc-badge cc-dsp">Government Donation</span>' : '<span class="cc-badge cc-ciip">Capital Investment</span>';
+  const progName = isDSP ? FEE_DATA.dsp.name : FEE_DATA.ciip.name;
+  const progDesc = isDSP ? FEE_DATA.dsp.description : FEE_DATA.ciip.description;
+
+  let html = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px">
+      <div>
+        <h3>${badge} ${progName}</h3>
+        <p style="color:var(--gray-500);font-size:0.85rem;line-height:1.5;margin-top:4px">${progDesc}</p>
+      </div>
+    </div>
+
+    <!-- Government Fees -->
+    <div class="cost-section">
+      <h4>&#127981; Government Fees</h4>
+      ${result.breakdown.map(b => `
+        <div class="cost-row">
+          <span class="cr-label">${b.label}</span>
+          <span class="cr-amount">${fmt(b.amount)}${b.sub ? `<br><span class="cr-sub">${b.sub}</span>` : ''}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Due Diligence -->
+    ${result.dueDiligence && result.dueDiligence.length > 0 ? `
+    <div class="cost-section">
+      <h4>&#128269; Due Diligence & Background Checks</h4>
+      ${result.dueDiligence.map(d => `
+        <div class="cost-row">
+          <span class="cr-label">${d.label}</span>
+          <span class="cr-amount">${fmt(d.amount)}${d.sub ? `<br><span class="cr-sub">${d.sub}</span>` : ''}</span>
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+
+    <!-- Admin -->
+    ${result.admin && result.admin.length > 0 ? `
+    <div class="cost-section">
+      <h4>&#128203; Administrative & Other</h4>
+      ${result.admin.map(a => `
+        <div class="cost-row">
+          <span class="cr-label">${a.label}</span>
+          <span class="cr-amount">${fmt(a.amount)}${a.sub ? `<br><span class="cr-sub">${a.sub}</span>` : ''}</span>
+        </div>
+      `).join('')}
+    </div>
+    ` : ''}
+
+    <!-- Total -->
+    <div class="cost-section" style="background:${isDSP?'rgba(201,168,76,0.08)':'rgba(5,150,105,0.06)'}">
+      <div class="cost-row total-row">
+        <span class="cr-label">&#128176; TOTAL ESTIMATED COST</span>
+        <span class="cr-amount">${fmt(result.total)}</span>
+      </div>
+      ${result.effectiveTotal !== undefined ? `
+      <div class="cost-row" style="margin-top:8px">
+        <span class="cr-label" style="color:var(--success);font-size:0.88rem">&#9989; Effective cost after 5-year capital return</span>
+        <span class="cr-amount" style="color:var(--success);font-size:1.1rem">${fmt(result.effectiveTotal)}</span>
+      </div>
+      <div style="font-size:0.78rem;color:var(--gray-500);margin-top:4px">US$${result.capitalReturned.toLocaleString()} capital returned after 5-year holding period</div>
+      ` : ''}
+    </div>
+  `;
+
+  card.innerHTML = html;
+}
+
+function renderSingleProgram(result) {
+  const progName = state.program === 'residence' ? FEE_DATA.residence.name : FEE_DATA.business.name;
+  const progDesc = state.program === 'residence' ? FEE_DATA.residence.description : FEE_DATA.business.description;
+
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:16px">
+      <div>
+        <h3>&#127968; ${progName}</h3>
+        <p style="color:var(--gray-500);font-size:0.85rem;line-height:1.5;margin-top:4px">${progDesc}</p>
+      </div>
+    </div>
+    ${result.breakdown.length > 0 ? `
+    <div class="cost-section">
+      <h4>&#128176; Base Fees</h4>
+      ${result.breakdown.map(b => `
+        <div class="cost-row">
+          <span class="cr-label">${b.label}</span><span class="cr-amount">${fmt(b.amount)}</span>
+        </div>
+      `).join('')}
+    </div>` : ''}
+    ${result.admin && result.admin.length > 0 ? `
+    <div class="cost-section">
+      <h4>&#128203; Administrative</h4>
+      ${result.admin.map(a => `
+        <div class="cost-row">
+          <span class="cr-label">${a.label}</span><span class="cr-amount">${fmt(a.amount)}</span>
+        </div>
+      `).join('')}
+    </div>` : ''}
+    <div class="cost-section" style="background:rgba(5,150,105,0.06)">
+      <div class="cost-row total-row">
+        <span class="cr-label">&#128176; TOTAL ESTIMATED COST</span>
+        <span class="cr-amount">${fmt(result.total)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderBarChart(dsp, ciip) {
+  const maxVal = Math.max(dsp.total, ciip.total);
+  const dspPct = Math.round((dsp.total / maxVal) * 100);
+  const ciipPct = Math.round((ciip.total / maxVal) * 100);
+
+  document.getElementById('barChart').innerHTML = `
+    <div class="bar-row">
+      <div class="bar-label">DSP</div>
+      <div class="bar-track"><div class="bar-fill bar-dsp" style="width:${dspPct}%">${fmt(dsp.total)}</div></div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">CIIP</div>
+      <div class="bar-track"><div class="bar-fill bar-ciip" style="width:${ciipPct}%">${fmt(ciip.total)}</div></div>
+    </div>
+    ${ciip.effectiveTotal !== undefined ? `
+    <div class="bar-row">
+      <div class="bar-label">CIIP Net*</div>
+      <div class="bar-track"><div class="bar-fill bar-ciip" style="width:${Math.round(ciip.effectiveTotal/maxVal*100)}%;opacity:0.6">${fmt(ciip.effectiveTotal)}</div></div>
+    </div>
+    <div style="font-size:0.75rem;color:var(--gray-500);margin-top:4px;text-align:right">* After US$${ciip.capitalReturned.toLocaleString()} capital returned in 5 years</div>
+    ` : ''}
+  `;
+}
+
+function renderInsight(dsp, ciip) {
+  const diff = dsp.total - ciip.total;
+  const diffEff = dsp.total - ciip.effectiveTotal;
+  const isCiipCheaper = diff > 0;
+
+  document.getElementById('insightBox').innerHTML = `
+    <h4>&#128161; Cost Analysis</h4>
+    <p>
+      ${isCiipCheaper
+        ? `The <strong>CIIP</strong> program is <strong>${fmt(Math.abs(diff))}</strong> cheaper upfront than DSP for your family configuration. After the US$${ciip.capitalReturned.toLocaleString()} capital return in 5 years, your <strong>effective CIIP cost is ${fmt(ciip.effectiveTotal)}</strong> — saving you <strong>${fmt(Math.abs(diffEff))}</strong> compared to DSP.`
+        : `The <strong>DSP</strong> and <strong>CIIP</strong> programs have similar upfront costs for your family size. DSP is ${isCiipCheaper?'more expensive':'a simpler option'} with a straightforward non-refundable contribution.`
+      }
+    </p>
+    <ul>
+      <li><strong>DSP:</strong> Non-refundable contribution. No capital to manage. Faster processing.</li>
+      <li><strong>CIIP:</strong> US$${FEE_DATA.ciip.government.capitalReturned.toLocaleString()} capital returned after 5 years. Lower long-term cost.</li>
+      <li>Both programs grant <strong>identical citizenship & passport rights</strong>.</li>
+      <li>Due diligence of <strong>US$${FEE_DATA.dsp.dueDiligence.adult.toLocaleString()}/adult</strong> is <strong>non-refundable</strong> regardless of outcome.</li>
+      <li>Government fees are due in full via SWIFT bank wire before passport issuance.</li>
+    </ul>
+  `;
+}
+
+function setupTabs() {
+  const tabs = document.querySelectorAll('#resultsTabs .tab-btn');
+  tabs.forEach(tab => {
+    tab.onclick = function() {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      const target = this.dataset.tab;
+      document.getElementById('dspCard').parentElement.style.display = (target === 'dsp' || target === 'ciip') ? '' : '';
+      document.getElementById('dspCard').style.display = target === 'dsp' ? '' : 'none';
+      document.getElementById('ciipCard').style.display = target === 'ciip' ? '' : 'none';
+    };
+  });
+}
+
+// ═══════ RESET ═════════════════════════════════════════
+function resetCalculator() {
+  state.step = 0;
+  state.program = null;
+  state.mainApplicants = 1;
+  state.hasSpouse = false;
+  state.children = 0;
+  state.parents = 0;
+  state.otherAdults = 0;
+  document.getElementById('stepper').style.display = '';
+  document.getElementById('heroSection').style.display = '';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('retakeSection').style.display = 'none';
+  renderCurrentStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ═══════ INIT ══════════════════════════════════════════
+renderCurrentStep();
+</script>
+
+</body>
+</html>
