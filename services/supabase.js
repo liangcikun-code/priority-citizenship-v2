@@ -37,6 +37,7 @@ const mem = {
   settings: new Map(),
 };
 
+function genUUID() { try { return require('crypto').randomUUID(); } catch(e) { return Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,14); } }
 function genId(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2,8); }
 
 // ─── When DB is configured, delegate to Supabase ─────
@@ -104,7 +105,7 @@ async function getLeads(filters = {}) {
 async function addLead(lead) {
   // Write to Supabase first (primary storage)
   if (db) {
-    const row = { name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nowISO(), updated_at:nowISO() };
+    const row = { id: lead.id || genUUID(), name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nowISO(), updated_at:nowISO() };
     const d = await supabaseQuery('leads', 'insert', row);
     if (d) {
       console.log('[supabase] Lead saved:', lead.email);
@@ -154,7 +155,7 @@ async function deleteLead(id) {
 async function getPosts() {
   if (db) {
     const d = await supabaseQuery('blog_posts','select','*','created_at',false);
-    return d.map(p=>({id:p.id,title:p.title,slug:p.slug,excerpt:p.excerpt,content:p.content,category:p.category,published:p.published,author:p.author,createdAt:p.created_at,updatedAt:p.updated_at}));
+    if (d && Array.isArray(d)) return d.map(p=>({id:p.id,title:p.title,slug:p.slug,excerpt:p.excerpt,content:p.content,category:p.category,published:p.published,author:p.author,createdAt:p.created_at,updatedAt:p.updated_at}));
   }
   return mem.blog.slice().reverse();
 }
@@ -162,8 +163,17 @@ async function getPosts() {
 async function addPost(post) {
   const slug = (post.title||'untitled').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')+'-'+Date.now().toString(36);
   if (db) {
-    const row = {title:post.title,slug,excerpt:post.excerpt||'',content:post.content||'',category:post.category||'general',published:post.published!==false,author:post.author||'Priority Citizenship',created_at:nowISO(),updated_at:nowISO()};
+    const row = { id: post.id || genUUID(), title:post.title, slug, excerpt:post.excerpt||'', content:post.content||'', category:post.category||'general', published:post.published!==false, author:post.author||'Priority Citizenship', created_at:nowISO(), updated_at:nowISO() };
     const d = await supabaseQuery('blog_posts','insert',row);
+    if (d) {
+      console.log('[supabase] Blog post saved:', post.title);
+      const np = {id:d.id,title:d.title,slug:d.slug,excerpt:d.excerpt,content:d.content,category:d.category,published:d.published,author:d.author,createdAt:d.created_at,updatedAt:d.updated_at};
+      mem.blog.push(np);
+      saveMemToDisk();
+      await logActivity('post_created',`Blog: ${post.title}`,post.title);
+      return np;
+    }
+    console.error('[supabase] Blog post insert FAILED — falling back to in-memory');
     await logActivity('post_created',`Blog: ${post.title}`,post.title);
     return d;
   }
@@ -205,9 +215,15 @@ async function getAppointments() {
 
 async function addAppointment(appt) {
   if (db) {
-    const row = {slot_id:appt.slotId,name:appt.name,email:appt.email,phone:appt.phone||'',service:appt.service||'general',message:appt.message||'',slot_label:appt.slotLabel||'',status:appt.status||'confirmed',created_at:nowISO()};
+    const row = { id: appt.id || genUUID(), slot_id:appt.slotId,name:appt.name,email:appt.email,phone:appt.phone||'',service:appt.service||'general',message:appt.message||'',slot_label:appt.slotLabel||'',status:appt.status||'confirmed',created_at:nowISO()};
     const d = await supabaseQuery('appointments','insert',row);
-    if (d) { console.log('[supabase] Appointment saved'); return d; }
+    if (d) {
+      console.log('[supabase] Appointment saved');
+      const na = {id:d.id,slotId:d.slot_id,name:d.name,email:d.email,phone:d.phone,service:d.service,message:d.message,slotLabel:d.slot_label,status:d.status,createdAt:d.created_at};
+      mem.appointments.push(na);
+      saveMemToDisk();
+      return na;
+    }
     console.error('[supabase] Appointment insert FAILED — falling back to in-memory');
   }
   const na = {id:genId('appt'),...appt,status:appt.status||'confirmed',createdAt:nowISO()};
@@ -232,7 +248,7 @@ async function getActivity(limit=50) {
 }
 
 async function logActivity(type, message, subject) {
-  if (db) { await supabaseQuery('activity_log','insert',{type,message,subject:subject||'',created_at:nowISO()}); return; }
+  if (db) { await supabaseQuery('activity_log','insert',{ id: genUUID(), type, message, subject:subject||'', created_at:nowISO() }); return; }
   mem.activity.unshift({id:genId('act'),type,message,subject:subject||'',created_at:nowISO()});
   if (mem.activity.length > 500) mem.activity.length = 500;
 }
@@ -346,8 +362,54 @@ function loadMemFromDisk() {
   } catch (e) { /* File doesn't exist or corrupted — fresh start */ }
 }
 
-// Initialize: load from disk if available
+// Initialize: load from disk if available, then migrate to Supabase if connected
 loadMemFromDisk();
+
+// If Supabase is connected and we have stranded disk backup data, push it to Supabase
+(async function migrateDiskToSupabase() {
+  if (!db) return;
+  try {
+    let migrated = 0;
+
+    // Migrate leads by checking if Supabase has any data at all
+    const supabaseHasLeads = await supabaseQuery('leads', 'select', 'id', 'created_at', false, 1).then(r => Array.isArray(r) && r.length > 0).catch(() => false);
+    if (!supabaseHasLeads) {
+      for (const l of mem.leads) {
+        try {
+          const row = { id: l.id || genUUID(), name: l.name, email: l.email, phone: l.phone || '', country: l.country || '', service: l.service || 'other', budget: l.budget || '', message: l.message || '', notes: l.notes || '', status: l.status || 'new', source: l.source || 'website', created_at: l.createdAt || nowISO(), updated_at: l.updatedAt || nowISO() };
+          await supabaseQuery('leads', 'insert', row);
+          migrated++;
+        } catch(e) {}
+      }
+    }
+
+    // Migrate blog posts
+    for (const p of mem.blog) {
+      try {
+        const row = { id: p.id || genUUID(), title: p.title, slug: p.slug || '', excerpt: p.excerpt || '', content: p.content || '', category: p.category || 'general', published: p.published !== false, author: p.author || 'Priority Citizenship', created_at: p.createdAt || nowISO(), updated_at: p.updatedAt || nowISO() };
+        await supabaseQuery('blog_posts', 'insert', row);
+        migrated++;
+      } catch(e) {}
+    }
+
+    // Migrate appointments
+    for (const a of mem.appointments) {
+      try {
+        const row = { id: a.id || genUUID(), slot_id: a.slotId || '', name: a.name, email: a.email, phone: a.phone || '', service: a.service || 'general', message: a.message || '', slot_label: a.slotLabel || '', status: a.status || 'confirmed', created_at: a.createdAt || nowISO() };
+        await supabaseQuery('appointments', 'insert', row);
+        migrated++;
+      } catch(e) {}
+    }
+
+    if (migrated > 0) {
+      console.log(`[supabase] Migrated ${migrated} records from disk backup to Supabase`);
+      mem.leads = []; mem.blog = []; mem.appointments = [];
+      saveMemToDisk();
+    }
+  } catch (e) {
+    console.error('[supabase] Migration failed:', e.message);
+  }
+})();
 
 module.exports = {
   getLeads, addLead, updateLead, deleteLead,
