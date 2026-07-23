@@ -91,7 +91,51 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Database diagnostic + auto-setup
+// Deep Supabase diagnostic — reveals why it's failing
+app.get("/api/debug-supabase", async (req, res) => {
+  const diag = {
+    hasSupabaseUrl: !!process.env.SUPABASE_URL,
+    hasSupabaseKey: !!process.env.SUPABASE_ANON_KEY
+  };
+  try {
+    // Try loading the module
+    try {
+      const m = require('@supabase/supabase-js');
+      diag.moduleLoaded = true;
+      diag.moduleKeys = Object.keys(m).join(', ');
+      diag.hasCreateClient = typeof m.createClient === 'function';
+    } catch(e) {
+      diag.moduleLoaded = false;
+      diag.moduleError = e.message;
+    }
+
+    // Try creating the client
+    if (diag.moduleLoaded && diag.hasCreateClient) {
+      try {
+        const { createClient } = require('@supabase/supabase-js');
+        const url = process.env.SUPABASE_URL.replace(/\/rest\/v1\/?$/, '').replace(/\/$/, '');
+        const client = createClient(url, process.env.SUPABASE_ANON_KEY);
+        diag.clientCreated = true;
+        // Try a simple query
+        try {
+          const { data, error } = await client.from('leads').select('count', { count: 'exact', head: true });
+          diag.querySuccess = true;
+          diag.queryError = error ? error.message : null;
+          diag.count = data;
+        } catch(qe) {
+          diag.querySuccess = false;
+          diag.queryError = qe.message;
+        }
+      } catch(ce) {
+        diag.clientCreated = false;
+        diag.clientError = ce.message;
+      }
+    }
+  } catch(e) {
+    diag.topLevelError = e.message;
+  }
+  res.json(diag);
+});
 app.get("/api/db-status", async (req, res) => {
   const supabaseMod = require("./services/supabase");
 
