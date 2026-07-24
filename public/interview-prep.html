@@ -180,18 +180,18 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   </div>
   <div class="step-label" id="stepLabel">Step 1 of 3</div>
   <div id="stepContent">
-    <!-- Fallback content shown before JS renders -->
+    <!-- Fallback content — replaced by JS renderCurrentStep() when available -->
     <div class="question-label">What type of immigration interview are you preparing for?</div>
     <div class="option-grid" style="grid-template-columns:1fr">
-      <button class="option-btn" onclick="selectType('citizenship_dd')" style="width:100%">
+      <button class="option-btn" onclick="state.interviewType='citizenship_dd';updateFallbackNav()" style="width:100%">
         <span class="opt-icon">&#127757;</span>
         <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
       </button>
-      <button class="option-btn" onclick="selectType('business')" style="width:100%">
+      <button class="option-btn" onclick="state.interviewType='business';updateFallbackNav()" style="width:100%">
         <span class="opt-icon">&#128188;</span>
         <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
       </button>
-      <button class="option-btn" onclick="selectType('general')" style="width:100%">
+      <button class="option-btn" onclick="state.interviewType='general';updateFallbackNav()" style="width:100%">
         <span class="opt-icon">&#128172;</span>
         <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
       </button>
@@ -467,6 +467,24 @@ const STEPS = [
 ];
 
 function selectType(type) { state.interviewType = type; renderCurrentStep(); }
+
+// Fallback: update the static nav button when JS hasn't fully loaded yet
+function updateFallbackNav() {
+  // Highlight selected button
+  document.querySelectorAll('#stepContent .option-btn').forEach(function(btn) {
+    btn.classList.remove('selected');
+  });
+  if (event && event.target) {
+    var el = event.target.closest('.option-btn');
+    if (el) el.classList.add('selected');
+  }
+  // Enable the Continue button
+  var navDiv = document.getElementById('stepNav');
+  if (navDiv) {
+    navDiv.innerHTML = '<div></div><div><button class="btn btn-primary" onclick="nextStep()">Continue &#8594;</button></div>';
+  }
+}
+
 
 // ═══════ WIZARD RENDERING ═════════════════════════════
 function renderCurrentStep() {
