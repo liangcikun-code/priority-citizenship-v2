@@ -84,7 +84,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 .chat-bubble.user .bubble-role{color:rgba(255,255,255,0.5)}
 
 .chat-input-row{display:flex;gap:10px;align-items:flex-end}
-.chat-input-row textarea{flex:1;padding:14px 18px;border:2px solid rgba(255,255,255,0.15);border-radius:14px;background:rgba(255,255,255,0.06);color:#fff;font-family:inherit;font-size:0.95rem;resize:none;min-height:50px;max-height:120px;transition:border-color 0.2s}
+.chat-input-row textarea{flex:1;padding:14px 18px;border:2px solid rgba(255,255,255,0.15);border-radius:14px;background:rgba(255,255,255,0.15);color:#fff;font-family:inherit;font-size:0.95rem;resize:none;min-height:50px;max-height:120px;transition:border-color 0.2s}
 .chat-input-row textarea::placeholder{color:rgba(255,255,255,0.3)}
 .chat-input-row textarea:focus{outline:none;border-color:var(--gold)}
 .chat-input-row .send-btn{width:50px;height:50px;border-radius:14px;border:none;background:var(--gold);color:var(--navy);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
@@ -240,10 +240,27 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
       <div id="improvementList"></div>
     </div>
 
+    <!-- Per-Question Review -->
+    <div class="report-card" id="perQuestionCard">
+      <h3 style="font-size:1.15rem;color:var(--navy);margin-bottom:4px">&#128270; Question-by-Question Review</h3>
+      <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:16px">Your answer, score, analysis, and recommended answer for each question</p>
+      <div id="perQuestionReview"></div>
+    </div>
+
     <div class="report-card" id="modelAnswersCard" style="display:none">
       <h3 style="font-size:1.15rem;color:var(--navy);margin-bottom:4px">&#128214; Model Answer Examples</h3>
       <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:16px">Standard responses to challenging questions</p>
       <div id="modelAnswers"></div>
+    </div>
+
+    <!-- Q&A Practice Workbook -->
+    <div class="report-card" id="workbookCard">
+      <h3 style="font-size:1.15rem;color:var(--navy);margin-bottom:4px">&#128218; Practice Workbook — Downloadable Q&A</h3>
+      <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:16px">Complete set of practice questions for your interview type. Use this as a study guide.</p>
+      <div id="workbookContent"></div>
+      <div style="margin-top:16px">
+        <button class="btn btn-outline btn-sm" onclick="printWorkbook()">&#128196; Print / Save as PDF</button>
+      </div>
     </div>
 
     <div class="actions-row">
@@ -659,10 +676,10 @@ function showReport() {
   tierEl.style.color = tierColor;
 
   document.getElementById('scoreSummary').textContent = avgScore >= 80
-    ? 'You demonstrate strong readiness for the interview. Your answers are detailed and well-structured. Focus on polishing minor areas.'
+    ? 'You demonstrate strong readiness for the interview. Your answers are detailed and well-structured.'
     : avgScore >= 65
-    ? 'You have a solid foundation but there are areas that need more preparation. Review the improvement suggestions below and practice those topics.'
-    : 'Significant preparation is recommended before your interview. Focus on providing more specific, detailed answers with concrete examples.';
+    ? 'You have a solid foundation but there are areas that need more preparation.'
+    : 'Significant preparation is recommended. Focus on providing more specific, detailed answers with concrete examples.';
 
   // Category breakdown
   const categoryScores = {};
@@ -694,45 +711,194 @@ function showReport() {
   const weakCats = sortedCats.filter(([_, total]) => Math.round((total / categoryCounts[_]) * 10) < 75).slice(0, 3);
   const improvements = weakCats.map(([cat]) => {
     const suggestions = {
-      source_of_funds: 'Prepare a clear, chronological narrative of how you accumulated your funds. Have supporting documents ready.',
-      personal_history: 'Create a timeline of your career and residence history with no gaps. Practice explaining each transition.',
-      background: 'Review all countries you have lived in. Be ready to explain any visa refusals or legal matters honestly.',
-      program_knowledge: 'Study the DSP/CIIP program details thoroughly. Know the costs, timeline, and requirements.',
-      future_plans: 'Be specific about why Vanuatu and how you will use the citizenship. Avoid vague statements.',
-      business_plan: 'Prepare a concise elevator pitch for your business. Know your market size and competitors.',
-      investment: 'Have exact figures ready. Be prepared to justify your budget breakdown and contingency plans.',
-      hiring: 'Know how many staff you need and at what salary levels. Understand local labor laws.',
-      revenue: 'Prepare conservative, realistic, and optimistic projections. Show your assumptions.',
-      experience: 'Connect your past experience directly to your Vanuatu venture. Use specific examples.',
-      compliance: 'Research Vanuatu regulations for your industry. Show you have consulted local experts.',
-      motivation: 'Articulate a clear, personal reason for choosing Vanuatu — beyond just tax benefits.',
-      knowledge: 'Read about Vanuatu culture, economy, and current events. Show genuine interest.',
-      connections: 'If you have Vanuatu connections, describe them. If not, explain your support network plan.',
-      financial: 'Have bank statements and income proofs organized. Know your net worth breakdown.',
-      health: 'Be honest about health conditions. Have medical records available if relevant.',
-      future: 'Paint a realistic picture of your life in Vanuatu — where you will live, what you will do.',
+      source_of_funds: 'Prepare a clear, chronological narrative of how you accumulated your funds.',
+      personal_history: 'Create a timeline of your career and residence history with no gaps.',
+      background: 'Review all countries you have lived in. Be ready to explain any legal matters honestly.',
+      program_knowledge: 'Study the DSP/CIIP program details thoroughly — costs, timeline, requirements.',
+      future_plans: 'Be specific about why Vanuatu and how you will use the citizenship.',
+      business_plan: 'Prepare a concise elevator pitch for your business. Know your market size.',
+      investment: 'Have exact figures ready. Justify your budget breakdown and contingency plans.',
+      hiring: 'Know staffing needs at specific salary levels. Understand local labor laws.',
+      revenue: 'Prepare conservative, realistic, and optimistic projections with assumptions.',
+      experience: 'Connect your past experience directly to your Vanuatu venture with examples.',
+      compliance: 'Research Vanuatu regulations. Show you have consulted local experts.',
+      motivation: 'Articulate a personal reason for choosing Vanuatu — beyond just tax benefits.',
+      knowledge: 'Read about Vanuatu culture, economy, and current events.',
+      connections: 'Describe your Vanuatu connections or explain your support network plan.',
+      financial: 'Have bank statements and income proofs organized. Know your net worth.',
+      health: 'Be honest about health conditions. Have medical records available.',
+      future: 'Paint a realistic picture of your life in Vanuatu in 5 years.',
     };
-    return suggestions[cat] || `Improve your answers in the "${catNames[cat] || cat}" category with more specific details.`;
+    return suggestions[cat] || `Improve your answers in "${catNames[cat] || cat}" with more specific details.`;
   });
 
   if (improvements.length === 0) improvements.push('Maintain your strong performance across all categories. Keep practicing to stay sharp.');
-
   document.getElementById('improvementList').innerHTML = `<ol class="improvement-list">${improvements.map(i => `<li>${i}</li>`).join('')}</ol>`;
 
-  // Model answers for weak areas
-  if (weakCats.length > 0) {
+  // ═══════ PER-QUESTION REVIEW ═══════════════════════════
+  const weaknessReasons = {
+    source_of_funds: { low: 'Answer lacked specific amounts, dates, or source documentation references.', rec: 'State the exact amount accumulated, over what period, from which specific sources (salary, business, investments, property sale), and mention supporting documents.' },
+    personal_history: { low: 'Timeline gaps or lack of specific employer names and dates.', rec: 'Provide a chronological timeline with employer names, positions, dates (month/year), and reason for each transition.' },
+    background: { low: 'Answer was too vague — did not demonstrate full disclosure or awareness of requirements.', rec: 'Be completely transparent. List every country of residence, every visa application, and be prepared to explain any adverse history.' },
+    program_knowledge: { low: 'Answer showed limited understanding of program details, costs, or process.', rec: 'Study the official program documents. Know exact contribution amounts, processing times, due diligence steps, and eligibility criteria.' },
+    future_plans: { low: 'Answer was generic — no specific plans for using the citizenship or passport.', rec: 'Describe concrete plans: which countries you will travel to, business expansion plans, family education goals, and asset protection strategy.' },
+    business_plan: { low: 'Business plan details were insufficient — missing market analysis or financial projections.', rec: 'Prepare a structured business plan with market size, competitor analysis, revenue model, staffing plan, and 3-year financial projections.' },
+    investment: { low: 'Investment breakdown was unclear — missing specific amounts and allocation details.', rec: 'Provide an itemized investment budget with exact figures, funding sources, and timeline for capital deployment.' },
+    hiring: { low: 'Hiring plan lacked specifics — no numbers, roles, or salary ranges.', rec: 'List specific roles you will hire, number of positions, expected salary ranges, and recruitment timeline.' },
+    revenue: { low: 'Revenue projections were vague — no numbers or assumptions stated.', rec: 'Present 3-year revenue projections with clear assumptions (market size, pricing, customer acquisition). Include best/worst case scenarios.' },
+    experience: { low: 'Did not clearly connect past experience to the Vanuatu venture.', rec: 'Draw direct parallels between your past roles and what you will do in Vanuatu. Use specific achievements and metrics.' },
+    compliance: { low: 'Answer showed limited awareness of Vanuatu regulatory requirements.', rec: 'Research specific regulations for your industry. Mention consultations with local lawyers or business advisors.' },
+    motivation: { low: 'Motivation was superficial — focused only on tax or travel benefits.', rec: 'Express genuine interest in Vanuatu: its culture, people, lifestyle, and business environment. Show you have researched the country.' },
+    knowledge: { low: 'Demonstrated limited knowledge of Vanuatu beyond basic facts.', rec: 'Research Vanuatu's history, economy (tourism, agriculture, finance), culture (kastom, ni-Vanuatu), and current affairs.' },
+    financial: { low: 'Financial details were insufficient — missing income sources or net worth breakdown.', rec: 'Prepare a clear net worth statement with supporting documents: bank statements, property valuations, investment portfolios.' },
+    health: { low: 'Health information was incomplete or evasive.', rec: 'Be fully transparent about medical history. Obtain recent medical reports and be ready to discuss any conditions openly.' },
+    future: { low: 'Future plans were unrealistic or not well thought out.', rec: 'Present a grounded 5-year plan: where you will live, how you will support yourself, and how you will integrate into Vanuatu society.' },
+    connections: { low: 'Did not address how you will build a support network in Vanuatu.', rec: 'If you have contacts in Vanuatu, name them. If not, explain how you will build relationships through business, community, or professional networks.' },
+  };
+
+  let perQuestionHTML = '';
+  state.answers.forEach((a, idx) => {
+    const cat = a.question.category || 'general';
+    const catName = catNames[cat] || cat;
+    const score = a.feedback.score;
+    const pct = score * 10;
+    const qText = state.language === 'cn' ? (a.question.cn || a.question.q) : (a.question.en || a.question.q);
+    const isLow = score < 6;
+    const analysis = weaknessReasons[cat] || { low: 'Answer could be more specific with concrete details and examples.', rec: 'Provide detailed, verifiable information with specific dates, amounts, names, and supporting documentation references.' };
+    
+    // Build recommended answer based on question category
+    const recAnswer = isLow ? analysis.rec : 'Your answer was adequate. To strengthen further: add more specific dates and figures, reference supporting documents, and connect your response to your overall application narrative.';
+
+    perQuestionHTML += `
+      <div style="border:1px solid var(--gray-200);border-radius:14px;padding:20px;margin-bottom:16px;${isLow ? 'border-left:4px solid var(--warning);' : 'border-left:4px solid var(--success);'}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">
+          <div style="flex:1"><strong style="color:var(--navy);font-size:0.92rem">Q${idx+1}:</strong> <span style="color:var(--gray-700);font-size:0.9rem">${qText}</span></div>
+          <span style="font-weight:800;font-size:1.1rem;color:${isLow ? 'var(--warning)' : 'var(--success)'};white-space:nowrap">${score}/10</span>
+        </div>
+        <div style="background:var(--gray-50);border-radius:10px;padding:12px 16px;margin-bottom:10px">
+          <div style="font-size:0.78rem;color:var(--gray-500);margin-bottom:4px">YOUR ANSWER:</div>
+          <div style="font-size:0.88rem;color:var(--gray-700);line-height:1.6">${a.answer}</div>
+        </div>
+        ${isLow ? `
+        <div style="background:rgba(217,119,6,0.06);border:1px solid rgba(217,119,6,0.15);border-radius:10px;padding:12px 16px;margin-bottom:10px">
+          <div style="font-size:0.78rem;color:var(--warning);font-weight:600;margin-bottom:4px">&#9888; WHY SCORE IS LOW:</div>
+          <div style="font-size:0.85rem;color:var(--gray-700);line-height:1.5">${analysis.low}</div>
+        </div>
+        ` : ''}
+        <div style="background:rgba(5,150,105,0.04);border:1px solid rgba(5,150,105,0.12);border-radius:10px;padding:12px 16px">
+          <div style="font-size:0.78rem;color:var(--success);font-weight:600;margin-bottom:4px">&#9989; ${isLow ? 'RECOMMENDED ANSWER:' : 'FEEDBACK & IMPROVEMENT:'}</div>
+          <div style="font-size:0.85rem;color:var(--gray-700);line-height:1.5">${recAnswer}</div>
+        </div>
+        <div style="font-size:0.72rem;color:var(--gray-500);margin-top:6px">Category: ${catName}</div>
+      </div>
+    `;
+  });
+  document.getElementById('perQuestionReview').innerHTML = perQuestionHTML;
+
+  // ═══════ MODEL ANSWERS (unique per weak question) ═══════
+  const lowScoreAnswers = state.answers.filter(a => a.feedback.score < 6);
+  if (lowScoreAnswers.length > 0) {
     document.getElementById('modelAnswersCard').style.display = 'block';
-    const modelAnswers = weakCats.map(([cat]) => {
-      const q = state.answers.find(a => a.question.category === cat);
-      if (!q) return '';
-      return `<div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.9rem">Q: ${q.question.q}</strong><p style="color:var(--gray-700);font-size:0.88rem;margin-top:4px;line-height:1.6"><em>Model answer:</em> For this type of question, a strong answer would include specific dates, amounts, and verifiable details. Structure your response clearly — start with the key fact, then provide supporting context, and end with why this is relevant to your application. Always be ready to provide documentation that supports your statement.</p></div>`;
-    }).join('');
-    document.getElementById('modelAnswers').innerHTML = modelAnswers;
+    let modelHTML = '';
+    lowScoreAnswers.forEach((a, idx) => {
+      const qText = state.language === 'cn' ? (a.question.cn || a.question.q) : (a.question.en || a.question.q);
+      const cat = a.question.category || 'general';
+      const analysis = weaknessReasons[cat] || { low: '', rec: 'Provide detailed, verifiable information with specific dates, amounts, names, and supporting documentation.' };
+      modelHTML += `
+        <div style="border:1px solid var(--gray-200);border-radius:12px;padding:18px;margin-bottom:14px">
+          <div style="font-weight:600;color:var(--navy);font-size:0.9rem;margin-bottom:8px">Q: ${qText}</div>
+          <div style="background:rgba(5,150,105,0.04);border-radius:8px;padding:12px 14px">
+            <div style="font-size:0.78rem;color:var(--success);font-weight:600;margin-bottom:4px">MODEL ANSWER:</div>
+            <div style="font-size:0.87rem;color:var(--gray-700);line-height:1.65">${analysis.rec}</div>
+          </div>
+          <div style="font-size:0.72rem;color:var(--gray-500);margin-top:4px">Score: ${a.feedback.score}/10 | Category: ${catNames[cat] || cat}</div>
+        </div>
+      `;
+    });
+    document.getElementById('modelAnswers').innerHTML = modelHTML;
+  } else {
+    document.getElementById('modelAnswersCard').style.display = 'none';
   }
+
+  // ═══════ PRACTICE WORKBOOK ═══════════════════════════
+  const allBankQuestions = bank.questions;
+  let workbookHTML = `<p style="font-size:0.88rem;color:var(--gray-700);margin-bottom:16px;line-height:1.6">Below are <strong>${allBankQuestions.length} practice questions</strong> for the <strong>${bank.name}</strong>. Use this as a complete study guide to prepare for your interview. Practice answering each question aloud or in writing.</p>`;
+  
+  // Group questions by category
+  const groupedByCat = {};
+  allBankQuestions.forEach(q => {
+    const cat = q.category || 'general';
+    if (!groupedByCat[cat]) groupedByCat[cat] = [];
+    groupedByCat[cat].push(q);
+  });
+
+  Object.entries(groupedByCat).forEach(([cat, questions]) => {
+    const catName = catNames[cat] || cat;
+    workbookHTML += `
+      <div style="margin-bottom:20px">
+        <h4 style="color:var(--navy);font-size:1rem;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--gold)">${catName} (${questions.length} questions)</h4>
+    `;
+    questions.forEach((q, i) => {
+      const qText = state.language === 'cn' ? (q.cn || q.q) : (q.en || q.q);
+      workbookHTML += `
+        <div style="padding:10px 0;border-bottom:1px solid var(--gray-100)">
+          <span style="color:var(--gold-dark);font-weight:600;font-size:0.85rem">${i+1}.</span>
+          <span style="color:var(--gray-700);font-size:0.9rem;margin-left:6px">${qText}</span>
+          <div style="margin-top:6px;margin-left:22px">
+            <span style="font-size:0.75rem;color:var(--gray-500)">Your notes: ___________________________________________</span>
+          </div>
+        </div>
+      `;
+    });
+    workbookHTML += `</div>`;
+  });
+
+  workbookHTML += `<p style="font-size:0.82rem;color:var(--gray-500);margin-top:20px;text-align:center">Generated by Priority Citizenship AI Interview Prep — ${new Date().toISOString().slice(0,10)}</p>`;
+  document.getElementById('workbookContent').innerHTML = workbookHTML;
 
   document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
+function printWorkbook() {
+  const bank = QUESTION_BANKS[state.interviewType];
+  const catNames = bank.categories || {};
+  const groupedByCat = {};
+  bank.questions.forEach(q => {
+    const cat = q.category || 'general';
+    if (!groupedByCat[cat]) groupedByCat[cat] = [];
+    groupedByCat[cat].push(q);
+  });
+
+  let wbHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Interview Practice Workbook — ${bank.name}</title>
+  <style>
+    body{font-family:Arial,sans-serif;max-width:700px;margin:40px auto;padding:20px;color:#1a1a1a;line-height:1.6}
+    h1{color:#0a1628;border-bottom:3px solid #c9a84c;padding-bottom:10px}
+    h3{color:#c9a84c;margin-top:24px}
+    .q{padding:8px 0;border-bottom:1px solid #eee}
+    .q-num{color:#a8892e;font-weight:bold}
+    .notes{color:#999;font-size:0.85em;margin-left:24px;margin-top:4px}
+    .footer{text-align:center;color:#999;font-size:0.8em;margin-top:40px}
+  </style></head><body>
+  <h1>Interview Practice Workbook</h1>
+  <p><strong>Interview Type:</strong> ${bank.name}</p>
+  <p><strong>Total Questions:</strong> ${bank.questions.length}</p>
+  <p>Practice answering each question aloud or in writing. Use the notes space to prepare key points.</p>`;
+
+  Object.entries(groupedByCat).forEach(([cat, questions]) => {
+    wbHTML += `<h3>${catNames[cat] || cat} (${questions.length} questions)</h3>`;
+    questions.forEach((q, i) => {
+      const qText = state.language === 'cn' ? (q.cn || q.q) : (q.en || q.q);
+      wbHTML += `<div class="q"><span class="q-num">${i+1}.</span> ${qText}<div class="notes">Your notes: ___________________________________________</div></div>`;
+    });
+  });
+
+  wbHTML += `<div class="footer">Generated by Priority Citizenship AI Interview Prep | prioritycitizenship@gmail.com<br>${new Date().toISOString().slice(0,10)}</div></body></html>`;
+
+  const w = window.open('','_blank');
+  w.document.write(wbHTML);
+  w.document.close();
+  setTimeout(() => w.print(), 500);
+}
 function endInterviewEarly() {
   if (state.answers.length === 0) {
     alert('Please answer at least one question before ending the interview.');
