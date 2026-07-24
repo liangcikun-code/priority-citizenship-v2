@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>AI Interview Prep — Priority Citizenship</title>
+<meta name="description" content="Practice for your Vanuatu immigration interview with our AI simulator. Realistic questions, instant feedback, and a readiness report.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628; --gold:#c9a84c; --gold-light:#e4c86a; --gold-dark:#a8892e;
+  --success:#059669; --success-light:#d1fae5; --warning:#d97706; --warning-light:#fef3c7;
+  --danger:#dc2626; --danger-light:#fee2e2;
+  --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-300:#d1d5db;
+  --gray-500:#6b7280; --gray-700:#374151;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy)0%,#0d1f3c100%);color:var(--gray-700);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.tool-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:rgba(10,22,40,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.tool-nav a,.tool-nav button{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.6);text-decoration:none;font-size:0.83rem;transition:color 0.2s;background:none;border:none;font-family:inherit;cursor:pointer;padding:6px 0}
+.tool-nav a:hover,.tool-nav button:hover{color:var(--gold)}
+.tool-nav .sep{color:rgba(255,255,255,0.15);margin:0 2px}
+.tool-nav-left,.tool-nav-right{display:flex;align-items:center;gap:4px}
+
+.hero{padding:100px 0 40px;text-align:center;color:#fff}
+.hero .badge{display:inline-block;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.25);padding:6px 16px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--gold-light);margin-bottom:16px}
+.hero h1{font-size:2.4rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.02em}
+.hero h1 span{color:var(--gold)}
+.hero p{color:rgba(255,255,255,0.6);font-size:1.05rem;max-width:580px;margin:0 auto}
+
+.wizard-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.08);margin-bottom:60px;max-width:700px;margin-left:auto;margin-right:auto}
+.wizard-progress{display:flex;gap:6px;align-items:center;margin-bottom:24px;flex-wrap:wrap}
+.wizard-dot{width:10px;height:10px;border-radius:50%;background:var(--gray-200);transition:all 0.3s;flex-shrink:0}
+.wizard-dot.active{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,76,0.2);width:12px;height:12px}
+.wizard-dot.done{background:var(--success)}
+.step-label{font-size:0.8rem;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:4px}
+.question-label{display:block;font-size:1.3rem;font-weight:700;color:var(--navy);margin-bottom:24px}
+.question-hint{font-size:0.85rem;color:var(--gray-500);margin-top:-16px;margin-bottom:20px}
+
+.option-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px}
+@media(max-width:500px){.option-grid{grid-template-columns:1fr}}
+.option-btn{display:flex;align-items:center;gap:10px;padding:14px 18px;border:2px solid var(--gray-200);border-radius:12px;background:#fff;font-family:inherit;font-size:0.95rem;color:var(--gray-700);cursor:pointer;transition:all 0.2s;text-align:left}
+.option-btn:hover{border-color:var(--gold);background:rgba(201,168,76,0.03)}
+.option-btn.selected{border-color:var(--gold);background:rgba(201,168,76,0.08);color:var(--navy);font-weight:600}
+.option-btn .icon{width:20px;height:20px;border-radius:50%;border:2px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:transparent}
+.option-btn.selected .icon{border-color:var(--gold);background:var(--gold);color:#fff}
+.option-btn .opt-icon{font-size:1.3rem}
+
+.wizard-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:28px}
+.btn{padding:12px 28px;border-radius:10px;font-family:inherit;font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--gold);color:var(--navy)}
+.btn-primary:hover{background:var(--gold-light)}
+.btn-primary:disabled{opacity:0.4;pointer-events:none;cursor:not-allowed}
+.btn-outline{background:transparent;color:var(--gray-500);border:2px solid var(--gray-200)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-white{background:#fff;color:var(--navy);border:2px solid var(--gray-200)}
+.btn-white:hover{border-color:var(--gold);background:rgba(201,168,76,0.06)}
+.btn-sm{padding:8px 18px;font-size:0.85rem}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#b91c1c}
+
+/* Interview simulator */
+.interview-container{max-width:760px;margin:0 auto;padding:40px 20px}
+.interview-header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.interview-meta{display:flex;gap:8px;flex-wrap:wrap}
+.meta-tag{font-size:0.75rem;padding:4px 12px;border-radius:100px;font-weight:600;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6)}
+.meta-tag.act{background:rgba(201,168,76,0.15);color:var(--gold-light)}
+
+.progress-bar-track{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-bottom:8px;overflow:hidden}
+.progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-light));border-radius:3px;transition:width 0.4s}
+
+.interview-chat{display:flex;flex-direction:column;gap:16px;max-height:55vh;overflow-y:auto;padding:0 4px;margin-bottom:20px}
+.interview-chat::-webkit-scrollbar{width:4px}
+.interview-chat::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+
+.chat-bubble{max-width:85%;padding:14px 18px;border-radius:16px;font-size:0.92rem;line-height:1.6;animation:fadeIn 0.3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chat-bubble.interviewer{align-self:flex-start;background:#fff;border-bottom-left-radius:4px;box-shadow:0 2px 12px rgba(0,0,0,0.06);color:var(--gray-700)}
+.chat-bubble.user{align-self:flex-end;background:var(--navy);color:#fff;border-bottom-right-radius:4px}
+.chat-bubble.system{align-self:center;background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.5);font-size:0.8rem;border-radius:8px;padding:8px 16px;max-width:90%}
+.chat-bubble .bubble-role{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;font-weight:600}
+.chat-bubble.interviewer .bubble-role{color:var(--gold-dark)}
+.chat-bubble.user .bubble-role{color:rgba(255,255,255,0.5)}
+
+.chat-input-row{display:flex;gap:10px;align-items:flex-end}
+.chat-input-row textarea{flex:1;padding:14px 18px;border:2px solid rgba(255,255,255,0.15);border-radius:14px;background:rgba(255,255,255,0.06);color:#fff;font-family:inherit;font-size:0.95rem;resize:none;min-height:50px;max-height:120px;transition:border-color 0.2s}
+.chat-input-row textarea::placeholder{color:rgba(255,255,255,0.3)}
+.chat-input-row textarea:focus{outline:none;border-color:var(--gold)}
+.chat-input-row .send-btn{width:50px;height:50px;border-radius:14px;border:none;background:var(--gold);color:var(--navy);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;flex-shrink:0}
+.chat-input-row .send-btn:hover{background:var(--gold-light)}
+.chat-input-row .send-btn:disabled{opacity:0.3;cursor:not-allowed}
+
+.confidence-bar{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.confidence-bar .cb-label{font-size:0.78rem;color:rgba(255,255,255,0.5);white-space:nowrap}
+.confidence-bar .cb-track{flex:1;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden}
+.confidence-bar .cb-fill{height:100%;border-radius:4px;transition:width 0.6s;background:linear-gradient(90deg,#fbbf24,var(--success))}
+
+.tip-banner{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:0.82rem;color:var(--gold-light);line-height:1.5}
+
+/* Results / Report */
+.results{padding:60px 0 80px}
+.results .container{max-width:760px;margin:0 auto;padding:0 20px}
+.results-header{text-align:center;margin-bottom:40px}
+.results-header h2{font-size:2rem;font-weight:800;color:#fff;margin-bottom:8px}
+.results-header p{color:rgba(255,255,255,0.6)}
+
+.report-card{background:#fff;border-radius:20px;padding:40px;box-shadow:0 4px 32px rgba(0,0,0,0.1);margin-bottom:24px}
+
+.score-ring{width:160px;height:160px;margin:0 auto 20px;position:relative}
+.score-ring svg{transform:rotate(-90deg);width:160px;height:160px}
+.score-ring .value-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-ring .value-num .num{font-size:2.8rem;font-weight:800;color:var(--navy);line-height:1}
+.score-ring .value-num .txt{font-size:0.85rem;color:var(--gray-500);font-weight:500}
+.score-tier{display:inline-block;padding:6px 20px;border-radius:100px;font-size:0.9rem;font-weight:700;margin-top:8px}
+
+.cat-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--gray-100)}
+.cat-item:last-child{border-bottom:none}
+.cat-left{width:160px;flex-shrink:0}
+.cat-name{font-size:0.88rem;font-weight:600;color:var(--navy);display:block}
+.cat-score{font-size:0.78rem;color:var(--gray-500)}
+.cat-bar{flex:1;height:10px;background:var(--gray-100);border-radius:5px;overflow:hidden}
+.cat-bar-fill{height:100%;border-radius:5px;transition:width 0.6s}
+.cat-bar-fill.high{background:var(--success)}
+.cat-bar-fill.medium{background:var(--warning)}
+.cat-bar-fill.low{background:var(--danger)}
+.cat-pct{font-size:0.9rem;font-weight:700;color:var(--navy);width:44px;text-align:right}
+
+.improvement-list{padding-left:18px;margin-top:12px}
+.improvement-list li{font-size:0.9rem;color:var(--gray-700);padding:6px 0;line-height:1.5}
+.improvement-list li::marker{color:var(--gold)}
+
+.actions-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:32px}
+@media(max-width:500px){.actions-row{flex-direction:column}}
+
+.retake-section{text-align:center;padding:40px 0 60px}
+.retake-section a{display:inline-flex;align-items:center;gap:6px;color:var(--gold);text-decoration:none;font-weight:600;font-size:0.95rem;padding:10px 24px;border:2px solid var(--gold);border-radius:10px;transition:all 0.2s}
+.retake-section a:hover{background:var(--gold);color:var(--navy)}
+
+.loading-dots{display:inline-flex;gap:4px}
+.loading-dots span{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:bounce 1.4s infinite ease-in-out both}
+.loading-dots span:nth-child(1){animation-delay:-0.32s}
+.loading-dots span:nth-child(2){animation-delay:-0.16s}
+@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+
+.print-only{display:none}
+@media print{
+  body{background:#fff;color:#000}
+  .tool-nav,.hero,.wizard-card,.interview-container,.actions-row,.retake-section{display:none!important}
+  .results{padding:0}
+  .results-header h2,.results-header p{color:#000}
+  .report-card{box-shadow:none;border:1px solid #ddd;break-inside:avoid}
+  .print-only{display:block;text-align:center;padding:20px}
+}
+</style>
+</head>
+<body>
+
+<div class="tool-nav">
+  <div class="tool-nav-left">
+    <a href="/">Home</a><span class="sep">/</span><a href="/tools">AI Tools</a><span class="sep">/</span><span style="color:var(--gold-light);font-size:0.83rem">Interview Prep</span>
+  </div>
+  <div class="tool-nav-right">
+    <span id="navStatus" style="font-size:0.78rem;color:rgba(255,255,255,0.4)">Configure</span>
+  </div>
+</div>
+
+<div class="hero" id="heroSection">
+  <div class="badge">&#127908; P2 — AI Interview Prep</div>
+  <h1>AI <span>Interview Simulator</span></h1>
+  <p>Practice for your Vanuatu immigration interview with our AI interviewer. Realistic questions, real-time feedback, and a detailed readiness report.</p>
+</div>
+
+<!-- SETUP WIZARD -->
+<div class="wizard-card" id="stepper">
+  <div class="wizard-progress" id="progressBar"></div>
+  <div class="step-label" id="stepLabel">Step 1 of 3</div>
+  <div id="stepContent"></div>
+  <div class="wizard-nav" id="stepNav"></div>
+</div>
+
+<!-- INTERVIEW SIMULATOR -->
+<div class="interview-container" id="interviewSection" style="display:none">
+  <div class="results-header" style="margin-bottom:24px">
+    <h2 style="font-size:1.6rem">&#127908; <span style="color:var(--gold)">Interview in Progress</span></h2>
+    <p id="interviewSubtitle"></p>
+  </div>
+
+  <div class="interview-header">
+    <div class="interview-meta">
+      <span class="meta-tag act" id="tagType"></span>
+      <span class="meta-tag" id="tagLevel"></span>
+      <span class="meta-tag" id="tagLang"></span>
+    </div>
+    <span style="font-size:0.85rem;color:var(--gold-light);font-weight:600" id="questionCounter">Question 0/10</span>
+  </div>
+
+  <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+  <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:rgba(255,255,255,0.3);margin:4px 0 20px">
+    <span>Start</span><span>Complete</span>
+  </div>
+
+  <div class="tip-banner" id="tipBanner">&#128161; <span id="tipText">Answer in full sentences. Be specific about dates and amounts.</span></div>
+
+  <div class="interview-chat" id="chatLog"></div>
+
+  <div class="chat-input-row">
+    <textarea id="userInput" rows="2" placeholder="Type your answer..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAnswer()}"></textarea>
+    <button class="send-btn" id="sendBtn" onclick="submitAnswer()">&#8593;</button>
+  </div>
+
+  <div style="text-align:center;margin-top:12px">
+    <button class="btn btn-outline btn-sm" onclick="endInterviewEarly()" style="color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.12)">End Interview Early & Get Report</button>
+  </div>
+</div>
+
+<!-- RESULTS REPORT -->
+<div class="results" id="resultsSection" style="display:none">
+  <div class="container">
+    <div class="results-header">
+      <h2>&#128202; Interview Readiness Report</h2>
+      <p id="reportSubtitle"></p>
+    </div>
+
+    <div class="report-card" style="text-align:center">
+      <div class="score-ring"><svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="72" fill="none" stroke="var(--gray-200)" stroke-width="10"/><circle cx="80" cy="80" r="72" fill="none" stroke="var(--success)" stroke-width="10" stroke-dasharray="0 452" stroke-linecap="round" id="scoreCircle"/></svg><div class="value-num"><div class="num" id="overallScoreNum">0</div><div class="txt">/ 100</div></div></div>
+      <span class="score-tier" id="scoreTier"></span>
+      <p class="score-summary" style="font-size:0.95rem;color:var(--gray-700);max-width:460px;margin:12px auto 0;line-height:1.6" id="scoreSummary"></p>
+    </div>
+
+    <div class="report-card">
+      <h3 style="font-size:1.15rem;color:var(--navy);margin-bottom:4px">&#128200; Category Breakdown</h3>
+      <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:20px">Performance across key evaluation areas</p>
+      <div id="categoryBreakdown"></div>
+    </div>
+
+    <div class="report-card" id="improvementCard">
+      <h3 style="font-size:1.15rem;color:var(--navy);margin-bottom:4px">&#127919; Top Improvement Areas</h3>
+      <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:16px">Focus on these to improve your readiness</p>
+      <div id="improvementList"></div>
+    </div>
+
+    <div class="report-card" id="modelAnswersCard" style="display:none">
+      <h3 style="font-size:1.15rem;color:var(--navy);margin-bottom:4px">&#128214; Model Answer Examples</h3>
+      <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:16px">Standard responses to challenging questions</p>
+      <div id="modelAnswers"></div>
+    </div>
+
+    <div class="actions-row">
+      <button class="btn btn-primary" onclick="retakeInterview()">&#128260; Retake Interview</button>
+      <button class="btn btn-white" onclick="window.print()">&#128196; Export Report</button>
+      <button class="btn btn-outline" onclick="resetAll()">&#8634; New Setup</button>
+    </div>
+
+    <div class="print-only">
+      <p>Generated by Priority Citizenship AI Interview Prep — prioritycitizenship@gmail.com</p>
+    </div>
+  </div>
+</div>
+
+<div class="retake-section" id="retakeSection" style="display:none">
+  <a href="#" onclick="resetAll();return false">&#8634; Start New Interview</a>
+</div>
+
+<script>
+// ═══════ QUESTION BANKS ═════════════════════════════════
+const QUESTION_BANKS = {
+  citizenship_dd: {
+    name: 'Citizenship Due Diligence Interview',
+    questions: [
+      { q: 'Can you explain the source of your investment funds? Please provide specific details about how you accumulated the capital.', en: 'Can you explain the source of your investment funds? Please provide specific details about how you accumulated the capital.', cn: '请解释您的投资资金来源。请提供关于您如何积累这笔资金的具体细节。', category: 'source_of_funds' },
+      { q: 'Please walk me through your career history from your first job to your current position.', en: 'Please walk me through your career history from your first job to your current position.', cn: '请介绍您的职业经历，从第一份工作到目前的职位。', category: 'personal_history' },
+      { q: 'Why did you choose Vanuatu specifically for your citizenship investment, rather than other programs like Caribbean nations?', en: 'Why did you choose Vanuatu specifically for your citizenship investment, rather than other programs like Caribbean nations?', cn: '为什么您特别选择瓦努阿图进行投资入籍，而不是其他项目如加勒比国家？', category: 'program_knowledge' },
+      { q: 'What do you know about the DSP program and its requirements?', en: 'What do you know about the DSP program and its requirements?', cn: '您对DSP项目及其要求了解多少？', category: 'program_knowledge' },
+      { q: 'Can you describe your current business or employment in detail?', en: 'Can you describe your current business or employment in detail?', cn: '请详细描述您目前的业务或工作情况。', category: 'personal_history' },
+      { q: 'Have you ever been refused a visa or citizenship by any country? If so, please explain the circumstances.', en: 'Have you ever been refused a visa or citizenship by any country? If so, please explain the circumstances.', cn: '您是否曾被任何国家拒签或拒绝入籍？如果是，请说明情况。', category: 'background' },
+      { q: 'Do you or any immediate family member hold, or have you ever held, a political position or government role?', en: 'Do you or any immediate family member hold, or have you ever held, a political position or government role?', cn: '您或您的直系亲属是否担任过或曾经担任过政治职务或政府角色？', category: 'background' },
+      { q: 'Have you ever been involved in any legal proceedings, criminal investigations, or sanctions?', en: 'Have you ever been involved in any legal proceedings, criminal investigations, or sanctions?', cn: '您是否曾涉及任何法律诉讼、刑事调查或制裁？', category: 'background' },
+      { q: 'What are your plans after obtaining Vanuatu citizenship? How do you intend to use the passport?', en: 'What are your plans after obtaining Vanuatu citizenship? How do you intend to use the passport?', cn: '获得瓦努阿图公民身份后，您有什么计划？您打算如何使用护照？', category: 'future_plans' },
+      { q: 'How will Vanuatu citizenship benefit your family and your business?', en: 'How will Vanuatu citizenship benefit your family and your business?', cn: '瓦努阿图公民身份将如何惠及您的家庭和业务？', category: 'future_plans' },
+      { q: 'Can you tell me about your family — spouse, children, and any other dependants you wish to include in the application?', en: 'Can you tell me about your family — spouse, children, and any other dependants you wish to include in the application?', cn: '请介绍一下您的家庭——配偶、子女以及您希望包含在申请中的其他受抚养人。', category: 'personal_history' },
+      { q: 'Do you understand that the due diligence process is thorough and the fee is non-refundable regardless of outcome?', en: 'Do you understand that the due diligence process is thorough and the fee is non-refundable regardless of outcome?', cn: '您是否理解尽职调查过程是彻底的，且无论结果如何费用均不予退还？', category: 'program_knowledge' },
+      { q: 'What is your current residential address, and how long have you lived there?', en: 'What is your current residential address, and how long have you lived there?', cn: '您目前的居住地址是什么？您在那里住了多久？', category: 'personal_history' },
+      { q: 'Do you have any existing business or personal connections in Vanuatu?', en: 'Do you have any existing business or personal connections in Vanuatu?', cn: '您在瓦努阿图是否有任何现有的业务或个人联系？', category: 'future_plans' },
+      { q: 'Are you aware of the tax implications in your home country after obtaining a second citizenship?', en: 'Are you aware of the tax implications in your home country after obtaining a second citizenship?', cn: '您是否了解获得第二公民身份后在本国的税务影响？', category: 'program_knowledge' },
+    ],
+    categories: { source_of_funds:'Source of Funds', personal_history:'Personal History', background:'Background & Compliance', program_knowledge:'Program Knowledge', future_plans:'Future Plans' }
+  },
+  business: {
+    name: 'Business Immigration Interview',
+    questions: [
+      { q: 'Please summarize your business plan for Vanuatu. What sector will you operate in?', en: 'Please summarize your business plan for Vanuatu. What sector will you operate in?', cn: '请概述您为瓦努阿图制定的商业计划。您将在哪个行业运营？', category: 'business_plan' },
+      { q: 'What market research have you conducted on the Vanuatu market?', en: 'What market research have you conducted on the Vanuatu market?', cn: '您对瓦努阿图市场做了哪些市场调研？', category: 'business_plan' },
+      { q: 'What is your total investment budget, and how is it broken down?', en: 'What is your total investment budget, and how is it broken down?', cn: '您的总投资预算是多少？如何分配？', category: 'investment' },
+      { q: 'How many local employees do you plan to hire in Vanuatu?', en: 'How many local employees do you plan to hire in Vanuatu?', cn: '您计划在瓦努阿图雇佣多少本地员工？', category: 'hiring' },
+      { q: 'What is your projected revenue for the first three years of operation?', en: 'What is your projected revenue for the first three years of operation?', cn: '您预计运营前三年的收入是多少？', category: 'revenue' },
+      { q: 'Who are your main competitors in Vanuatu or the Pacific region?', en: 'Who are your main competitors in Vanuatu or the Pacific region?', cn: '您在瓦努阿图或太平洋地区的主要竞争对手是谁？', category: 'business_plan' },
+      { q: 'What relevant industry experience do you bring to this venture?', en: 'What relevant industry experience do you bring to this venture?', cn: '您为这项事业带来了哪些相关的行业经验？', category: 'experience' },
+      { q: 'How will your business contribute to Vanuatu\'s economy?', en: 'How will your business contribute to Vanuatu\'s economy?', cn: '您的业务将如何为瓦努阿图经济做出贡献？', category: 'business_plan' },
+      { q: 'Do you understand Vanuatu\'s regulatory requirements for your industry?', en: 'Do you understand Vanuatu\'s regulatory requirements for your industry?', cn: '您是否了解瓦努阿图对您所在行业的监管要求？', category: 'compliance' },
+      { q: 'What is your contingency plan if the business underperforms in the first two years?', en: 'What is your contingency plan if the business underperforms in the first two years?', cn: '如果业务在前两年表现不佳，您的应急计划是什么？', category: 'investment' },
+    ],
+    categories: { business_plan:'Business Plan', investment:'Investment & Finance', hiring:'Hiring Plans', revenue:'Revenue Projections', experience:'Industry Experience', compliance:'Regulatory Compliance' }
+  },
+  general: {
+    name: 'General Immigration Q&A',
+    questions: [
+      { q: 'Why are you interested in immigrating to Vanuatu?', en: 'Why are you interested in immigrating to Vanuatu?', cn: '为什么您有兴趣移民到瓦努阿图？', category: 'motivation' },
+      { q: 'What do you know about life in Vanuatu — the culture, the cost of living, the healthcare system?', en: 'What do you know about life in Vanuatu — the culture, the cost of living, the healthcare system?', cn: '您对瓦努阿图的生活了解多少——文化、生活成本、医疗体系？', category: 'knowledge' },
+      { q: 'Do you have any family or friends already living in Vanuatu?', en: 'Do you have any family or friends already living in Vanuatu?', cn: '您是否有家人或朋友已经居住在瓦努阿图？', category: 'connections' },
+      { q: 'What is your current employment situation and monthly income?', en: 'What is your current employment situation and monthly income?', cn: '您目前的就业情况和月收入如何？', category: 'financial' },
+      { q: 'Have you ever visited Vanuatu before? If so, when and for what purpose?', en: 'Have you ever visited Vanuatu before? If so, when and for what purpose?', cn: '您以前是否访问过瓦努阿图？如果是，什么时间和目的？', category: 'background' },
+      { q: 'What is your educational background?', en: 'What is your educational background?', cn: '您的教育背景是什么？', category: 'background' },
+      { q: 'Do you have any health conditions that require ongoing treatment?', en: 'Do you have any health conditions that require ongoing treatment?', cn: '您是否有任何需要持续治疗的健康状况？', category: 'health' },
+      { q: 'Have you ever been convicted of a criminal offense in any country?', en: 'Have you ever been convicted of a criminal offense in any country?', cn: '您是否曾在任何国家被判定犯有刑事罪行？', category: 'background' },
+      { q: 'How do you plan to support yourself and your family in Vanuatu?', en: 'How do you plan to support yourself and your family in Vanuatu?', cn: '您计划如何在瓦努阿图养活自己和家人？', category: 'financial' },
+      { q: 'What do you expect your life to look like 5 years after moving to Vanuatu?', en: 'What do you expect your life to look like 5 years after moving to Vanuatu?', cn: '搬来瓦努阿图5年后，您预期您的生活会是什么样子？', category: 'future' },
+    ],
+    categories: { motivation:'Motivation & Intent', knowledge:'Country Knowledge', connections:'Local Connections', financial:'Financial Capacity', background:'Background & Character', health:'Health', future:'Future Plans' }
+  }
+};
+
+// ═══════ INTERVIEW TIPS ═════════════════════════════════
+const DEFAULT_TIPS = [
+  'Answer in full sentences. Be specific about dates and amounts.',
+  'Vague answers raise red flags — provide concrete details.',
+  'Be consistent with your application documents.',
+  'If you don\'t know or don\'t remember, say so honestly.',
+  'Keep answers concise but complete — 2-4 sentences is ideal.',
+];
+
+// ═══════ STATE ══════════════════════════════════════════
+const state = {
+  step: 0,
+  interviewType: null,    // 'citizenship_dd' | 'business' | 'general'
+  difficulty: null,       // 'beginner' | 'intermediate' | 'advanced'
+  language: 'en',         // 'en' | 'cn'
+  questions: [],          // Selected questions for this session
+  currentQ: 0,
+  answers: [],            // { question, answer, feedback: {score, comment} }
+  confidenceScore: 70,    // Dynamic confidence tracker
+};
+
+// ═══════ WIZARD STEPS ═══════════════════════════════════
+const STEPS = [
+  {
+    title: 'Select Interview Type',
+    render() {
+      return `
+        <div class="question-label">What type of immigration interview are you preparing for?</div>
+        <div class="option-grid" style="grid-template-columns:1fr">
+          <button class="option-btn${state.interviewType==='citizenship_dd'?' selected':''}" onclick="selectType('citizenship_dd')">
+            <span class="opt-icon">&#127757;</span>
+            <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
+          </button>
+          <button class="option-btn${state.interviewType==='business'?' selected':''}" onclick="selectType('business')">
+            <span class="opt-icon">&#128188;</span>
+            <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
+          </button>
+          <button class="option-btn${state.interviewType==='general'?' selected':''}" onclick="selectType('general')">
+            <span class="opt-icon">&#128172;</span>
+            <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
+          </button>
+        </div>
+      `;
+    }
+  },
+  {
+    title: 'Choose Difficulty & Language',
+    render() {
+      return `
+        <div class="question-label">Select difficulty level</div>
+        <div class="option-grid">
+          <button class="option-btn${state.difficulty==='beginner'?' selected':''}" onclick="state.difficulty='beginner';renderCurrentStep()">
+            <span class="opt-icon">&#128994;</span>
+            <div><div style="font-weight:600">Beginner</div><div style="font-size:0.78rem;color:var(--gray-500)">Gentle questions, 10 questions, extra hints</div></div>
+          </button>
+          <button class="option-btn${state.difficulty==='intermediate'?' selected':''}" onclick="state.difficulty='intermediate';renderCurrentStep()">
+            <span class="opt-icon">&#128993;</span>
+            <div><div style="font-weight:600">Intermediate</div><div style="font-size:0.78rem;color:var(--gray-500)">Standard DD questions, 10 questions, realistic pace</div></div>
+          </button>
+          <button class="option-btn${state.difficulty==='advanced'?' selected':''}" onclick="state.difficulty='advanced';renderCurrentStep()">
+            <span class="opt-icon">&#128308;</span>
+            <div><div style="font-weight:600">Advanced</div><div style="font-size:0.78rem;color:var(--gray-500)">Challenging follow-ups, 10 questions, strict scoring</div></div>
+          </button>
+        </div>
+        <div class="question-label" style="margin-top:24px">Interview language</div>
+        <div class="option-grid">
+          <button class="option-btn${state.language==='en'?' selected':''}" onclick="state.language='en';renderCurrentStep()">
+            <span class="opt-icon">&#127468;&#127463;</span>
+            <div><div style="font-weight:600">English</div></div>
+          </button>
+          <button class="option-btn${state.language==='cn'?' selected':''}" onclick="state.language='cn';renderCurrentStep()">
+            <span class="opt-icon">&#127464;&#127475;</span>
+            <div><div style="font-weight:600">中文 (Chinese)</div></div>
+          </button>
+        </div>
+      `;
+    }
+  },
+  {
+    title: 'Start Interview',
+    render() {
+      const bank = QUESTION_BANKS[state.interviewType];
+      const diffNames = {beginner:'Beginner',intermediate:'Intermediate',advanced:'Advanced'};
+      const langNames = {en:'English',cn:'中文 Chinese'};
+      return `
+        <div class="question-label">&#9989; Ready to begin your interview</div>
+        <div style="background:var(--gray-50);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Interview Type</span><span style="font-weight:600;color:var(--navy)">${bank.name}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Difficulty</span><span style="font-weight:600;color:var(--navy)">${diffNames[state.difficulty]}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:0.92rem"><span style="color:var(--gray-500)">Language</span><span style="font-weight:600;color:var(--navy)">${langNames[state.language]}</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 0 0;margin-top:10px;border-top:2px solid var(--gray-200);font-size:0.95rem"><span style="font-weight:700;color:var(--navy)">Questions</span><span style="font-weight:800;color:var(--navy)">10 questions</span></div>
+        </div>
+        <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:16px;font-size:0.88rem;color:var(--gray-700);line-height:1.6">
+          <strong style="color:var(--gold-dark)">&#128161; Tips before you start:</strong><br>
+          • Find a quiet place where you can speak your answers aloud or type them.<br>
+          • Answer as you would in a real interview — be honest and specific.<br>
+          • After each answer, you will receive an AI evaluation with feedback.<br>
+          • You can end the interview early and still receive a partial report.
+        </div>
+      `;
+    }
+  }
+];
+
+function selectType(type) { state.interviewType = type; renderCurrentStep(); }
+
+// ═══════ WIZARD RENDERING ═════════════════════════════
+function renderCurrentStep() {
+  const step = STEPS[state.step];
+  document.getElementById('stepLabel').textContent = `Step ${state.step+1} of ${STEPS.length}`;
+  document.getElementById('stepContent').innerHTML = step.render();
+  renderProgress();
+  renderNav();
+}
+
+function renderProgress() {
+  document.getElementById('progressBar').innerHTML = STEPS.map((_,i) => {
+    let cls = i < state.step ? 'done' : (i === state.step ? 'active' : '');
+    return `<div class="wizard-dot ${cls}"></div>`;
+  }).join('');
+}
+
+function renderNav() {
+  const isLast = state.step === STEPS.length - 1;
+  const canProceed = state.step === 0 ? state.interviewType !== null : state.step === 1 ? state.difficulty !== null : true;
+  document.getElementById('stepNav').innerHTML = `
+    <div>${state.step > 0 ? `<button class="btn btn-outline btn-sm" onclick="prevStep()">← Back</button>` : ''}</div>
+    <div>
+      ${isLast
+        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="startInterview()">🎤 Start Interview →</button>`
+        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="nextStep()">Continue →</button>`
+      }
+    </div>
+  `;
+}
+
+function nextStep() { if (state.step < STEPS.length-1) { state.step++; renderCurrentStep(); } }
+function prevStep() { if (state.step > 0) { state.step--; renderCurrentStep(); } }
+
+// ═══════ START INTERVIEW ════════════════════════════════
+function startInterview() {
+  const bank = QUESTION_BANKS[state.interviewType];
+  // Select 10 questions: randomize but prefer category diversity
+  const shuffled = [...bank.questions].sort(() => Math.random() - 0.5);
+  state.questions = shuffled.slice(0, 10);
+  state.currentQ = 0;
+  state.answers = [];
+  state.confidenceScore = state.difficulty === 'beginner' ? 80 : state.difficulty === 'intermediate' ? 70 : 60;
+
+  // Hide wizard/hero, show interview
+  document.getElementById('stepper').style.display = 'none';
+  document.getElementById('heroSection').style.display = 'none';
+  document.getElementById('interviewSection').style.display = 'block';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('retakeSection').style.display = 'none';
+
+  // Update nav status
+  document.getElementById('navStatus').textContent = 'Interviewing...';
+  const langNames = {en:'EN',cn:'中文'};
+  document.getElementById('tagType').textContent = bank.name;
+  document.getElementById('tagLevel').textContent = state.difficulty.charAt(0).toUpperCase() + state.difficulty.slice(1);
+  document.getElementById('tagLang').textContent = langNames[state.language];
+
+  // Render first question
+  renderQuestion();
+  document.getElementById('interviewSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function renderQuestion() {
+  const q = state.questions[state.currentQ];
+  if (!q) return;
+
+  const qNum = state.currentQ + 1;
+  const displayText = state.language === 'cn' ? (q.cn || q.q) : (q.en || q.q);
+
+  document.getElementById('questionCounter').textContent = `Question ${qNum}/10`;
+  document.getElementById('progressFill').style.width = `${(state.currentQ / 10) * 100}%`;
+
+  // Random tip
+  const tip = DEFAULT_TIPS[Math.floor(Math.random() * DEFAULT_TIPS.length)];
+  document.getElementById('tipText').textContent = tip;
+
+  addChatBubble('interviewer', displayText);
+  document.getElementById('userInput').value = '';
+  document.getElementById('userInput').focus();
+}
+
+function addChatBubble(role, text) {
+  const chat = document.getElementById('chatLog');
+  const div = document.createElement('div');
+  div.className = `chat-bubble ${role}`;
+
+  const roleLabels = { interviewer: 'AI Interviewer', user: 'You', system: 'System' };
+  if (role === 'system') {
+    div.textContent = text;
+  } else {
+    div.innerHTML = `<div class="bubble-role">${roleLabels[role]}</div>${text}`;
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+
+  // Limit chat to 50 messages
+  while (chat.children.length > 50) chat.removeChild(chat.firstChild);
+}
+
+// ═══════ SUBMIT ANSWER & AI EVALUATION ═══════════════════
+async function submitAnswer() {
+  const input = document.getElementById('userInput');
+  const answer = input.value.trim();
+  if (!answer || state.currentQ >= state.questions.length) return;
+
+  // Disable input
+  input.disabled = true;
+  document.getElementById('sendBtn').disabled = true;
+  addChatBubble('user', answer);
+
+  // Save answer
+  const q = state.questions[state.currentQ];
+
+  // Show loading
+  addChatBubble('system', '<span class="loading-dots"><span></span><span></span><span></span></span> Evaluating your answer...');
+
+  // Evaluate with AI
+  const evaluation = await evaluateAnswer(q, answer);
+  // Remove loading bubble
+  const chat = document.getElementById('chatLog');
+  chat.removeChild(chat.lastChild);
+
+  // Show feedback
+  addChatBubble('system', `Score: ${evaluation.score}/10 | ${evaluation.comment}`);
+
+  // Update confidence
+  state.confidenceScore = Math.max(10, Math.min(100, state.confidenceScore + (evaluation.score - 5) * 2));
+  state.answers.push({ question: q, answer, feedback: evaluation });
+
+  // Advance
+  state.currentQ++;
+
+  if (state.currentQ >= state.questions.length) {
+    setTimeout(() => showReport(), 1000);
+  } else {
+    setTimeout(() => {
+      renderQuestion();
+      input.disabled = false;
+      document.getElementById('sendBtn').disabled = false;
+      input.focus();
+    }, 1500);
+  }
+}
+
+// ═══════ AI EVALUATION ══════════════════════════════════
+async function evaluateAnswer(question, answer) {
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: `You are evaluating an immigration interview answer.
+
+Interview Type: ${QUESTION_BANKS[state.interviewType].name}
+Difficulty: ${state.difficulty}
+Question: ${question.q}
+Candidate's Answer: ${answer}
+
+Evaluate the answer on a scale of 1-10. Provide a short constructive comment (max 25 words) in ${state.language === 'cn' ? 'Chinese' : 'English'}.
+
+Reply in STRICT JSON format: {"score": <number 1-10>, "comment": "<brief feedback>"}`,
+        role: 'system'
+      })
+    });
+    if (resp.ok) {
+      const data = await resp.json();
+      // Try to extract JSON from response
+      const txt = data.reply || '';
+      const jsonMatch = txt.match(/\{[\s\S]*"score"[\s\S]*"comment"[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        return { score: Math.max(1, Math.min(10, parsed.score)), comment: parsed.comment };
+      }
+    }
+  } catch(e) { /* fallback */ }
+
+  // Fallback: local heuristic evaluation
+  const len = answer.length;
+  let score = 5;
+  if (len > 500) score = 8;
+  else if (len > 300) score = 7;
+  else if (len > 150) score = 6;
+  else if (len < 30) score = 2;
+  else if (len < 60) score = 3;
+
+  const keywords = ['because','specifically','for example','therefore','plan','experience','years','income','investment','business','family','bank','certificate','document','verify'];
+  const hasKeywords = keywords.filter(k => answer.toLowerCase().includes(k)).length;
+  score = Math.min(10, score + Math.floor(hasKeywords / 3));
+
+  const comments = [
+    'Good detail. Try to be more specific with numbers and dates.',
+    'Solid answer. Consider adding a concrete example.',
+    'Adequate. Expand on the timeline and specific amounts.',
+    'Too brief. Provide more context and supporting details.',
+    'Vague response. Interviewers expect specific, verifiable information.',
+    'Excellent detail and clarity. This would satisfy a DD officer.',
+    'Good. Mention any supporting documents you have for this.',
+    'Reasonable. Be prepared for a follow-up question on this topic.',
+  ];
+  return { score, comment: comments[Math.floor(Math.random() * comments.length)] };
+}
+
+// ═══════ REPORT GENERATION ═══════════════════════════════
+function showReport() {
+  document.getElementById('interviewSection').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'block';
+  document.getElementById('retakeSection').style.display = 'block';
+  document.getElementById('navStatus').textContent = 'Report Ready';
+
+  const bank = QUESTION_BANKS[state.interviewType];
+  const avgScore = state.answers.length > 0
+    ? Math.round(state.answers.reduce((s, a) => s + a.feedback.score, 0) / state.answers.length * 10)
+    : 50;
+
+  document.getElementById('reportSubtitle').textContent = `${bank.name} · ${state.language==='cn'?'中文':'English'} · ${state.currentQ} questions completed`;
+  document.getElementById('overallScoreNum').textContent = avgScore;
+
+  // Score circle
+  const circumference = 452;
+  const dash = (avgScore / 100) * circumference;
+  document.getElementById('scoreCircle').setAttribute('stroke-dasharray', `${dash} ${circumference}`);
+
+  // Tier
+  let tier, tierColor, tierBg;
+  if (avgScore >= 80) { tier = 'Excellent — Well Prepared'; tierColor = 'var(--success)'; tierBg = 'var(--success-light)'; }
+  else if (avgScore >= 65) { tier = 'Good — Room for Improvement'; tierColor = 'var(--warning)'; tierBg = 'var(--warning-light)'; }
+  else { tier = 'Needs Practice — Review Key Areas'; tierColor = 'var(--danger)'; tierBg = 'var(--danger-light)'; }
+  const tierEl = document.getElementById('scoreTier');
+  tierEl.textContent = tier;
+  tierEl.style.background = tierBg;
+  tierEl.style.color = tierColor;
+
+  document.getElementById('scoreSummary').textContent = avgScore >= 80
+    ? 'You demonstrate strong readiness for the interview. Your answers are detailed and well-structured. Focus on polishing minor areas.'
+    : avgScore >= 65
+    ? 'You have a solid foundation but there are areas that need more preparation. Review the improvement suggestions below and practice those topics.'
+    : 'Significant preparation is recommended before your interview. Focus on providing more specific, detailed answers with concrete examples.';
+
+  // Category breakdown
+  const categoryScores = {};
+  const categoryCounts = {};
+  state.answers.forEach(a => {
+    const cat = a.question.category || 'general';
+    if (!categoryScores[cat]) { categoryScores[cat] = 0; categoryCounts[cat] = 0; }
+    categoryScores[cat] += a.feedback.score;
+    categoryCounts[cat]++;
+  });
+  const catNames = bank.categories || {};
+
+  let catHTML = '';
+  const sortedCats = Object.entries(categoryScores).sort((a, b) => (a[1]/categoryCounts[a[0]]) - (b[1]/categoryCounts[b[0]]));
+  sortedCats.forEach(([cat, total]) => {
+    const pct = Math.round((total / categoryCounts[cat]) * 10);
+    const barClass = pct >= 80 ? 'high' : pct >= 60 ? 'medium' : 'low';
+    catHTML += `
+      <div class="cat-item">
+        <div class="cat-left"><span class="cat-name">${catNames[cat] || cat}</span><span class="cat-score">${categoryCounts[cat]} question${categoryCounts[cat]>1?'s':''}</span></div>
+        <div class="cat-bar"><div class="cat-bar-fill ${barClass}" style="width:${pct}%"></div></div>
+        <div class="cat-pct">${pct}%</div>
+      </div>
+    `;
+  });
+  document.getElementById('categoryBreakdown').innerHTML = catHTML;
+
+  // Improvement areas
+  const weakCats = sortedCats.filter(([_, total]) => Math.round((total / categoryCounts[_]) * 10) < 75).slice(0, 3);
+  const improvements = weakCats.map(([cat]) => {
+    const suggestions = {
+      source_of_funds: 'Prepare a clear, chronological narrative of how you accumulated your funds. Have supporting documents ready.',
+      personal_history: 'Create a timeline of your career and residence history with no gaps. Practice explaining each transition.',
+      background: 'Review all countries you have lived in. Be ready to explain any visa refusals or legal matters honestly.',
+      program_knowledge: 'Study the DSP/CIIP program details thoroughly. Know the costs, timeline, and requirements.',
+      future_plans: 'Be specific about why Vanuatu and how you will use the citizenship. Avoid vague statements.',
+      business_plan: 'Prepare a concise elevator pitch for your business. Know your market size and competitors.',
+      investment: 'Have exact figures ready. Be prepared to justify your budget breakdown and contingency plans.',
+      hiring: 'Know how many staff you need and at what salary levels. Understand local labor laws.',
+      revenue: 'Prepare conservative, realistic, and optimistic projections. Show your assumptions.',
+      experience: 'Connect your past experience directly to your Vanuatu venture. Use specific examples.',
+      compliance: 'Research Vanuatu regulations for your industry. Show you have consulted local experts.',
+      motivation: 'Articulate a clear, personal reason for choosing Vanuatu — beyond just tax benefits.',
+      knowledge: 'Read about Vanuatu culture, economy, and current events. Show genuine interest.',
+      connections: 'If you have Vanuatu connections, describe them. If not, explain your support network plan.',
+      financial: 'Have bank statements and income proofs organized. Know your net worth breakdown.',
+      health: 'Be honest about health conditions. Have medical records available if relevant.',
+      future: 'Paint a realistic picture of your life in Vanuatu — where you will live, what you will do.',
+    };
+    return suggestions[cat] || `Improve your answers in the "${catNames[cat] || cat}" category with more specific details.`;
+  });
+
+  if (improvements.length === 0) improvements.push('Maintain your strong performance across all categories. Keep practicing to stay sharp.');
+
+  document.getElementById('improvementList').innerHTML = `<ol class="improvement-list">${improvements.map(i => `<li>${i}</li>`).join('')}</ol>`;
+
+  // Model answers for weak areas
+  if (weakCats.length > 0) {
+    document.getElementById('modelAnswersCard').style.display = 'block';
+    const modelAnswers = weakCats.map(([cat]) => {
+      const q = state.answers.find(a => a.question.category === cat);
+      if (!q) return '';
+      return `<div style="margin-bottom:16px"><strong style="color:var(--navy);font-size:0.9rem">Q: ${q.question.q}</strong><p style="color:var(--gray-700);font-size:0.88rem;margin-top:4px;line-height:1.6"><em>Model answer:</em> For this type of question, a strong answer would include specific dates, amounts, and verifiable details. Structure your response clearly — start with the key fact, then provide supporting context, and end with why this is relevant to your application. Always be ready to provide documentation that supports your statement.</p></div>`;
+    }).join('');
+    document.getElementById('modelAnswers').innerHTML = modelAnswers;
+  }
+
+  document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function endInterviewEarly() {
+  if (state.answers.length === 0) {
+    alert('Please answer at least one question before ending the interview.');
+    return;
+  }
+  state.questions = state.questions.slice(0, state.currentQ); // Truncate to answered
+  showReport();
+}
+
+// ═══════ RESET ═════════════════════════════════════════
+function resetAll() {
+  state.step = 0;
+  state.interviewType = null;
+  state.difficulty = null;
+  state.language = 'en';
+  state.questions = [];
+  state.currentQ = 0;
+  state.answers = [];
+  state.confidenceScore = 70;
+  document.getElementById('stepper').style.display = '';
+  document.getElementById('heroSection').style.display = '';
+  document.getElementById('interviewSection').style.display = 'none';
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('retakeSection').style.display = 'none';
+  document.getElementById('chatLog').innerHTML = '';
+  document.getElementById('navStatus').textContent = 'Configure';
+  document.getElementById('userInput').disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  renderCurrentStep();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retakeInterview() {
+  state.currentQ = 0;
+  state.answers = [];
+  state.confidenceScore = state.difficulty === 'beginner' ? 80 : 70;
+  document.getElementById('resultsSection').style.display = 'none';
+  document.getElementById('retakeSection').style.display = 'none';
+  document.getElementById('interviewSection').style.display = 'block';
+  document.getElementById('chatLog').innerHTML = '';
+  document.getElementById('userInput').disabled = false;
+  document.getElementById('sendBtn').disabled = false;
+  document.getElementById('navStatus').textContent = 'Interviewing...';
+  // Re-randomize questions
+  const bank = QUESTION_BANKS[state.interviewType];
+  state.questions = [...bank.questions].sort(() => Math.random() - 0.5).slice(0, 10);
+  renderQuestion();
+}
+
+// ═══════ INIT ══════════════════════════════════════════
+renderCurrentStep();
+</script>
+</body>
+</html>
