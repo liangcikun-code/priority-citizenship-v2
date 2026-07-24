@@ -172,11 +172,36 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 </div>
 
 <!-- SETUP WIZARD -->
-<div class="wizard-card" id="stepper">
-  <div class="wizard-progress" id="progressBar"></div>
+<div class="wizard-card" id="stepper" style="min-height:300px">
+  <div class="wizard-progress" id="progressBar">
+    <div class="wizard-dot active"></div>
+    <div class="wizard-dot"></div>
+    <div class="wizard-dot"></div>
+  </div>
   <div class="step-label" id="stepLabel">Step 1 of 3</div>
-  <div id="stepContent"></div>
-  <div class="wizard-nav" id="stepNav"></div>
+  <div id="stepContent">
+    <!-- Fallback content shown before JS renders -->
+    <div class="question-label">What type of immigration interview are you preparing for?</div>
+    <div class="option-grid" style="grid-template-columns:1fr">
+      <button class="option-btn" onclick="selectType('citizenship_dd')" style="width:100%">
+        <span class="opt-icon">&#127757;</span>
+        <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
+      </button>
+      <button class="option-btn" onclick="selectType('business')" style="width:100%">
+        <span class="opt-icon">&#128188;</span>
+        <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
+      </button>
+      <button class="option-btn" onclick="selectType('general')" style="width:100%">
+        <span class="opt-icon">&#128172;</span>
+        <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
+      </button>
+    </div>
+  </div>
+  <div class="wizard-nav" id="stepNav">
+    <div></div>
+    <div><button class="btn btn-primary" disabled style="opacity:0.4">Select a type above to continue &#8594;</button></div>
+  </div>
+  <div id="jsError" style="display:none;background:#fee2e2;border:1px solid #dc2626;border-radius:10px;padding:16px;margin-top:16px;color:#991b1b;font-size:0.85rem"></div>
 </div>
 
 <!-- INTERVIEW SIMULATOR -->
@@ -949,7 +974,17 @@ function retakeInterview() {
 }
 
 // ═══════ INIT ══════════════════════════════════════════
-renderCurrentStep();
+try {
+  renderCurrentStep();
+  console.log('[Interview Prep] Initialized successfully');
+} catch(e) {
+  console.error('[Interview Prep] Init error:', e.message, e.stack);
+  const errDiv = document.getElementById('jsError');
+  if (errDiv) {
+    errDiv.style.display = 'block';
+    errDiv.innerHTML = '<strong>⚠ Error loading interview:</strong> ' + e.message + '<br><small>Please refresh the page or contact support.</small>';
+  }
+}
 </script>
 </body>
 </html>
