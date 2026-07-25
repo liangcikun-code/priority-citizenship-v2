@@ -206,6 +206,14 @@ app.get("/tools/:page", (req, res) => {
   }
 });
 
+// Prototype preview pages
+app.get("/nav-ai-proto", (req, res) => {
+  res.sendFile(path.join(publicDir, "nav-ai-proto.html"));
+});
+app.get("/hero-proto", (req, res) => {
+  res.sendFile(path.join(publicDir, "hero-proto.html"));
+});
+
 // Admin panel route
 app.get("/admin", (req, res) => {
   res.sendFile(path.join(publicDir, "admin.html"));
