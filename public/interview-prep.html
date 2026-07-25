@@ -183,15 +183,15 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
     <!-- Fallback content — replaced by JS renderCurrentStep() when available -->
     <div class="question-label">What type of immigration interview are you preparing for?</div>
     <div class="option-grid" style="grid-template-columns:1fr">
-      <button class="option-btn" onclick="selectType('citizenship_dd')" style="width:100%">
+      <button class="option-btn" data-action="selectType:citizenship_dd" style="width:100%">
         <span class="opt-icon">&#127757;</span>
         <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
       </button>
-      <button class="option-btn" onclick="selectType('business')" style="width:100%">
+      <button class="option-btn" data-action="selectType:business" style="width:100%">
         <span class="opt-icon">&#128188;</span>
         <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
       </button>
-      <button class="option-btn" onclick="selectType('general')" style="width:100%">
+      <button class="option-btn" data-action="selectType:general" style="width:100%">
         <span class="opt-icon">&#128172;</span>
         <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
       </button>
@@ -199,7 +199,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   </div>
   <div class="wizard-nav" id="stepNav">
     <div></div>
-    <div><button class="btn btn-primary" id="fallbackContinueBtn" disabled style="opacity:0.4" onclick="if(!this.disabled)nextStep()">Select a type above to continue &#8594;</button></div>
+    <div><button class="btn btn-primary" id="fallbackContinueBtn" disabled style="opacity:0.4" data-action="nextStep">Select a type above to continue &#8594;</button></div>
   </div>
   <div id="jsError" style="display:none;background:#fee2e2;border:1px solid #dc2626;border-radius:10px;padding:16px;margin-top:16px;color:#991b1b;font-size:0.85rem"></div>
 </div>
@@ -230,12 +230,12 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   <div class="interview-chat" id="chatLog"></div>
 
   <div class="chat-input-row">
-    <textarea id="userInput" rows="2" placeholder="Type your answer..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAnswer()}"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="submitAnswer()">&#8593;</button>
+    <textarea id="userInput" rows="2" placeholder="Type your answer..." data-enter="submitAnswer"></textarea>
+    <button class="send-btn" id="sendBtn" data-action="submitAnswer">&#8593;</button>
   </div>
 
   <div style="text-align:center;margin-top:12px">
-    <button class="btn btn-outline btn-sm" onclick="endInterviewEarly()" style="color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.12)">End Interview Early & Get Report</button>
+    <button class="btn btn-outline btn-sm" data-action="endInterviewEarly" style="color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.12)">End Interview Early & Get Report</button>
   </div>
 </div>
 
@@ -284,14 +284,14 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
       <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:16px">Complete set of practice questions for your interview type. Use this as a study guide.</p>
       <div id="workbookContent"></div>
       <div style="margin-top:16px">
-        <button class="btn btn-outline btn-sm" onclick="printWorkbook()">&#128196; Print / Save as PDF</button>
+        <button class="btn btn-outline btn-sm" data-action="printWorkbook">&#128196; Print / Save as PDF</button>
       </div>
     </div>
 
     <div class="actions-row">
-      <button class="btn btn-primary" onclick="retakeInterview()">&#128260; Retake Interview</button>
-      <button class="btn btn-white" onclick="window.print()">&#128196; Export Report</button>
-      <button class="btn btn-outline" onclick="resetAll()">&#8634; New Setup</button>
+      <button class="btn btn-primary" data-action="retakeInterview">&#128260; Retake Interview</button>
+      <button class="btn btn-white" data-action="windowPrint">&#128196; Export Report</button>
+      <button class="btn btn-outline" data-action="resetAll">&#8634; New Setup</button>
     </div>
 
     <div class="print-only">
@@ -301,7 +301,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 </div>
 
 <div class="retake-section" id="retakeSection" style="display:none">
-  <a href="#" onclick="resetAll();return false">&#8634; Start New Interview</a>
+  <a href="#" data-action="resetAll">&#8634; Start New Interview</a>
 </div>
 
 <script>
@@ -391,15 +391,15 @@ const STEPS = [
       return `
         <div class="question-label">What type of immigration interview are you preparing for?</div>
         <div class="option-grid" style="grid-template-columns:1fr">
-          <button class="option-btn${state.interviewType==='citizenship_dd'?' selected':''}" onclick="selectType('citizenship_dd')">
+          <button class="option-btn${state.interviewType==='citizenship_dd'?' selected':''}" data-action="selectType:citizenship_dd">
             <span class="opt-icon">&#127757;</span>
             <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
           </button>
-          <button class="option-btn${state.interviewType==='business'?' selected':''}" onclick="selectType('business')">
+          <button class="option-btn${state.interviewType==='business'?' selected':''}" data-action="selectType:business">
             <span class="opt-icon">&#128188;</span>
             <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
           </button>
-          <button class="option-btn${state.interviewType==='general'?' selected':''}" onclick="selectType('general')">
+          <button class="option-btn${state.interviewType==='general'?' selected':''}" data-action="selectType:general">
             <span class="opt-icon">&#128172;</span>
             <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
           </button>
@@ -413,26 +413,26 @@ const STEPS = [
       return `
         <div class="question-label">Select difficulty level</div>
         <div class="option-grid">
-          <button class="option-btn${state.difficulty==='beginner'?' selected':''}" onclick="state.difficulty='beginner';renderCurrentStep()">
+          <button class="option-btn${state.difficulty==='beginner'?' selected':''}" data-action="setDifficulty:beginner">
             <span class="opt-icon">&#128994;</span>
             <div><div style="font-weight:600">Beginner</div><div style="font-size:0.78rem;color:var(--gray-500)">Gentle questions, 10 questions, extra hints</div></div>
           </button>
-          <button class="option-btn${state.difficulty==='intermediate'?' selected':''}" onclick="state.difficulty='intermediate';renderCurrentStep()">
+          <button class="option-btn${state.difficulty==='intermediate'?' selected':''}" data-action="setDifficulty:intermediate">
             <span class="opt-icon">&#128993;</span>
             <div><div style="font-weight:600">Intermediate</div><div style="font-size:0.78rem;color:var(--gray-500)">Standard DD questions, 10 questions, realistic pace</div></div>
           </button>
-          <button class="option-btn${state.difficulty==='advanced'?' selected':''}" onclick="state.difficulty='advanced';renderCurrentStep()">
+          <button class="option-btn${state.difficulty==='advanced'?' selected':''}" data-action="setDifficulty:advanced">
             <span class="opt-icon">&#128308;</span>
             <div><div style="font-weight:600">Advanced</div><div style="font-size:0.78rem;color:var(--gray-500)">Challenging follow-ups, 10 questions, strict scoring</div></div>
           </button>
         </div>
         <div class="question-label" style="margin-top:24px">Interview language</div>
         <div class="option-grid">
-          <button class="option-btn${state.language==='en'?' selected':''}" onclick="state.language='en';renderCurrentStep()">
+          <button class="option-btn${state.language==='en'?' selected':''}" data-action="setLanguage:en">
             <span class="opt-icon">&#127468;&#127463;</span>
             <div><div style="font-weight:600">English</div></div>
           </button>
-          <button class="option-btn${state.language==='cn'?' selected':''}" onclick="state.language='cn';renderCurrentStep()">
+          <button class="option-btn${state.language==='cn'?' selected':''}" data-action="setLanguage:cn">
             <span class="opt-icon">&#127464;&#127475;</span>
             <div><div style="font-weight:600">中文 (Chinese)</div></div>
           </button>
@@ -471,36 +471,19 @@ function selectType(type) {
   // Highlight the clicked button immediately (before re-render)
   var btns = document.querySelectorAll('#stepContent .option-btn');
   btns.forEach(function(b) { b.classList.remove('selected'); });
-  // Try to find and highlight the matching button
-  var clickedBtn = document.querySelector('#stepContent .option-btn[onclick*="'+type+'"]');
+  // Find the matching button by data-action attribute
+  var clickedBtn = document.querySelector('#stepContent .option-btn[data-action*="'+type+'"]');
   if (clickedBtn) clickedBtn.classList.add('selected');
-  
+
   // Enable the Continue button immediately (in case renderCurrentStep hasn't replaced the fallback nav)
   var navBtn = document.querySelector('#stepNav .btn-primary');
   if (navBtn) {
     navBtn.disabled = false;
     navBtn.style.opacity = '1';
   }
-  
+
   // Now do the full re-render (will replace static content with dynamic)
   renderCurrentStep();
-}
-
-// Fallback: update the static nav button when JS hasn't fully loaded yet
-function updateFallbackNav() {
-  // Highlight selected button
-  document.querySelectorAll('#stepContent .option-btn').forEach(function(btn) {
-    btn.classList.remove('selected');
-  });
-  if (event && event.target) {
-    var el = event.target.closest('.option-btn');
-    if (el) el.classList.add('selected');
-  }
-  // Enable the Continue button
-  var navDiv = document.getElementById('stepNav');
-  if (navDiv) {
-    navDiv.innerHTML = '<div></div><div><button class="btn btn-primary" onclick="nextStep()">Continue &#8594;</button></div>';
-  }
 }
 
 
@@ -524,11 +507,11 @@ function renderNav() {
   const isLast = state.step === STEPS.length - 1;
   const canProceed = state.step === 0 ? state.interviewType !== null : state.step === 1 ? state.difficulty !== null : true;
   document.getElementById('stepNav').innerHTML = `
-    <div>${state.step > 0 ? `<button class="btn btn-outline btn-sm" onclick="prevStep()">← Back</button>` : ''}</div>
+    <div>${state.step > 0 ? `<button class="btn btn-outline btn-sm" data-action="prevStep">← Back</button>` : ''}</div>
     <div>
       ${isLast
-        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="startInterview()">🎤 Start Interview →</button>`
-        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="nextStep()">Continue →</button>`
+        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} data-action="startInterview">🎤 Start Interview →</button>`
+        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} data-action="nextStep">Continue →</button>`
       }
     </div>
   `;
@@ -1009,7 +992,76 @@ function retakeInterview() {
   renderQuestion();
 }
 
-// ═══════ INIT ══════════════════════════════════════════
+// ═══════ EVENT DELEGATION (CSP-safe, no inline onclick) ══
+document.addEventListener('click', function(e) {
+  // Find the nearest element with data-action
+  var el = e.target.closest('[data-action]');
+  if (!el) return;
+
+  // Skip disabled buttons
+  if (el.disabled || el.hasAttribute('disabled')) return;
+
+  var action = el.getAttribute('data-action');
+
+  // Parse "actionName:arg" format
+  var colonIdx = action.indexOf(':');
+  var cmd = colonIdx >= 0 ? action.slice(0, colonIdx) : action;
+  var arg = colonIdx >= 0 ? action.slice(colonIdx + 1) : null;
+
+  switch (cmd) {
+    case 'selectType':
+      if (typeof selectType === 'function') selectType(arg);
+      break;
+    case 'setDifficulty':
+      state.difficulty = arg;
+      if (typeof renderCurrentStep === 'function') renderCurrentStep();
+      break;
+    case 'setLanguage':
+      state.language = arg;
+      if (typeof renderCurrentStep === 'function') renderCurrentStep();
+      break;
+    case 'nextStep':
+      if (typeof nextStep === 'function') nextStep();
+      break;
+    case 'prevStep':
+      if (typeof prevStep === 'function') prevStep();
+      break;
+    case 'startInterview':
+      if (typeof startInterview === 'function') startInterview();
+      break;
+    case 'submitAnswer':
+      if (typeof submitAnswer === 'function') submitAnswer();
+      break;
+    case 'endInterviewEarly':
+      if (typeof endInterviewEarly === 'function') endInterviewEarly();
+      break;
+    case 'retakeInterview':
+      if (typeof retakeInterview === 'function') retakeInterview();
+      break;
+    case 'resetAll':
+      if (typeof resetAll === 'function') resetAll();
+      break;
+    case 'printWorkbook':
+      if (typeof printWorkbook === 'function') printWorkbook();
+      break;
+    case 'windowPrint':
+      window.print();
+      break;
+  }
+});
+
+// Handle Enter key on textarea (CSP-safe)
+document.addEventListener('keydown', function(e) {
+  if (e.target && e.target.hasAttribute('data-enter')) {
+    var action = e.target.getAttribute('data-enter');
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (action === 'submitAnswer' && typeof submitAnswer === 'function') submitAnswer();
+    }
+  }
+});
+
+
 try {
   renderCurrentStep();
   console.log('[Interview Prep] Initialized successfully');
