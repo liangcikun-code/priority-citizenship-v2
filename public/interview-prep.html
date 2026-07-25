@@ -183,15 +183,15 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
     <!-- Fallback content — replaced by JS renderCurrentStep() when available -->
     <div class="question-label">What type of immigration interview are you preparing for?</div>
     <div class="option-grid" style="grid-template-columns:1fr">
-      <button class="option-btn" onclick="state.interviewType='citizenship_dd';updateFallbackNav()" style="width:100%">
+      <button class="option-btn" onclick="selectType('citizenship_dd')" style="width:100%">
         <span class="opt-icon">&#127757;</span>
         <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
       </button>
-      <button class="option-btn" onclick="state.interviewType='business';updateFallbackNav()" style="width:100%">
+      <button class="option-btn" onclick="selectType('business')" style="width:100%">
         <span class="opt-icon">&#128188;</span>
         <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
       </button>
-      <button class="option-btn" onclick="state.interviewType='general';updateFallbackNav()" style="width:100%">
+      <button class="option-btn" onclick="selectType('general')" style="width:100%">
         <span class="opt-icon">&#128172;</span>
         <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
       </button>
@@ -199,7 +199,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   </div>
   <div class="wizard-nav" id="stepNav">
     <div></div>
-    <div><button class="btn btn-primary" disabled style="opacity:0.4">Select a type above to continue &#8594;</button></div>
+    <div><button class="btn btn-primary" id="fallbackContinueBtn" disabled style="opacity:0.4" onclick="if(!this.disabled)nextStep()">Select a type above to continue &#8594;</button></div>
   </div>
   <div id="jsError" style="display:none;background:#fee2e2;border:1px solid #dc2626;border-radius:10px;padding:16px;margin-top:16px;color:#991b1b;font-size:0.85rem"></div>
 </div>
@@ -466,7 +466,25 @@ const STEPS = [
   }
 ];
 
-function selectType(type) { state.interviewType = type; renderCurrentStep(); }
+function selectType(type) {
+  state.interviewType = type;
+  // Highlight the clicked button immediately (before re-render)
+  var btns = document.querySelectorAll('#stepContent .option-btn');
+  btns.forEach(function(b) { b.classList.remove('selected'); });
+  // Try to find and highlight the matching button
+  var clickedBtn = document.querySelector('#stepContent .option-btn[onclick*="'+type+'"]');
+  if (clickedBtn) clickedBtn.classList.add('selected');
+  
+  // Enable the Continue button immediately (in case renderCurrentStep hasn't replaced the fallback nav)
+  var navBtn = document.querySelector('#stepNav .btn-primary');
+  if (navBtn) {
+    navBtn.disabled = false;
+    navBtn.style.opacity = '1';
+  }
+  
+  // Now do the full re-render (will replace static content with dynamic)
+  renderCurrentStep();
+}
 
 // Fallback: update the static nav button when JS hasn't fully loaded yet
 function updateFallbackNav() {
