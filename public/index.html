@@ -237,6 +237,24 @@ ul { list-style: none; }
 .nav-cta::after { display: none !important; }
 .nav-cta:hover { background: var(--gold-light) !important; color: var(--navy) !important; }
 
+/* AI Tools nav link — gold border + glow */
+.nav-ai-tools {
+  color: var(--gold-light) !important;
+  font-weight: 600 !important;
+  background: rgba(201,168,76,0.1);
+  padding: 6px 14px;
+  border-radius: 100px;
+  border: 1.5px solid var(--gold);
+  box-shadow: 0 0 12px rgba(201,168,76,0.15);
+  transition: all 0.25s !important;
+}
+.nav-ai-tools:hover {
+  background: rgba(201,168,76,0.2) !important;
+  box-shadow: 0 0 24px rgba(201,168,76,0.3) !important;
+  color: var(--gold-light) !important;
+}
+.nav-ai-tools::after { display: none !important; }
+
 .nav-toggle {
   display: none;
   background: none;
@@ -1065,7 +1083,7 @@ ul { list-style: none; }
       <a href="#stories">Success Stories</a>
       <a href="#faq">FAQ</a>
       <a href="/blog">Blog</a>
-      <a href="/tools">AI Tools</a>
+      <a href="/tools" class="nav-ai-tools">&#9889; AI Tools</a>
 <a href="/tools/book-appointment" class="nav-cta">Book Consultation</a>
     </div>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
@@ -1080,7 +1098,7 @@ ul { list-style: none; }
   <a href="#stories" onclick="closeMobileNav()">Success Stories</a>
   <a href="#faq" onclick="closeMobileNav()">FAQ</a>
   <a href="/blog" onclick="closeMobileNav()">Blog</a>
-  <a href="/tools/visa-recommendation" onclick="closeMobileNav()">AI Tools</a>
+  <a href="/tools" onclick="closeMobileNav()" style="color:var(--gold-light);font-weight:600;">⚡ AI Tools</a>
   <a href="/tools/book-appointment" onclick="closeMobileNav()" style="color:var(--gold);font-weight:600;">Book Consultation</a>
 </div>
 
