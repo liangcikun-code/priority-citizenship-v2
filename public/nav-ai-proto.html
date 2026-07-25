@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nav AI Tools — Proto</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--navy);min-height:100vh}
+:root{--navy:#0a1628;--gold:#c9a84c;--gold-light:#e4c86a;--white:#fff}
+
+/* ── Nav bar ── */
+.navbar{
+  display:flex;align-items:center;justify-content:center;gap:40px;
+  padding:20px 32px;
+  background:rgba(10,22,40,0.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+.nav-link{
+  font-size:0.9rem;font-weight:500;color:rgba(255,255,255,0.65);
+  text-decoration:none;transition:color 0.2s;position:relative;
+}
+.nav-link:hover{color:#fff}
+
+/* ── Container for variants ── */
+.section{max-width:1100px;margin:0 auto;padding:48px 24px}
+.section h2{color:#fff;font-size:1.4rem;margin-bottom:8px}
+.section p{color:rgba(255,255,255,0.4);font-size:0.9rem;margin-bottom:24px}
+.variants{display:flex;align-items:center;gap:48px;flex-wrap:wrap;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:32px 40px}
+
+/* ═══ Variant A: Solid Gold Pill ═══ */
+.ai-gold-pill{
+  font-size:0.85rem;font-weight:700;color:var(--navy);
+  background:var(--gold);padding:7px 16px;border-radius:100px;
+  text-decoration:none;transition:all 0.2s;
+  letter-spacing:0.01em;
+}
+.ai-gold-pill:hover{background:var(--gold-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(201,168,76,0.4)}
+
+/* ═══ Variant B: Gold border + glow ═══ */
+.ai-glow-pill{
+  font-size:0.85rem;font-weight:700;color:var(--gold-light);
+  background:rgba(201,168,76,0.1);padding:7px 16px;border-radius:100px;
+  text-decoration:none;border:1.5px solid var(--gold);
+  transition:all 0.2s;position:relative;
+  box-shadow:0 0 12px rgba(201,168,76,0.15);
+}
+.ai-glow-pill:hover{
+  background:rgba(201,168,76,0.2);
+  box-shadow:0 0 24px rgba(201,168,76,0.3);
+  color:var(--gold-light);
+}
+
+/* ═══ Variant C: Gradient animated ═══ */
+.ai-gradient-pill{
+  font-size:0.85rem;font-weight:700;color:var(--navy);
+  padding:7px 16px;border-radius:100px;
+  text-decoration:none;transition:all 0.2s;
+  background:linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark));
+  background-size:200% 200%;
+  animation:gradShift 3s ease infinite;
+}
+.ai-gradient-pill:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(201,168,76,0.45)}
+@keyframes gradShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+
+/* ═══ Variant D: Sparkle dot + gold text ═══ */
+.ai-sparkle{
+  font-size:0.85rem;font-weight:700;color:var(--gold);
+  text-decoration:none;transition:all 0.2s;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.ai-sparkle::before{
+  content:'';width:7px;height:7px;border-radius:50%;
+  background:var(--gold);animation:dotPulse 1.5s ease-in-out infinite;
+  box-shadow:0 0 6px var(--gold);
+}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.8)}}
+.ai-sparkle:hover{color:var(--gold-light)}
+
+/* ═══ Variant E: Gold underline expand ═══ */
+.ai-underline{
+  font-size:0.85rem;font-weight:700;color:var(--gold);
+  text-decoration:none;transition:all 0.2s;position:relative;
+}
+.ai-underline::after{
+  content:'';position:absolute;bottom:-5px;left:0;width:100%;height:2px;
+  background:var(--gold);border-radius:1px;
+  transition:transform 0.25s cubic-bezier(0.175,0.885,0.32,1.275);
+  transform:scaleX(1);
+}
+.ai-underline:hover::after{transform:scaleX(1.3)}
+.ai-underline:hover{color:var(--gold-light)}
+
+/* ═══ Variant F: Tag with "NEW" badge ═══ */
+.ai-badge-row{display:inline-flex;align-items:center;gap:6px;text-decoration:none;position:relative}
+.ai-badge-text{font-size:0.85rem;font-weight:600;color:var(--gold-light);transition:color 0.2s}
+.ai-badge-row:hover .ai-badge-text{color:#fff}
+.ai-badge-tag{
+  font-size:0.58rem;font-weight:800;color:var(--navy);
+  background:var(--gold);padding:2px 6px;border-radius:4px;
+  letter-spacing:0.04em;animation:badgePop 2.5s ease-in-out infinite;
+  box-shadow:0 2px 8px rgba(201,168,76,0.3);
+}
+@keyframes badgePop{0%,100%{transform:scale(1)}15%{transform:scale(1.2)}30%{transform:scale(1)}}
+
+/* ── Labels ── */
+.label{font-size:0.7rem;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:6px;white-space:nowrap}
+.col{display:flex;flex-direction:column;align-items:center;gap:6px}
+
+hr{border:none;border-top:1px solid rgba(255,255,255,0.05);margin:40px 0}
+
+/* ── Winner highlight ── */
+.pick{text-align:center;margin-top:32px}
+.pick-inner{display:inline-block;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:20px 32px}
+.pick-inner .label{color:var(--gold);margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <span class="nav-link" style="font-weight:700;color:#fff">PC</span>
+  <a href="#" class="nav-link">About</a>
+  <a href="#" class="nav-link">Services</a>
+  <a href="#" class="nav-link">Blog</a>
+  <!-- The AI Tools slot — styled below -->
+  <span style="color:rgba(255,255,255,0.2)">AI Tools &#8593;</span>
+  <a href="#" class="nav-link" style="background:var(--gold);color:var(--navy);padding:8px 18px;border-radius:8px;font-weight:600;font-size:0.82rem">Book</a>
+</div>
+
+<!-- ═══ ROW 1: Gold variants ═══ -->
+<div class="section">
+  <h2>Option A · B · C — Gold Background Treatments</h2>
+  <p>Most eye-catching — visually dominates the nav. Good if AI Tools is a top-priority CTA.</p>
+  <div class="variants">
+    <div class="col">
+      <div class="label">A: Solid Gold Pill</div>
+      <a href="#" class="ai-gold-pill">&#9889; AI Tools</a>
+    </div>
+    <div class="col">
+      <div class="label">B: Gold Border + Glow</div>
+      <a href="#" class="ai-glow-pill">&#9889; AI Tools</a>
+    </div>
+    <div class="col">
+      <div class="label">C: Gradient Animated</div>
+      <a href="#" class="ai-gradient-pill">&#9889; AI Tools</a>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<!-- ═══ ROW 2: Subtle variants ═══ -->
+<div class="section">
+  <h2>Option D · E · F — Subtle but Distinct</h2>
+  <p>Less aggressive — stands out from gray nav links without competing with the "Book" CTA button.</p>
+  <div class="variants">
+    <div class="col">
+      <div class="label">D: Pulsing Dot + Gold Text</div>
+      <a href="#" class="ai-sparkle">AI Tools</a>
+    </div>
+    <div class="col">
+      <div class="label">E: Gold Underline</div>
+      <a href="#" class="ai-underline">AI Tools</a>
+    </div>
+    <div class="col">
+      <div class="label">F: NEW Badge Tag</div>
+      <a href="#" class="ai-badge-row">
+        <span class="ai-badge-text">AI Tools</span>
+        <span class="ai-badge-tag">NEW</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ My pick ═══ -->
+<div class="pick">
+  <div class="pick-inner">
+    <div class="label">&#9733; Recommended Combo</div>
+    <a href="#" class="ai-gradient-pill" style="font-size:0.95rem;padding:9px 20px">&#9889; AI Tools</a>
+    <p style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:8px">Gradient pill + glow hover<br>— hard to miss, feels premium, doesn't fight the Book CTA</p>
+  </div>
+</div>
+
+</body>
+</html>
