@@ -205,12 +205,12 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
   <div class="interview-chat" id="chatLog"></div>
 
   <div class="chat-input-row">
-    <textarea id="userInput" rows="2" placeholder="Type your answer..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitAnswer()}"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="submitAnswer()">&#8593;</button>
+    <textarea id="userInput" rows="2" placeholder="Type your answer..." data-enter="submitAnswer"></textarea>
+    <button class="send-btn" id="sendBtn" data-action="submitAnswer">&#8593;</button>
   </div>
 
   <div style="text-align:center;margin-top:12px">
-    <button class="btn btn-outline btn-sm" onclick="endInterviewEarly()" style="color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.12)">End Interview Early & Get Report</button>
+    <button class="btn btn-outline btn-sm" data-action="endInterviewEarly" style="color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.12)">End Interview Early & Get Report</button>
   </div>
 </div>
 
@@ -247,9 +247,9 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
     </div>
 
     <div class="actions-row">
-      <button class="btn btn-primary" onclick="retakeInterview()">&#128260; Retake Interview</button>
-      <button class="btn btn-white" onclick="window.print()">&#128196; Export Report</button>
-      <button class="btn btn-outline" onclick="resetAll()">&#8634; New Setup</button>
+      <button class="btn btn-primary" data-action="retakeInterview">&#128260; Retake Interview</button>
+      <button class="btn btn-white" data-action="windowPrint">&#128196; Export Report</button>
+      <button class="btn btn-outline" data-action="resetAll">&#8634; New Setup</button>
     </div>
 
     <div class="print-only">
@@ -259,7 +259,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(180deg,var(--navy
 </div>
 
 <div class="retake-section" id="retakeSection" style="display:none">
-  <a href="#" onclick="resetAll();return false">&#8634; Start New Interview</a>
+  <a href="#" data-action="resetAll">&#8634; Start New Interview</a>
 </div>
 
 <script>
@@ -349,15 +349,15 @@ const STEPS = [
       return `
         <div class="question-label">What type of immigration interview are you preparing for?</div>
         <div class="option-grid" style="grid-template-columns:1fr">
-          <button class="option-btn${state.interviewType==='citizenship_dd'?' selected':''}" onclick="selectType('citizenship_dd')">
+          <button class="option-btn${state.interviewType==='citizenship_dd'?' selected':''}" data-action="selectType:citizenship_dd">
             <span class="opt-icon">&#127757;</span>
             <div><div style="font-weight:600">Citizenship Due Diligence Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Investment citizenship — source of funds, background, program knowledge</div></div>
           </button>
-          <button class="option-btn${state.interviewType==='business'?' selected':''}" onclick="selectType('business')">
+          <button class="option-btn${state.interviewType==='business'?' selected':''}" data-action="selectType:business">
             <span class="opt-icon">&#128188;</span>
             <div><div style="font-weight:600">Business Immigration Interview</div><div style="font-size:0.78rem;color:var(--gray-500)">Business plan, investment, hiring, market analysis</div></div>
           </button>
-          <button class="option-btn${state.interviewType==='general'?' selected':''}" onclick="selectType('general')">
+          <button class="option-btn${state.interviewType==='general'?' selected':''}" data-action="selectType:general">
             <span class="opt-icon">&#128172;</span>
             <div><div style="font-weight:600">General Immigration Q&A</div><div style="font-size:0.78rem;color:var(--gray-500)">Motivation, background, financial capacity, future plans</div></div>
           </button>
@@ -371,26 +371,26 @@ const STEPS = [
       return `
         <div class="question-label">Select difficulty level</div>
         <div class="option-grid">
-          <button class="option-btn${state.difficulty==='beginner'?' selected':''}" onclick="state.difficulty='beginner';renderCurrentStep()">
+          <button class="option-btn${state.difficulty==='beginner'?' selected':''}" data-action="setDifficulty:beginner">
             <span class="opt-icon">&#128994;</span>
             <div><div style="font-weight:600">Beginner</div><div style="font-size:0.78rem;color:var(--gray-500)">Gentle questions, 10 questions, extra hints</div></div>
           </button>
-          <button class="option-btn${state.difficulty==='intermediate'?' selected':''}" onclick="state.difficulty='intermediate';renderCurrentStep()">
+          <button class="option-btn${state.difficulty==='intermediate'?' selected':''}" data-action="setDifficulty:intermediate">
             <span class="opt-icon">&#128993;</span>
             <div><div style="font-weight:600">Intermediate</div><div style="font-size:0.78rem;color:var(--gray-500)">Standard DD questions, 10 questions, realistic pace</div></div>
           </button>
-          <button class="option-btn${state.difficulty==='advanced'?' selected':''}" onclick="state.difficulty='advanced';renderCurrentStep()">
+          <button class="option-btn${state.difficulty==='advanced'?' selected':''}" data-action="setDifficulty:advanced">
             <span class="opt-icon">&#128308;</span>
             <div><div style="font-weight:600">Advanced</div><div style="font-size:0.78rem;color:var(--gray-500)">Challenging follow-ups, 10 questions, strict scoring</div></div>
           </button>
         </div>
         <div class="question-label" style="margin-top:24px">Interview language</div>
         <div class="option-grid">
-          <button class="option-btn${state.language==='en'?' selected':''}" onclick="state.language='en';renderCurrentStep()">
+          <button class="option-btn${state.language==='en'?' selected':''}" data-action="setLanguage:en">
             <span class="opt-icon">&#127468;&#127463;</span>
             <div><div style="font-weight:600">English</div></div>
           </button>
-          <button class="option-btn${state.language==='cn'?' selected':''}" onclick="state.language='cn';renderCurrentStep()">
+          <button class="option-btn${state.language==='cn'?' selected':''}" data-action="setLanguage:cn">
             <span class="opt-icon">&#127464;&#127475;</span>
             <div><div style="font-weight:600">中文 (Chinese)</div></div>
           </button>
@@ -426,6 +426,41 @@ const STEPS = [
 
 function selectType(type) { state.interviewType = type; renderCurrentStep(); }
 
+// ═══════ EVENT DELEGATION (replaces all inline onclick) ══
+document.addEventListener('click', function(e) {
+  var el = e.target.closest('[data-action]');
+  if (!el) return;
+  if (el.disabled || el.hasAttribute('disabled')) return;
+  var action = el.getAttribute('data-action');
+  var parts = action.split(':');
+  var cmd = parts[0];
+  var arg = parts[1];
+  switch (cmd) {
+    case 'selectType': selectType(arg); break;
+    case 'setDifficulty': state.difficulty = arg; renderCurrentStep(); break;
+    case 'setLanguage': state.language = arg; renderCurrentStep(); break;
+    case 'nextStep': nextStep(); break;
+    case 'prevStep': prevStep(); break;
+    case 'startInterview': startInterview(); break;
+    case 'submitAnswer': submitAnswer(); break;
+    case 'endInterviewEarly': endInterviewEarly(); break;
+    case 'retakeInterview': retakeInterview(); break;
+    case 'resetAll': resetAll(); break;
+    case 'windowPrint': window.print(); break;
+  }
+});
+
+// ═══════ ENTER KEY HANDLER ═══════════════════════════════
+document.addEventListener('keydown', function(e) {
+  if (e.target && e.target.hasAttribute('data-enter')) {
+    var action = e.target.getAttribute('data-enter');
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (action === 'submitAnswer') submitAnswer();
+    }
+  }
+});
+
 // ═══════ WIZARD RENDERING ═════════════════════════════
 function renderCurrentStep() {
   const step = STEPS[state.step];
@@ -446,11 +481,11 @@ function renderNav() {
   const isLast = state.step === STEPS.length - 1;
   const canProceed = state.step === 0 ? state.interviewType !== null : state.step === 1 ? state.difficulty !== null : true;
   document.getElementById('stepNav').innerHTML = `
-    <div>${state.step > 0 ? `<button class="btn btn-outline btn-sm" onclick="prevStep()">← Back</button>` : ''}</div>
+    <div>${state.step > 0 ? `<button class="btn btn-outline btn-sm" data-action="prevStep">← Back</button>` : ''}</div>
     <div>
       ${isLast
-        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="startInterview()">🎤 Start Interview →</button>`
-        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} onclick="nextStep()">Continue →</button>`
+        ? `<button class="btn btn-primary" ${canProceed?'':'disabled'} data-action="startInterview">🎤 Start Interview →</button>`
+        : `<button class="btn btn-primary" ${canProceed?'':'disabled'} data-action="nextStep">Continue →</button>`
       }
     </div>
   `;
