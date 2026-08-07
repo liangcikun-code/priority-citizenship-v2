@@ -119,25 +119,19 @@ async function getLeads(filters = {}) {
 }
 
 async function addLead(lead) {
-  // Write to Supabase first (primary storage)
-  if (db) {
-    const row = { id: lead.id || genUUID(), name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nowISO(), updated_at:nowISO() };
-    const d = await supabaseQuery('leads', 'insert', row);
-    if (d) {
-      console.log('[supabase] Lead saved:', lead.email);
-      // Also cache in memory
-      const nl = {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
-      mem.leads.push(nl);
-      saveMemToDisk();
-      return nl;
-    }
-    console.error('[supabase] Lead insert FAILED — falling back to in-memory');
+  // Must write to Supabase — NO in-memory fallback for production data
+  if (!db) {
+    throw new Error('Database not connected. Contact admin.');
   }
-
-  // In-memory fallback (only when Supabase fails or is unavailable)
-  const nl = {id:genId('lead'),...lead,status:lead.status||'new',createdAt:nowISO(),updatedAt:nowISO()};
+  const row = { id: lead.id || genUUID(), name:lead.name, email:lead.email, phone:lead.phone||'', country:lead.country||'', service:lead.service||'other', budget:lead.budget||'', message:lead.message||'', notes:lead.notes||'', status:lead.status||'new', source:lead.source||'website', created_at:nowISO(), updated_at:nowISO() };
+  const d = await supabaseQuery('leads', 'insert', row);
+  if (!d) {
+    throw new Error('Database write failed — lead NOT saved. Please try again or contact admin.');
+  }
+  console.log('[supabase] Lead saved:', lead.email);
+  // Cache in memory for fast reads
+  const nl = {id:d.id,name:d.name,email:d.email,phone:d.phone,country:d.country,service:d.service,budget:d.budget,message:d.message,notes:d.notes,status:d.status,source:d.source,createdAt:d.created_at,updatedAt:d.updated_at};
   mem.leads.push(nl);
-  mem.activity.unshift({id:genId('act'),type:'lead_created',message:`New lead: ${lead.name}`,subject:lead.name,created_at:nowISO()});
   saveMemToDisk();
   return nl;
 }
